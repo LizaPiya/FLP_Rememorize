@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.venv/
+venv/
+
+# Large model weights — do NOT commit LLM weights
+runs/*/best_ckpt/
+runs/*/final_ckpt/
+runs/step_*/
+# But DO commit tokenizer configs (small, text files)
+!runs/*/best_ckpt/tokenizer/
+!runs/*/final_ckpt/tokenizer/
+
+# Datasets — too large for git
+Datasets/*.jsonl
+Datasets/*.csv
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Results: predictions are large, but metrics + scores should be committed
+results/*/predictions.jsonl
+
+# OS
+.DS_Store
