@@ -412,20 +412,20 @@ All variants use the same trained \textsc{ReMemorize} checkpoint; only the infer
     \item \textbf{w/o Phase-2 Memory Update:} The memory snapshot $\mathbf{m}_{T_{\text{src}}}$ from Phase~1 is injected at every decoding step but is never updated during generation. This ablates the live-memory component of Phase~2 while retaining source-conditioned context.
 \end{itemize}
 
-Results on MIMIC-IV are reported in Table~\ref{tab:ablation_arch}. Removing memory entirely causes the largest drop in ROUGE-1 ($-5.72$ points) and BLEU-1 ($-6.50$ points), confirming that the memory module provides meaningful recall gains. Fixing the gate at $\gamma{=}0.5$ partially recovers performance but falls short of the learned policy, demonstrating the value of memory-conditioned adaptive gating.
+Results on MIMIC-IV are reported in Table~\ref{tab:ablation_arch} after full training runs complete.
 
 \begin{table}[t]
 \centering
-\caption{Memory architecture ablations on MIMIC-IV (5 examples). All values in \%. Bold = best per metric.}
+\caption{Memory architecture ablations on MIMIC-IV. All values in \%. Bold = best per metric. Results to be filled after training.}
 \label{tab:ablation_arch}
 \begin{tabular}{lrrrrrr}
 \toprule
 Variant & R-1 & R-2 & R-L & B-1 & B-2 & BS-F1 \\
 \midrule
-\textbf{Full model (ours)} & \textbf{27.69} & 6.70 & 14.94 & \textbf{13.42} & \textbf{5.63} & 80.15 \\
-No memory               & 21.97 & 9.13 & 13.80 & 6.92 & 3.74 & 81.24 \\
-Fixed gate $\gamma{=}0.5$ & 26.63 & 8.36 & 15.53 & 11.33 & 5.57 & 81.11 \\
-No Phase-2 update       & 26.57 & \textbf{9.75} & \textbf{16.25} & 10.24 & 5.60 & \textbf{81.97} \\
+\textbf{Full model (ours)} & -- & -- & -- & -- & -- & -- \\
+No memory                  & -- & -- & -- & -- & -- & -- \\
+Fixed gate $\gamma{=}0.5$  & -- & -- & -- & -- & -- & -- \\
+No Phase-2 update          & -- & -- & -- & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
