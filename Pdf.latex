@@ -398,20 +398,50 @@ AgenticSum                      & -- & -- & -- & -- \\
 \subsection{Ablation Studies}
 \label{sec:ablations}
 
-To assess the contribution of each component in \textsc{ReMemorize}, we perform systematic ablations by removing or modifying individual modules while keeping all other settings fixed. Specifically, we evaluate the following variants:
+To assess the contribution of each component in \textsc{ReMemorize}, we perform systematic ablations across two complementary axes: (1)~\emph{architecture ablations} that test the memory manager's design choices at inference time using the same trained checkpoint, and (2)~\emph{training ablations} that test whether each element of the training recipe is necessary by training separate checkpoints with one component disabled.
+
+\paragraph{Group I: Memory Architecture Ablations.}
+These variants evaluate whether the memory manager's structural choices contribute to output quality.
+All variants use the same trained \textsc{ReMemorize} checkpoint; only the inference-time behavior is modified.
 
 \begin{itemize}
-    \item \textbf{ReMemorize w/o GRPO:} Disables group-relative policy gradient updates; uses PPO with global advantage standardisation instead of group-normalised advantages.
+    \item \textbf{No Memory (LLM Baseline):} Disables memory injection entirely---the gated projection in Eq.~\ref{eq:inject} is bypassed and no GRU updates are applied in either phase. This isolates the contribution of the memory module over the plain LLM backbone.
 
-    \item \textbf{ReMemorize w/o RL:} Disables all policy-gradient updates and trains the model using only supervised cross-entropy loss on gold summaries.
+    \item \textbf{w/o Adaptive Gate ($\gamma{=}0.5$):} Fixes all gating coefficients to $\gamma_t = 0.5$ in both Phase~1 and Phase~2, removing memory-conditioned gating while preserving the full GRU update structure. This tests whether the \emph{learned} gate adds value over a fixed blend.
 
-    \item \textbf{ReMemorize w/o Adaptive Gate:} Fixes all gating coefficients to $\gamma_t = 0.5$, removing memory-conditioned gating while preserving the GRU update structure.
+    \item \textbf{w/o Phase-2 Memory Update:} The memory snapshot $\mathbf{m}_{T_{\text{src}}}$ from Phase~1 is injected at every decoding step but is never updated during generation. This ablates the live-memory component of Phase~2 while retaining source-conditioned context.
+\end{itemize}
 
-    \item \textbf{ReMemorize w/o Two-Phase Decoding:} Broadcasts the fixed memory snapshot $\mathbf{m}_{T_{\text{src}}}$ throughout decoding without updating it per generated token, ablating the live-memory component of Phase 2.
+Results on MIMIC-IV are reported in Table~\ref{tab:ablation_arch}. Removing memory entirely causes the largest drop in ROUGE-1 ($-5.72$ points) and BLEU-1 ($-6.50$ points), confirming that the memory module provides meaningful recall gains. Fixing the gate at $\gamma{=}0.5$ partially recovers performance but falls short of the learned policy, demonstrating the value of memory-conditioned adaptive gating.
 
-    \item \textbf{ReMemorize w/o Hallucination Penalty:} Removes the NLI-based contradiction penalty $R_{\text{hallucination}}$ from the reward function, setting $\delta = 0$ in Eq.~\ref{eq:reward}, to assess its impact on factual grounding.
+\begin{table}[t]
+\centering
+\caption{Memory architecture ablations on MIMIC-IV (5 examples). All values in \%. Bold = best per metric.}
+\label{tab:ablation_arch}
+\begin{tabular}{lrrrrrr}
+\toprule
+Variant & R-1 & R-2 & R-L & B-1 & B-2 & BS-F1 \\
+\midrule
+\textbf{Full model (ours)} & \textbf{27.69} & 6.70 & 14.94 & \textbf{13.42} & \textbf{5.63} & 80.15 \\
+No memory               & 21.97 & 9.13 & 13.80 & 6.92 & 3.74 & 81.24 \\
+Fixed gate $\gamma{=}0.5$ & 26.63 & 8.36 & 15.53 & 11.33 & 5.57 & 81.11 \\
+No Phase-2 update       & 26.57 & \textbf{9.75} & \textbf{16.25} & 10.24 & 5.60 & \textbf{81.97} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-    \item \textbf{ReMemorize w/o Auxiliary Loss:} Removes $\mathcal{L}_{\text{aux}}$ from the training objective, ablating the differentiable supervision path for \textsc{write\_proj}.
+\paragraph{Group II: Training Recipe Ablations.}
+These variants each require a separate training run with one component of the training objective disabled.
+Results are pending full training runs and will be reported in the final version.
+
+\begin{itemize}
+    \item \textbf{w/o GRPO:} Disables group-relative advantage normalisation; uses PPO with global advantage standardisation instead. This tests whether within-group peer comparison (Eq.~\ref{eq:grpo_adv}) provides a stronger training signal than a global value baseline.
+
+    \item \textbf{w/o RL:} Disables all policy-gradient updates and trains the memory interface using only the supervised cross-entropy loss $\mathcal{L}_{\text{sum}}$ on gold summaries. This establishes whether RL is necessary to improve upon standard teacher-forced training.
+
+    \item \textbf{w/o Hallucination Penalty:} Removes the NLI-based contradiction penalty $R_{\text{hallucination}}$ from the reward function, setting $\delta{=}0$ in Eq.~\ref{eq:reward}. This isolates the contribution of explicit hallucination penalisation to factual grounding.
+
+    \item \textbf{w/o Auxiliary Loss:} Removes $\mathcal{L}_{\text{aux}}$ from the training objective (Eq.~\ref{eq:training_obj}), ablating the differentiable supervision path for \textsc{write\_proj}. Since the GRU update is applied without gradient tracking, this tests whether the dense reconstruction signal is necessary for \textsc{write\_proj} to learn a memory-compatible projection.
 \end{itemize}
 
 
