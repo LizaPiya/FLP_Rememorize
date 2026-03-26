@@ -108,6 +108,10 @@ def parse_args() -> argparse.Namespace:
                    help="Max target tokens for teacher-forcing.")
     p.add_argument("--lm_loss_weight", type=float, default=0.5,
                    help="Weight of supervised CE loss relative to GRPO reward.")
+    p.add_argument("--rl_lm_weight", type=float, default=0.5,
+                   help="Weight of reward-weighted CE loss on best GRPO candidate. "
+                        "Gives mem_proj/mem_gate a reward signal beyond supervised CE. "
+                        "Set to 0 to disable.")
     p.add_argument("--warmup_steps",   type=int, default=100)
     p.add_argument("--grad_clip",      type=float, default=1.0)
 
@@ -407,6 +411,9 @@ def train(args: argparse.Namespace) -> None:
                 # ── 1. Encode source into memory / extract key_window ──────
                 if backbone is not None:
                     key_window, _ = backbone.encode_and_update_memory(source)
+                    # FIX: save Phase 1 snapshot so every candidate starts
+                    # from the same memory state (independent rollouts).
+                    phase1_snapshot = backbone.memory_manager.m.clone()
                 else:
                     # Dev mode: use random vectors as key proxies
                     T = min(len(source.split()), 64)
@@ -416,13 +423,22 @@ def train(args: argparse.Namespace) -> None:
                     ]
                     mm.reset_state()
                     mm.update(key_window, key_window)
+                    phase1_snapshot = None
 
                 # ── 2. Generate G candidate summaries ──────────────────────
                 if backbone is not None:
-                    candidates = [
-                        backbone.generate_summary(source, max_new_tokens=args.max_new_tokens)
-                        for _ in range(args.group_size)
-                    ]
+                    candidates = []
+                    for _ in range(args.group_size):
+                        # FIX: restore Phase 1 state before each rollout so
+                        # all G candidates are independent and comparable.
+                        backbone.memory_manager.m.copy_(phase1_snapshot)
+                        candidates.append(
+                            backbone.generate_summary(
+                                source, max_new_tokens=args.max_new_tokens
+                            )
+                        )
+                    # Restore Phase 1 state for subsequent steps
+                    backbone.memory_manager.m.copy_(phase1_snapshot)
                 else:
                     candidates = [
                         _dev_generate(source, dev_rng, variation=g)
@@ -439,6 +455,9 @@ def train(args: argparse.Namespace) -> None:
                 grpo_stats = trainer.grpo_step(grpo_batch)
 
                 # ── 4. Supervised CE loss on gold target (backbone only) ────
+                # Also runs reward-weighted CE on best GRPO candidate so that
+                # mem_proj/mem_gate receive a reward signal, not only supervised
+                # CE. (forward_train resets memory internally via Phase 1.)
                 lm_loss_val = 0.0
                 mse_val     = 0.0
                 lm_info: Optional[dict] = None
@@ -446,8 +465,29 @@ def train(args: argparse.Namespace) -> None:
                     backbone_optimizer.zero_grad()
                     with torch.amp.autocast(device_type="cuda", dtype=torch.bfloat16,
                                             enabled=(device == "cuda")):
+                        # Gold-target CE loss
                         lm_loss, lm_info = backbone.forward_train(source, ex.target)
                         weighted_loss = args.lm_loss_weight * lm_loss
+
+                        # Reward-weighted CE on best candidate
+                        if args.rl_lm_weight > 0.0 and grpo_batch:
+                            rewards  = [s.reward for s in grpo_batch]
+                            mean_r   = sum(rewards) / len(rewards)
+                            std_r    = max(
+                                (sum((r - mean_r) ** 2 for r in rewards) / len(rewards)) ** 0.5,
+                                1e-8,
+                            )
+                            best_idx = rewards.index(max(rewards))
+                            best_adv = (rewards[best_idx] - mean_r) / std_r
+                            if best_adv > 0.0:
+                                rl_lm_loss, _ = backbone.forward_train(
+                                    source, candidates[best_idx]
+                                )
+                                weighted_loss = weighted_loss + (
+                                    args.lm_loss_weight * args.rl_lm_weight
+                                    * best_adv * rl_lm_loss
+                                )
+
                     weighted_loss.backward()
                     torch.nn.utils.clip_grad_norm_(
                         backbone.memory_interface_parameters(), args.grad_clip
