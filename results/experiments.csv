@@ -1,0 +1,2 @@
+timestamp,run_name,checkpoint,eval_file,n_examples,rouge1,rouge2,rougeL,bleu1,bleu2,bertscore_f1,minicheck,mem_gamma_mean,mem_memory_norm,output_dir,notes
+2026-03-26 15:11,checkup_5examples,runs/mimic_v1/best_ckpt,Datasets/mimic_eval.jsonl,5,0.22613322243583295,0.07344024983256524,0.13139383994925652,0.08099148647887736,0.03586817931175804,0.8147794604301453,,0.09644209742546081,9.297293090820313,results/checkup_run,pipeline checkup run

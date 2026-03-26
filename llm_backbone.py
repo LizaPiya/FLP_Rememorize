@@ -62,7 +62,7 @@ class ReMemorizeLLM(nn.Module):
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
         # ── LLM ───────────────────────────────────────────────────────
-        load_kw: Dict = {"torch_dtype": dtype, "device_map": "auto"}
+        load_kw: Dict = {"dtype": dtype, "device_map": "auto"}
         if use_flash_attention:
             load_kw["attn_implementation"] = "flash_attention_2"
 
