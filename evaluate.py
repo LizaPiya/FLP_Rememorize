@@ -377,13 +377,13 @@ def print_report(metrics: Dict, n_examples: int, checkpoint: Optional[str] = Non
     ]
     for name, val in rows:
         if val is not None:
-            print(f"  {name:<16} {val:.4f}")
+            print(f"  {name:<16} {val * 100:.2f}")
 
     print()
     print("FAITHFULNESS:")
     mc = metrics.get("minicheck_support")
     if mc is not None:
-        print(f"  {'MiniCheck':<16} {mc:.4f}")
+        print(f"  {'MiniCheck':<16} {mc * 100:.2f}")
     else:
         print("  MiniCheck        [not computed — run: pip install minicheck]")
 

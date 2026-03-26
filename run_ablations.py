@@ -147,6 +147,14 @@ def print_comparison_table(
     ablations: List[str],
 ) -> None:
     """Print a LaTeX-friendly comparison table to stdout."""
+    # Metrics scaled ×100 for percentage display (standard in NLP papers)
+    # mem_* diagnostics are kept as raw floats
+    PCT_METRICS = {
+        "rouge1", "rouge2", "rougeL",
+        "bleu1", "bleu2",
+        "bertscore_f1", "minicheck_support",
+    }
+
     metrics_to_show = [
         ("rouge1",            "ROUGE-1"),
         ("rouge2",            "ROUGE-2"),
@@ -158,6 +166,11 @@ def print_comparison_table(
         ("mem_gamma_mean",    "γ mean"),
         ("mem_memory_norm",   "Memory norm"),
     ]
+
+    def fmt_val(key: str, val: float) -> str:
+        if key in PCT_METRICS:
+            return f"{val * 100:.2f}"
+        return f"{val:.4f}"
 
     col_w   = 22
     met_w   = 16
@@ -206,7 +219,7 @@ def print_comparison_table(
                         )
                         best = best_val
 
-                    cell = f"{val:.4f}"
+                    cell = fmt_val(metric_key, val)
                     if best is not None and abs(val - best) < 1e-6:
                         cell = cell + "*"
                     row_parts.append(f"{cell:>{col_w}}")
@@ -248,8 +261,10 @@ def print_comparison_table(
                     row_parts.append(f"{'n/a':>{col_w}}")
                 else:
                     delta = val - full_val
+                    if metric_key in PCT_METRICS:
+                        delta *= 100
                     sign = "+" if delta >= 0 else ""
-                    cell = f"{sign}{delta:.4f}"
+                    cell = f"{sign}{delta:.2f}" if metric_key in PCT_METRICS else f"{sign}{delta:.4f}"
                     row_parts.append(cell.rjust(col_w))
         print("  ".join(row_parts))
 
@@ -298,7 +313,7 @@ def print_comparison_table(
                 if val is None:
                     cells.append("—")
                 else:
-                    cell = f"{val:.4f}"
+                    cell = fmt_val(metric_key, val)
                     if abs(val - best_val) < 1e-6:
                         cell = rf"\textbf{{{cell}}}"
                     cells.append(cell)
