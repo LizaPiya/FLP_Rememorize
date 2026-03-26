@@ -108,14 +108,17 @@ class ReMemorizeLLM(nn.Module):
     def _mem_device(self) -> torch.device:
         return self.memory_manager.device
 
-    def _inject(self, h: torch.Tensor) -> torch.Tensor:
+    def _inject(self, h: torch.Tensor, skip: bool = False) -> torch.Tensor:
         """
         Inject current memory state into a hidden vector (or batch).
             h_aug = h + σ(mem_gate(h)) · mem_proj(m)
 
-        h   : (..., H)  on any device/dtype
+        h    : (..., H)  on any device/dtype
+        skip : if True, return h unchanged (ablation: no_memory)
         Returns h_aug on the same device/dtype as h.
         """
+        if skip:
+            return h
         m = torch.tensor(
             self.memory_manager.read(), dtype=self.dtype, device=self._mem_device
         )                                                        # (d_mem,)
@@ -126,21 +129,28 @@ class ReMemorizeLLM(nn.Module):
 
     def _update_memory(
         self,
-        h: torch.Tensor,   # (H,) single-token hidden state
+        h: torch.Tensor,          # (H,) single-token hidden state
         detach: bool = True,
+        fixed_gamma: Optional[float] = None,
     ) -> float:
         """
         Update memory from a single hidden-state vector.
         Returns the scalar γ used for logging.
+
+        fixed_gamma : if set, bypass the gating policy and use this constant γ
+                      (ablation: fixed_gate).
         """
         h_mem = h.to(self._mem_device, torch.float32)
         if detach:
             h_mem = h_mem.detach()
         k = self.key_proj(h_mem.to(self.dtype)).float()
         v = self.val_proj(h_mem.to(self.dtype)).float()
-        gamma = float(
-            self.memory_manager.policy([k.tolist()], [self.memory_manager.read()])[0]
-        )
+        if fixed_gamma is not None:
+            gamma = float(max(0.0, min(1.0, fixed_gamma)))
+        else:
+            gamma = float(
+                self.memory_manager.policy([k.tolist()], [self.memory_manager.read()])[0]
+            )
         self.memory_manager._gru_step(v, gamma, detach=detach)
         return gamma
 
@@ -150,11 +160,18 @@ class ReMemorizeLLM(nn.Module):
 
     @torch.no_grad()
     def encode_and_update_memory(
-        self, source: str
+        self,
+        source: str,
+        ablation_mode: str = "full",
     ) -> Tuple[List[List[float]], Dict]:
         """
         Tokenise source, run LLM forward (no grad), project hidden states
         to key/value spaces, then run sequential GRU update over all tokens.
+
+        ablation_mode="no_memory": still encodes source (needed for key_window),
+        but skips memory update so Phase 1 state stays zeroed.
+
+        ablation_mode="fixed_gate": uses γ=0.5 for every token in Phase 1.
 
         Returns:
             key_window : List[List[float]]  shape (T, d_key)  for trainer
@@ -172,12 +189,32 @@ class ReMemorizeLLM(nn.Module):
         values = self.val_proj(hidden).float().cpu().tolist()   # (T, d_value)
 
         self.memory_manager.reset_state()
-        mem_stats = self.memory_manager.update(keys, values)
+
+        if ablation_mode == "no_memory":
+            # Skip Phase 1 update; memory stays zeroed
+            mem_stats = {
+                "gamma_mean": 0.0, "gamma_std": 0.0,
+                "memory_norm": 0.0, "reconstruction_mse": 0.0,
+            }
+        elif ablation_mode == "fixed_gate":
+            T = len(keys)
+            fixed_gammas = [0.5] * T
+            mem_stats = self.memory_manager.update(keys, values, gammas=fixed_gammas)
+        else:
+            mem_stats = self.memory_manager.update(keys, values)
+
         return keys, mem_stats
 
     # ------------------------------------------------------------------
     # Phase 2 — Generation  (manual autoregressive loop)
     # ------------------------------------------------------------------
+
+    # Supported ablation modes for generate_summary:
+    #   "full"             — default: inject + update with learned gating
+    #   "no_memory"        — skip injection and memory updates entirely
+    #   "fixed_gate"       — inject memory but fix γ=0.5 (no learned gating)
+    #   "no_phase2_update" — inject memory but freeze updates during decoding
+    ABLATION_MODES = {"full", "no_memory", "fixed_gate", "no_phase2_update"}
 
     @torch.no_grad()
     def generate_summary(
@@ -191,6 +228,7 @@ class ReMemorizeLLM(nn.Module):
         top_p: float = 0.9,
         do_sample: bool = True,
         detach_memory_hidden: bool = True,
+        ablation_mode: str = "full",
     ) -> str:
         """
         Generate a summary with memory that continues evolving during decoding.
@@ -202,8 +240,19 @@ class ReMemorizeLLM(nn.Module):
             3. Sample next token from lm_head(h_aug_t)
             4. Update m_t from h_t  (detach controlled by detach_memory_hidden)
 
+        ablation_mode controls which memory components are active:
+            "full"             — full model (default)
+            "no_memory"        — skip injection and updates (pure LLM baseline)
+            "fixed_gate"       — inject memory but fix γ=0.5 (no learned gating)
+            "no_phase2_update" — inject Phase 1 memory but freeze during decoding
+
         Assumes encode_and_update_memory() has already been called.
         """
+        if ablation_mode not in self.ABLATION_MODES:
+            raise ValueError(
+                f"Unknown ablation_mode {ablation_mode!r}. "
+                f"Choose from {self.ABLATION_MODES}"
+            )
         char_budget = self.max_source_length * 4
         prompt = prompt_template.format(source=source[:char_budget])
 
@@ -229,8 +278,9 @@ class ReMemorizeLLM(nn.Module):
             # Last-position hidden state  (1, H)
             h_t = out.hidden_states[-1][:, -1, :]
 
-            # Inject current memory
-            h_aug = self._inject(h_t)                           # (1, H)
+            # Inject current memory (skip entirely for no_memory ablation)
+            skip_inject = (ablation_mode == "no_memory")
+            h_aug = self._inject(h_t, skip=skip_inject)         # (1, H)
 
             # Project to logits and sample
             logits = self.llm.lm_head(h_aug.to(self._llm_device, self.dtype))  # (1, vocab)
@@ -257,7 +307,14 @@ class ReMemorizeLLM(nn.Module):
                 break
 
             # Update memory from this decoding step
-            self._update_memory(h_t.squeeze(0), detach=detach_memory_hidden)
+            # no_memory and no_phase2_update: skip Phase 2 updates
+            if ablation_mode in ("full", "fixed_gate"):
+                fixed_g = 0.5 if ablation_mode == "fixed_gate" else None
+                self._update_memory(
+                    h_t.squeeze(0),
+                    detach=detach_memory_hidden,
+                    fixed_gamma=fixed_g,
+                )
 
             # Advance: feed only the new token (past_kv handles context)
             current_ids = torch.tensor([[next_tok]], device=self._llm_device)

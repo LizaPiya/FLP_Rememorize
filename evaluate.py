@@ -211,6 +211,8 @@ def run_inference(args: argparse.Namespace, output_dir: Path) -> Path:
         examples = examples[:args.max_examples]
     log.info("Loaded %d eval examples.", len(examples))
 
+    ablation = getattr(args, "ablation", "full") or "full"
+
     # ── Generate ──────────────────────────────────────────────────────────────
     predictions_path = output_dir / "predictions.jsonl"
     t0 = time.time()
@@ -220,19 +222,23 @@ def run_inference(args: argparse.Namespace, output_dir: Path) -> Path:
             backbone.memory_manager.reset_state()
 
             # Phase 1: encode source into memory
-            _, mem_stats = backbone.encode_and_update_memory(ex["source"])
+            _, mem_stats = backbone.encode_and_update_memory(
+                ex["source"], ablation_mode=ablation
+            )
 
             # Phase 2: generate summary with live memory
             prediction = backbone.generate_summary(
                 ex["source"],
                 max_new_tokens=args.max_new_tokens,
+                ablation_mode=ablation,
             )
 
             record = {
-                "id":          ex["id"],
-                "source":      ex["source"],
-                "prediction":  prediction,
-                "reference":   ex["reference"],
+                "id":            ex["id"],
+                "source":        ex["source"],
+                "prediction":    prediction,
+                "reference":     ex["reference"],
+                "ablation_mode": ablation,
                 "memory_diagnostics": {
                     "gamma_mean":   mem_stats.get("gamma_mean",  None),
                     "gamma_std":    mem_stats.get("gamma_std",   None),
@@ -419,6 +425,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--no_flash_attn",     action="store_true")
     p.add_argument("--max_examples",      type=int, default=None,
                    help="Cap number of eval examples (for testing).")
+    p.add_argument("--ablation",          type=str, default="full",
+                   choices=["full", "no_memory", "fixed_gate", "no_phase2_update"],
+                   help="Ablation variant to run. 'full' = default trained model.")
 
     # Metrics args
     p.add_argument("--predictions", type=str, default=None,
@@ -503,6 +512,7 @@ def log_experiment(
     row = {
         "timestamp":        datetime.now().strftime("%Y-%m-%d %H:%M"),
         "run_name":         args.run_name or Path(args.output_dir).name,
+        "ablation":         getattr(args, "ablation", "full") or "full",
         "checkpoint":       args.checkpoint or "",
         "eval_file":        args.eval_file or "",
         "n_examples":       n_examples,

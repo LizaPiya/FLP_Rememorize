@@ -53,10 +53,13 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 # ─────────────────────────────────────────────────────────────────────────────
 
 JUDGE_MODELS: Dict[str, str] = {
-    "llama":   "meta-llama/Llama-3.2-8B-Instruct",   # AgenticSum judge — continuity
+    "llama":   "meta-llama/Llama-3.2-3B-Instruct",   # AgenticSum judge lineage (3B — weak, upgrade to 8B when available)
     "mistral": "mistralai/Mistral-7B-Instruct-v0.3",  # Different lineage
     "qwen":    "Qwen/Qwen2.5-7B-Instruct",            # Different training data/family
 }
+# NOTE: Llama-3B has high parse failure rate on structured output.
+# Upgrade to 8B: snapshot_download('meta-llama/Llama-3.2-8B-Instruct')
+# then change llama entry to 'meta-llama/Llama-3.2-8B-Instruct'
 
 DIMENSIONS = ["hallucination", "factual", "complete", "coherent"]
 
@@ -239,7 +242,7 @@ class LLMJudge:
             tokenizer.pad_token = tokenizer.eos_token
 
         kwargs = dict(
-            torch_dtype=torch.float16,
+            dtype=torch.float16,
             device_map="auto" if device == "cuda" else None,
             trust_remote_code=True,
         )
@@ -576,18 +579,18 @@ def run(args: argparse.Namespace) -> None:
     # ── Save per-example CSV (flattened) ──────────────────────────────────────
     import csv
 
-    # Build flat column names: llama_hallucination, llama_factual, ...,
-    # ensemble_hallucination, ..., agreement_hallucination, ..., llama_parse_failed
+    # CSV columns: raw 1-5 scores as primary, 0-1 normalized as secondary
+    # ensemble_* columns are mean raw 1-5 across judges
     csv_path = output_path.with_suffix(".csv")
     flat_fields = ["id"]
     for j in judge_names:
         for dim in DIMENSIONS:
-            flat_fields.append(f"{j}_{dim}")          # normalized 0-1
-            flat_fields.append(f"{j}_{dim}_raw")      # raw 1-5
+            flat_fields.append(f"{j}_{dim}_1to5")     # primary: raw 1-5
+            flat_fields.append(f"{j}_{dim}_0to1")     # secondary: normalized 0-1
         flat_fields.append(f"{j}_parse_failed")
     for dim in DIMENSIONS:
-        flat_fields.append(f"ensemble_{dim}")
-        flat_fields.append(f"agreement_{dim}")
+        flat_fields.append(f"ensemble_{dim}_1to5")    # mean raw 1-5 across judges
+        flat_fields.append(f"agreement_{dim}_alpha")  # Krippendorff alpha
 
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=flat_fields)
@@ -596,12 +599,14 @@ def run(args: argparse.Namespace) -> None:
             row: Dict = {"id": r["id"]}
             for j in judge_names:
                 for dim in DIMENSIONS:
-                    row[f"{j}_{dim}"]      = round(r["scores"][j][dim], 4)
-                    row[f"{j}_{dim}_raw"]  = round(r["raw_1_to_5"][j][dim], 4)
+                    row[f"{j}_{dim}_1to5"] = round(r["raw_1_to_5"][j][dim], 2)
+                    row[f"{j}_{dim}_0to1"] = round(r["scores"][j][dim], 4)
                 row[f"{j}_parse_failed"] = r["parse_failures"].get(j, False)
             for dim in DIMENSIONS:
-                row[f"ensemble_{dim}"]  = round(r["ensemble"][dim], 4)
-                row[f"agreement_{dim}"] = round(r["agreement"].get(dim, float("nan")), 4)
+                # Ensemble as mean raw 1-5 (more interpretable than 0-1)
+                raw_vals = [r["raw_1_to_5"][j][dim] for j in judge_names]
+                row[f"ensemble_{dim}_1to5"]   = round(float(np.mean(raw_vals)), 2)
+                row[f"agreement_{dim}_alpha"]  = round(r["agreement"].get(dim, float("nan")), 4)
             writer.writerow(row)
 
     log.info("Per-example scores saved to %s", csv_path)
@@ -622,23 +627,23 @@ def run(args: argparse.Namespace) -> None:
     print(f"Scoring mode       : {'G-Eval CoT + token probabilities' if args.use_cot else 'Direct (standard)'}")
     print()
 
-    print("PER-JUDGE MEANS (0-1 scale):")
-    header = f"{'Dimension':<16}" + "".join(f"{j:>12}" for j in judge_names)
+    print("PER-JUDGE MEANS (1-5 scale):")
+    header = f"{'Dimension':<16}" + "".join(f"{j:>12}" for j in judge_names) + f"{'ensemble':>12}"
     print(header)
     print("-" * len(header))
     for dim in DIMENSIONS:
-        row = f"{dim:<16}"
+        row_str = f"{dim:<16}"
+        raw_means = []
         for j in judge_names:
-            m = stats["per_judge"][j].get(dim, {}).get("mean", float("nan"))
-            row += f"{m:>12.4f}"
-        print(row)
-
-    print()
-    print("ENSEMBLE (mean across judges):")
-    for dim in DIMENSIONS:
-        m = stats["ensemble"][dim]["mean"]
-        s = stats["ensemble"][dim]["std"]
-        print(f"  {dim:<16} {m:.4f} ± {s:.4f}")
+            # Compute mean of raw 1-5 scores for this judge+dim
+            raw_vals = [r["raw_1_to_5"][j][dim] for r in results
+                        if not r["parse_failures"].get(j, False)]
+            m = float(np.mean(raw_vals)) if raw_vals else float("nan")
+            raw_means.append(m)
+            row_str += f"{m:>12.2f}"
+        ensemble_mean = float(np.mean(raw_means)) if raw_means else float("nan")
+        row_str += f"{ensemble_mean:>12.2f}"
+        print(row_str)
 
     print()
     print("CORPUS-LEVEL INTER-JUDGE AGREEMENT (Krippendorff α):")
@@ -651,6 +656,22 @@ def run(args: argparse.Namespace) -> None:
     print("PARSE FAILURE RATES:")
     for j, rate in stats["parse_failure_rates"].items():
         print(f"  {j:<16} {rate:.1%}")
+
+    # ── Per-example 1-5 scores table ─────────────────────────────────────────
+    print()
+    print("PER-EXAMPLE SCORES (raw 1-5, ensemble mean):")
+    ex_header = f"{'id':<20}" + "".join(f"{d[:5]:>8}" for d in DIMENSIONS)
+    print(ex_header)
+    print("-" * len(ex_header))
+    for r in results:
+        ex_id = str(r["id"])[:19]
+        row_str = f"{ex_id:<20}"
+        for dim in DIMENSIONS:
+            raw_vals = [r["raw_1_to_5"][j][dim] for j in judge_names
+                        if not r["parse_failures"].get(j, False)]
+            ens = float(np.mean(raw_vals)) if raw_vals else float("nan")
+            row_str += f"{ens:>8.1f}"
+        print(row_str)
 
     print()
     print(f"Per-example scores : {csv_path}")
