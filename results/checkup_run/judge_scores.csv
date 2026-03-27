@@ -1,0 +1,6 @@
+id,llama_hallucination,llama_hallucination_raw,llama_factual,llama_factual_raw,llama_complete,llama_complete_raw,llama_coherent,llama_coherent_raw,llama_parse_failed,qwen_hallucination,qwen_hallucination_raw,qwen_factual,qwen_factual_raw,qwen_complete,qwen_complete_raw,qwen_coherent,qwen_coherent_raw,qwen_parse_failed,ensemble_hallucination,agreement_hallucination,ensemble_factual,agreement_factual,ensemble_complete,agreement_complete,ensemble_coherent,agreement_coherent
+12002987-DS-14,0.5,3.0,0.5,3.0,0.5,3.0,0.5,3.0,True,0.5,3.0,0.75,4.0,0.75,4.0,0.75,4.0,False,0.5,nan,0.625,nan,0.625,nan,0.625,nan
+14331310-DS-8,0.5,3.0,0.5,3.0,0.5,3.0,0.5,3.0,True,1.0,5.0,1.0,5.0,1.0,5.0,1.0,5.0,False,0.75,nan,0.75,nan,0.75,nan,0.75,nan
+10666345-DS-15,0.5,3.0,0.75,4.0,0.5,3.0,0.75,4.0,False,0.75,4.0,0.75,4.0,0.75,4.0,0.75,4.0,False,0.625,nan,0.75,nan,0.625,nan,0.75,nan
+15032543-DS-5,0.5,3.0,0.5,3.0,0.5,3.0,0.5,3.0,True,0.0,1.0,0.75,4.0,0.5,3.0,0.75,4.0,False,0.25,nan,0.625,nan,0.5,nan,0.625,nan
+12627553-DS-13,0.5,3.0,0.5,3.0,0.5,3.0,0.5,3.0,True,0.0,1.0,0.5,3.0,0.5,3.0,0.5,3.0,False,0.25,nan,0.5,nan,0.5,nan,0.5,nan

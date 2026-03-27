@@ -45,6 +45,7 @@ from memory_manager import ReMemorizeMemoryManager
 from reward_manager import RewardCalibrator, RewardWeights
 from scorers import HeuristicRewardScorer, NLIRewardScorer
 from trainer import ReMemorizeTrainer, TrainerConfig
+from policy_manager import UpdateStats
 
 logging.basicConfig(
     level=logging.INFO,
@@ -123,6 +124,21 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--reward_beta",  type=float, default=0.3)
     p.add_argument("--reward_gamma", type=float, default=0.1)
     p.add_argument("--reward_delta", type=float, default=0.8)
+
+    # Training ablation (Group II — requires separate training runs)
+    p.add_argument(
+        "--training_ablation",
+        type=str,
+        default="full",
+        choices=["full", "no_grpo", "no_rl", "no_hallucination_penalty", "no_aux_loss"],
+        help=(
+            "Training-time ablation variant. "
+            "'no_grpo': replace GRPO with single-sample PPO. "
+            "'no_rl': supervised CE only, no policy updates. "
+            "'no_hallucination_penalty': set reward_delta=0 (remove -δ·hallucination term). "
+            "'no_aux_loss': set mse_reward_weight=0 (remove memory MSE bonus)."
+        ),
+    )
 
     # Output / logging
     p.add_argument("--output_dir",    type=str, default="runs/memorize")
@@ -292,6 +308,15 @@ def train(args: argparse.Namespace) -> None:
         device=device,
     )
 
+    # ── Apply training ablation overrides ───────────────────────────────────
+    abl = args.training_ablation
+    if abl == "no_hallucination_penalty":
+        args.reward_delta = 0.0
+        log.info("Ablation 'no_hallucination_penalty': reward_delta set to 0.")
+    mse_reward_weight = 0.0 if abl == "no_aux_loss" else 0.1
+    if abl == "no_aux_loss":
+        log.info("Ablation 'no_aux_loss': mse_reward_weight set to 0.")
+
     # ── Reward calibrator + weights ─────────────────────────────────────────
     calibrator = RewardCalibrator(
         ema_alpha=0.1, clip_z=2.5, factual_floor=0.5, factual_floor_penalty=0.2
@@ -323,7 +348,7 @@ def train(args: argparse.Namespace) -> None:
             entropy_coef=0.005,
             group_size=args.group_size,
             max_kl=0.02,
-            mse_reward_weight=0.1,
+            mse_reward_weight=mse_reward_weight,
             lr_warmup_steps=args.warmup_steps,
         ),
         seed=args.seed,
@@ -425,34 +450,49 @@ def train(args: argparse.Namespace) -> None:
                     mm.update(key_window, key_window)
                     phase1_snapshot = None
 
-                # ── 2. Generate G candidate summaries ──────────────────────
-                if backbone is not None:
-                    candidates = []
-                    for _ in range(args.group_size):
-                        # FIX: restore Phase 1 state before each rollout so
-                        # all G candidates are independent and comparable.
-                        backbone.memory_manager.m.copy_(phase1_snapshot)
-                        candidates.append(
-                            backbone.generate_summary(
-                                source, max_new_tokens=args.max_new_tokens
-                            )
-                        )
-                    # Restore Phase 1 state for subsequent steps
-                    backbone.memory_manager.m.copy_(phase1_snapshot)
-                else:
-                    candidates = [
-                        _dev_generate(source, dev_rng, variation=g)
-                        for g in range(args.group_size)
-                    ]
+                # ── 2. Generate candidate summaries ────────────────────────
+                # no_grpo: one candidate → PPO update (no group normalisation)
+                # no_rl:   skip candidate generation and policy update entirely
+                n_candidates = 1 if abl == "no_grpo" else args.group_size
+                grpo_stats = None
+                candidates = []
 
-                # ── 3. GRPO batch collection + policy update ────────────────
-                grpo_batch = trainer.collect_grpo_batch(
-                    key_windows=[key_window],
-                    sources=[source],
-                    summary_groups=[candidates],
-                    references=[reference],
-                )
-                grpo_stats = trainer.grpo_step(grpo_batch)
+                if abl != "no_rl":
+                    if backbone is not None:
+                        for _ in range(n_candidates):
+                            backbone.memory_manager.m.copy_(phase1_snapshot)
+                            candidates.append(
+                                backbone.generate_summary(
+                                    source, max_new_tokens=args.max_new_tokens
+                                )
+                            )
+                        backbone.memory_manager.m.copy_(phase1_snapshot)
+                    else:
+                        candidates = [
+                            _dev_generate(source, dev_rng, variation=g)
+                            for g in range(n_candidates)
+                        ]
+
+                # ── 3. Policy update (GRPO or PPO) ─────────────────────────
+                if abl == "no_rl":
+                    grpo_stats = UpdateStats(0.0, 0.0, 0.0, 0.0, 0.0)
+                elif abl == "no_grpo":
+                    # Single-sample PPO (no group advantage normalisation)
+                    ppo_batch = trainer.collect_policy_batch_from_summaries(
+                        key_windows=[key_window],
+                        sources=[source],
+                        summaries=candidates,
+                        references=[reference],
+                    )
+                    grpo_stats = trainer.ppo_step(ppo_batch)
+                else:
+                    grpo_batch = trainer.collect_grpo_batch(
+                        key_windows=[key_window],
+                        sources=[source],
+                        summary_groups=[candidates],
+                        references=[reference],
+                    )
+                    grpo_stats = trainer.grpo_step(grpo_batch)
 
                 # ── 4. Supervised CE loss on gold target (backbone only) ────
                 # Also runs reward-weighted CE on best GRPO candidate so that
@@ -470,8 +510,9 @@ def train(args: argparse.Namespace) -> None:
                         weighted_loss = args.lm_loss_weight * lm_loss
 
                         # Reward-weighted CE on best candidate
-                        if args.rl_lm_weight > 0.0 and grpo_batch:
-                            rewards  = [s.reward for s in grpo_batch]
+                        # Skipped for no_rl / no_grpo (no rewards computed)
+                        if args.rl_lm_weight > 0.0 and candidates and abl not in ("no_rl", "no_grpo"):
+                            rewards  = [s.reward for s in grpo_batch]  # grpo_batch defined in full branch
                             mean_r   = sum(rewards) / len(rewards)
                             std_r    = max(
                                 (sum((r - mean_r) ** 2 for r in rewards) / len(rewards)) ** 0.5,

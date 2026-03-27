@@ -51,13 +51,31 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
 )
 
-ALL_ABLATIONS = ["full", "no_memory", "fixed_gate", "no_phase2_update"]
+ALL_ABLATIONS = [
+    # Group I: memory architecture (inference-time, single checkpoint)
+    "full",
+    "no_memory",
+    "fixed_gate",
+    "no_phase2_update",
+    # Group II: training recipe (require separate training runs)
+    "no_grpo",
+    "no_rl",
+    "no_hallucination_penalty",
+    "no_aux_loss",
+]
+
+GROUP1_ABLATIONS = {"full", "no_memory", "fixed_gate", "no_phase2_update"}
+GROUP2_ABLATIONS = {"no_grpo", "no_rl", "no_hallucination_penalty", "no_aux_loss"}
 
 ABLATION_LABELS = {
-    "full":              "Full model (ours)",
-    "no_memory":         "No memory (LLM baseline)",
-    "fixed_gate":        "Fixed gate γ=0.5",
-    "no_phase2_update":  "No Phase-2 update",
+    "full":                    "Full model (ours)",
+    "no_memory":               "No memory (LLM baseline)",
+    "fixed_gate":              "Fixed gate γ=0.5",
+    "no_phase2_update":        "No Phase-2 update",
+    "no_grpo":                 "w/o GRPO (PPO)",
+    "no_rl":                   "w/o RL (CE only)",
+    "no_hallucination_penalty": "w/o Halluc. penalty",
+    "no_aux_loss":             "w/o Aux. loss",
 }
 
 
@@ -65,22 +83,34 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="ReMemorize ablation study runner")
 
     p.add_argument("--checkpoint",        type=str, default=None,
-                   help="Path to checkpoint directory.")
+                   help="Path to checkpoint directory (Group I ablations).")
     p.add_argument("--eval_file",         type=str, default=None,
                    help="Path to eval JSONL.")
+    p.add_argument("--train_file",        type=str, default=None,
+                   help="Path to training JSONL (required for Group II ablations).")
     p.add_argument("--output_dir",        type=str, required=True,
                    help="Root output dir; each ablation gets a subdirectory.")
     p.add_argument("--model",             type=str, default="mistralai/Mistral-7B-v0.1")
     p.add_argument("--dataset",           type=str, default="mimic",
                    choices=["mimic", "mts_dialog"])
+    # Group II training args (forwarded to train.py)
+    p.add_argument("--num_epochs",        type=int, default=3)
+    p.add_argument("--group_size",        type=int, default=4)
+    p.add_argument("--batch_size",        type=int, default=1)
+    p.add_argument("--lr",               type=float, default=1e-4)
+    p.add_argument("--seed",              type=int, default=42)
     p.add_argument("--max_new_tokens",    type=int, default=256)
     p.add_argument("--max_source_length", type=int, default=3840)
     p.add_argument("--no_flash_attn",     action="store_true")
     p.add_argument("--max_examples",      type=int, default=None,
                    help="Cap number of eval examples (useful for quick tests).")
-    p.add_argument("--ablations",         nargs="+", default=ALL_ABLATIONS,
+    p.add_argument("--ablations",         nargs="+", default=list(GROUP1_ABLATIONS),
                    choices=ALL_ABLATIONS,
-                   help="Which ablation variants to run (default: all).")
+                   help=(
+                       "Which ablation variants to run. "
+                       "Default: Group I only (inference-time). "
+                       "Group II variants require --train_file."
+                   ))
     p.add_argument("--compare_only",      action="store_true",
                    help="Skip inference; just load existing metrics.json files and compare.")
     p.add_argument("--device",            type=str, default=None)
@@ -132,6 +162,70 @@ def run_one_ablation(
 
     with open(metrics_path) as f:
         return json.load(f)
+
+
+def run_training_ablation(
+    ablation: str,
+    args: argparse.Namespace,
+    ablation_output_dir: Path,
+) -> Optional[Dict]:
+    """
+    For Group II ablations: run train.py with --training_ablation, then
+    evaluate the resulting best_ckpt with evaluate.py.
+    Returns the metrics dict on success, None on failure.
+    """
+    if not args.train_file:
+        log.error(
+            "Ablation '%s' is a Group II (training-recipe) variant and requires --train_file.",
+            ablation,
+        )
+        return None
+
+    train_output_dir = ablation_output_dir / "train_run"
+
+    # ── Step 1: train ───────────────────────────────────────────────────────
+    train_cmd = [
+        sys.executable, "train.py",
+        "--training_ablation", ablation,
+        "--model",             args.model,
+        "--dataset",           args.dataset,
+        "--train_file",        str(args.train_file),
+        "--output_dir",        str(train_output_dir),
+        "--num_epochs",        str(args.num_epochs),
+        "--group_size",        str(args.group_size),
+        "--batch_size",        str(args.batch_size),
+        "--lr",                str(args.lr),
+        "--seed",              str(args.seed),
+        "--max_new_tokens",    str(args.max_new_tokens),
+        "--max_source_length", str(args.max_source_length),
+    ]
+    if args.eval_file:
+        train_cmd += ["--eval_file", str(args.eval_file)]
+    if args.no_flash_attn:
+        train_cmd.append("--no_flash_attn")
+    if args.max_examples:
+        train_cmd += ["--max_train", str(args.max_examples)]
+
+    log.info("─── Training ablation: %s ───", ablation)
+    log.info("Command: %s", " ".join(train_cmd))
+    result = subprocess.run(train_cmd, cwd=str(Path(__file__).parent))
+    if result.returncode != 0:
+        log.error("Training ablation %s FAILED (exit code %d)", ablation, result.returncode)
+        return None
+
+    best_ckpt = train_output_dir / "best_ckpt"
+    if not best_ckpt.exists():
+        log.error("best_ckpt not found at %s after training.", best_ckpt)
+        return None
+
+    # ── Step 2: evaluate ────────────────────────────────────────────────────
+    return run_one_ablation(
+        ablation="full",   # evaluate in full inference mode (ablation already baked in)
+        args=argparse.Namespace(
+            **{**vars(args), "checkpoint": str(best_ckpt)},
+        ),
+        ablation_output_dir=ablation_output_dir,
+    )
 
 
 def load_existing_metrics(ablation: str, output_dir: Path) -> Optional[Dict]:
@@ -339,15 +433,26 @@ def main() -> None:
             if results[ablation] is None:
                 log.warning("No metrics.json found for ablation '%s'.", ablation)
     else:
-        if not args.checkpoint:
-            raise ValueError("--checkpoint is required (or use --compare_only).")
-        if not args.eval_file:
+        g1 = [a for a in args.ablations if a in GROUP1_ABLATIONS]
+        g2 = [a for a in args.ablations if a in GROUP2_ABLATIONS]
+
+        if g1 and not args.checkpoint:
+            raise ValueError("--checkpoint is required for Group I ablations (or use --compare_only).")
+        if g1 and not args.eval_file:
             raise ValueError("--eval_file is required (or use --compare_only).")
+        if g2 and not args.train_file:
+            raise ValueError(
+                "--train_file is required for Group II ablations: "
+                + str(g2)
+            )
 
         for ablation in args.ablations:
             ablation_dir = output_dir / ablation
             ablation_dir.mkdir(parents=True, exist_ok=True)
-            results[ablation] = run_one_ablation(ablation, args, ablation_dir)
+            if ablation in GROUP2_ABLATIONS:
+                results[ablation] = run_training_ablation(ablation, args, ablation_dir)
+            else:
+                results[ablation] = run_one_ablation(ablation, args, ablation_dir)
 
     print_comparison_table(results, args.ablations)
 

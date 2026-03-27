@@ -1,0 +1,13 @@
+{
+  "rouge1": 0.21966354166902757,
+  "rouge2": 0.09131030410722131,
+  "rougeL": 0.13797403364179445,
+  "bleu1": 0.06921853601203366,
+  "bleu2": 0.037372231898455184,
+  "bertscore_f1": 0.812447190284729,
+  "minicheck_support": null,
+  "mem_gamma_mean": 0.0,
+  "mem_gamma_std": 0.0,
+  "mem_memory_norm": 0.0,
+  "mem_recon_mse": 0.0
+}
