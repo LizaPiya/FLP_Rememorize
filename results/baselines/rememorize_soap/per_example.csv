@@ -1,0 +1,518 @@
+id,rouge1,rouge2,rougeL,pred_len,ref_len,gamma_mean,gamma_std,memory_norm,recon_mse,prediction,reference
+soap_00016,0.2793,0.0818,0.1441,64,170,0.10035157948732376,0.016582485288381577,8.295337677001953,0.1818517815161702,"
+The patient is a 31 year old female who is 30 weeks pregnant with her first child. She has been having dizzy spells and a new rash on her right calf. She has also had intermittent neck pain, muscle aches, headaches, chest tightness, and shoulder pain. She has not had a fever, chills, nausea, or diarrhea. She has not measured her blood sugar recently.","Subjective:
+- Symptoms: Dizziness (general dizziness and vertigo), lightheadedness, headaches (off and on), neck pain (intermittent), muscle aches (intermittent), tightness in the chest (not currently), discomfort and tenderness in the left shoulder, new rash on the right calf, new bruises (more than usual).
+- Severity: Lightheadedness, symptoms of dizziness are concerning.
+- Duration: Dizziness spells and other symptoms are ongoing; headaches are random; rash and bruises noted in the past couple of days.
+- Associated symptoms: Nausea associated with dizziness (but no vomiting), no diarrhea, no fever or chills.
+- Relevant medical history: History of gestational diabetes.
+- Family history: Not mentioned.
+- Allergies: Not mentioned.
+- Other concerns: The patient expresses concern regarding the dizziness, headaches, and the new rash.
+
+Objective:
+- Blood sugar measurement: 155 mg/dL after lunch.
+- Examination findings: New rash on the right calf, new bruises noted.
+
+Assessment:
+- No formal assessment or diagnosis provided.
+
+Plan:
+- Further evaluation of dizziness and rash needed.
+- Monitor blood sugar levels due to history of gestational diabetes."
+soap_00080,0.1792,0.0667,0.1132,174,44,0.10866950452327728,0.014169915579259396,7.821835517883301,0.21199152886401862,"
+The patient is a 73 year old male with a history of chronic anemia, who was given Procrit (EPO) to treat the anemia. He is not married, and does not smoke or drink alcohol.
+
+Possible Ethical Issues:
+
+1. Euthanasia:
+The patient is 73 years old, which is old enough to be euthanized. Euthanasia is the act of killing a patient to end suffering. This is an ethical issue because the patient is not suffering from any disease or illness, but rather is just old. The patient does not want to be euthanized.
+
+2. Autonomy:
+The patient does not want to be euthanized, but the physician thinks he should be. This is an ethical issue because the patient has the right to make his own decisions about his health care.
+
+3. Non-maleficence:
+The physician thinks the patient should be euthanized, but the patient does not want to be. This is an ethical issue because the physician is not doing what is best for the patient.
+
+4. Beneficence:
+The physician thinks the patient should be e","Subjective:
+- Patient has anemia.
+- Patient was treated with Procrit in the past for anemia.
+- Patient lives alone.
+- Patient does not smoke or drink alcohol.
+
+Objective:
+- (No objective data mentioned)
+
+Assessment:
+- (No assessment provided)
+
+Plan:
+- (No plan provided)"
+soap_00082,0.1481,0.0249,0.0905,188,58,0.11183241754770279,0.017225002869963646,8.046664237976074,0.23635460192767474,"
+
+The patient was a 40 year old male who presented to the emergency room with a high fever and a persistent cough. The patient reported having a fever and chills for the past two days. He also complained of a persistent cough that was producing thick, yellow-green mucus. The patient reported that he had been coughing for the past three weeks and that the cough was getting worse. The patient denied any recent travel or exposure to anyone with a respiratory infection. The patient was diagnosed with pertussis and was admitted to the hospital for treatment. The patient was given antibiotics and was discharged from the hospital after three days. The patient was instructed to follow up with his primary care provider in one week.
+
+Pertussis is a highly contagious respiratory infection caused by the bacteria Bordetella pertussis. Pertussis is spread through the air when an infected person coughs or sneezes. Pertussis is most common in children, but can also occur in adults. Pertussis can cause severe illness in infants and young children. Pertussis can cause death in infants and young children. Pertussis can be prevented by vacc","Subjective:
+- Patient is suspected to have pertussis.
+- No specific symptoms, severity, duration, associated symptoms, relevant medical history, family history, allergies, or concerns were explicitly mentioned by the patient in the conversation.
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- Suspected diagnosis: Pertussis.
+
+Plan:
+- No specific actions, medications, tests, follow-up, or patient education mentioned."
+soap_00052,0.3684,0.0813,0.2065,196,315,0.10542058944702148,0.017706850543618202,7.704324245452881,0.1597713984150923,"
+The patient is a 20-year-old female who presented to the clinic after a fall during a dance class. She describes her pain as sharp and throbbing and rates it as a 10 out of 10. She describes the mechanism of her fall as her leg slipping on her dress, causing her to fall. She reports no other pain, numbness, tingling, or weakness in the area. She is otherwise healthy with no history of hospitalizations or surgeries. Her mother has a history of osteoporosis. She is up to date on her immunizations and does not have any allergies. The patient is concerned about the pain and wants to get it fixed as soon as possible.
+
+On examination, the patient reports that her right leg is swollen and red compared to her left leg. There are no breaks in the skin, but the bone appears to be misaligned. The patient reports that her right leg is warmer than her left leg. She is unable to move her right leg at all or bear weight on it. The patient is diagnosed with a tibial fracture and will be referred to an orthopaedic surgeon for surgery. The fracture will take","Subjective:
+- Presents with right leg pain and deformity after a fall during a traditional dance class (long dress got caught on foot causing slip and fall with leg twisting)
+- Fall occurred 1 hour ago
+- Unable to bear weight 
+- Pain localized to middle part of lower leg/shin area
+- Sharp, throbbing pain rated 10/10 in severity 
+- Pain has remained constant since onset
+- Some intermittent numbness and tingling below the site of injury
+- Denies loss of sensation or coldness in the affected area
+- Denies headache, dizziness, confusion, memory loss, weight loss, fever, chills, skin/hair/nail changes, vision/hearing/smell/taste changes, cough, shortness of breath, wheezing, chest pain, palpitations, bowel/bladder changes, nausea, vomiting, or abdominal pain
+
+PMHx:
+- No chronic medical conditions
+- No medications
+- No allergies
+- Surgical history significant for 2 uncomplicated vaginal deliveries
+- Mother with history of osteoporosis diagnosed in her 50s
+- Maternal aunt with history of ovarian cancer diagnosed in her 60s
+- Denies personal history of musculoskeletal, pulmonary, cardiac, autoimmune conditions, or cancer
+- Up to date with immunizations
+- Denies recent sick contacts or travel
+
+Objective:
+- Obvious deformity of right lower leg with visible bending of the bone
+- Swelling, redness, and bruising of right lower leg
+- No open wounds or bony protrusion through skin
+- Increased warmth of right lower leg compared to left
+- Unable to actively flex or extend right knee due to pain
+- Unable to bear weight on right leg
+
+Assessment:
+- Suspected right tibial fracture
+
+Plan:
+- X-rays of right tibia/fibula to assess for fracture location and characteristics
+- Splint application to affected leg until swelling subsides
+- Referral to orthopedic surgery for definitive management (likely intramedullary nailing vs open reduction internal fixation with plates/screws)
+- Anticipate 4-6 month healing time
+- Pain management
+- Physical therapy for strength and range of motion after surgical fixation"
+soap_00048,0.2917,0.0435,0.1667,23,30,0.10755690932273865,0.013565409928560257,5.4868550300598145,0.34748852566668864,"
+The patient has no family history of health problems.
+
+### Looking for a similar assignment? Get help from our qualified experts!
+
+Order Now","Subjective:
+- Family medical history: No one in the family has any health problems.
+
+Objective:
+- [No objective data provided]
+
+Assessment:
+- [No assessment provided]
+
+Plan:
+- [No plan provided]"
+soap_00041,0.2174,0.0965,0.1652,184,48,0.11185012012720108,0.011874441988766193,5.381421089172363,0.31381678386874823,"
+
+The patient is a 34 year old female who was admitted with a history of severe abdominal pain, nausea and vomiting. She was diagnosed with acute cholecystitis. She was given antibiotics and her pain was controlled with morphine. She is currently on a clear liquid diet and is waiting to be discharged. The patient was advised to continue working, but to be careful. She was grateful for the doctor’s help and promised to be careful.
+
+The patient was admitted with a history of severe abdominal pain, nausea and vomiting. She was diagnosed with acute cholecystitis and was given antibiotics and morphine for pain control. She was placed on a clear liquid diet and was waiting to be discharged. The patient was advised to continue working but to be careful. She was grateful for the doctor’s help and promised to be careful.
+
+The patient was admitted with a history of severe abdominal pain, nausea and vomiting. She was diagnosed with acute cholecystitis and was given antibiotics and morphine for pain control. She was placed on a clear liquid diet and was waiting to be dis","Subjective: 
+- Patient expresses gratitude to the doctor. 
+- Patient intends to continue working but is advised to be careful.
+
+Objective: 
+- (No measurable or observable data provided.)
+
+Assessment: 
+- (No clinician's interpretation or diagnoses provided.)
+
+Plan: 
+- Patient is advised to be careful while continuing to work."
+soap_00026,0.2299,0.0581,0.1494,52,127,0.09939583390951157,0.01491083949804306,7.846120834350586,0.1809084112254473,"
+
+The patient is a 26-year-old female who is seen in the ER for a self-harm attempt. She reports being depressed and is seen by her primary care physician, Dr. Lin, for this condition. She was diagnosed with depression and has been on Lexapro before.
+
+Keywords:
+
+depression, self-harm, Lexapro, primary care physician, ER","Subjective:
+- Symptoms: Feeling very tired, depressed.
+- Severity: Not explicitly stated, but the context implies significant distress.
+- Duration: Recent episodes of self-harm; third attempt in the last two months.
+- Associated Symptoms: Emotional distress related to job loss and relationship ending.
+- Relevant Medical History: Previous diagnosis of depression by Doctor Lin; history of self-harm (three attempts).
+- Family History: Not mentioned.
+- Allergies: Not mentioned.
+- Other Concerns: Recently lost job and boyfriend, leading to emotional difficulties.
+
+Objective:
+- No objective data provided.
+
+Assessment:
+- Diagnosis: Depression (previously diagnosed by Doctor Lin).
+- Clinical Impression: Patient is experiencing significant emotional distress due to life events (job loss, relationship issues) and has a history of self-harm.
+
+Plan:
+- No specific plan mentioned in the conversation."
+soap_00019,0.0656,0.0,0.0574,187,61,0.10164916515350342,0.017034359276294708,7.884589672088623,0.21940443385392427,"The patient is in good health.
+
+But the way this information is presented in a typical clinical note, you have to read through a whole page of history and physical examination before you reach this conclusion.
+
+A new study published in the Journal of General Internal Medicine shows that a simple summary at the top of a note can help doctors to quickly extract the most important information.
+
+The researchers randomly assigned 150 patients to one of three groups. The first group received a traditional clinical note, the second group received a note with a brief summary at the top and the third group received a note with a more detailed summary.
+
+The patients were then asked to read the notes and answer a series of questions about the patient's health.
+
+The researchers found that the patients who read the notes with a brief summary were able to correctly answer more questions than the other two groups.
+
+The study authors conclude that ""the use of a brief summary of the patient's history and physical examination may improve the quality of clinical notes and facilitate better patient care.""","Subjective:
+- No history of heart attack.
+- No chest pain, palpitations, or shortness of breath on exertion.
+- Patient reports normal blood pressure.
+- No swelling.
+- No history of irregular heartbeats.
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinician's interpretation or diagnoses provided.
+
+Plan:
+- No actions, medications, tests, follow-up, or patient education explicitly mentioned."
+soap_00004,0.2245,0.0205,0.1088,78,230,0.09846974909305573,0.01639251969754696,7.222306251525879,0.1642794429863033,"
+
+This clinical note summarizes a patient's symptoms of chest pain. The patient describes the pain as ""sharp"" and ""constant,"" and it has been ongoing for two weeks. The patient has never had this type of pain before and it has not gotten worse or better over time. The patient is also experiencing stress in their personal life, which may be contributing to the pain. The patient is brought back to see the doctor to discuss the next steps.","Subjective:
+- Presenting with chest pain for the last 2 weeks
+- Location: left-sided chest discomfort
+- Quality: sharp pain
+- Severity: 4/10
+- Timing: intermittent, lasting 20-30 minutes per episode
+- Context: occurs most often while at work or driving
+- Alleviating/Aggravating factors: no clear aggravating or alleviating factors identified; pain is not exacerbated by physical activity
+- Associated symptoms: denies SOB, N/V, or fevers
+- Self-treatment: tried Advil, Tylenol, and Tums without relief
+
+PMHx:
+- Previously healthy
+- Denies chronic conditions or regular follow-up with PCP
+- Medications: none; has only tried Advil and Tylenol for current chest pain
+- Allergies: NKDA
+- FHx: father had MI at age 60 last year
+
+SocHx:
+- Separated from husband 2 years ago, causing significant stress
+- Tobacco: current smoker, 0.5-1 PPD; has reduced from 1 PPD and is actively trying to quit
+- Alcohol: 1-2 glasses of wine on weekends
+- Denies other substance use
+- Exercise: runs or cycles 3-4 days/week without chest pain or issues
+
+ROS:
+- Denies prior history of HTN or hyperlipidemia, but has never been tested for the latter
+- Denies history of GERD
+
+Objective:
+- Vitals signs not provided
+- Physical examination not performed
+
+Assessment:
+- Differential diagnosis not provided
+
+Plan:
+- Investigations: none mentioned
+- Treatment: none mentioned
+- Other: will discuss case with PCP and follow up with patient regarding next steps"
+soap_00046,0.1423,0.0169,0.0837,175,67,0.10198921710252762,0.016789307817816734,6.582566738128662,0.2663573334956991,"
+
+The patient is a 32-year-old female who presents with a complaint of a headache. The patient is concerned that the headache is becoming more frequent and severe. The patient is currently taking an over-the-counter pain reliever for the headache, but it is not providing adequate relief. The patient has no other significant medical history and is not currently taking any other medications. The patient is otherwise healthy and has no other concerns. The patient is worried that the headache may be a sign of something more serious and wants to be seen by a doctor to rule out any underlying causes. The patient is requesting a referral to a neurologist.
+
+Keywords:
+
+Headache, pain, neurologist, referral, medical history, medication, patient, doctor, over-the-counter, concern, symptom, patient history, medical history, patient concern, patient symptoms, patient information, patient data, patient complaint, patient record, patient information, patient history, patient data, patient information, patient data, patient data, patient data, patient data, patient data, patient data, patient data, patient data, patient data, patient data, patient data, patient data, patient data, patient data,","Subjective:
+- Symptoms: Headache
+- Severity: Not specified
+- Duration: Not specified
+- Associated symptoms: Not specified
+- Relevant medical history: Not mentioned
+- Family history: Not mentioned
+- Allergies: Not mentioned
+- Other concerns: None explicitly mentioned
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinician's interpretation, diagnoses, or clinical impressions provided.
+
+Plan:
+- No actions, medications, tests, follow-up, or patient education mentioned."
+soap_00011,0.0645,0.0,0.0645,136,31,0.10883251577615738,0.018393483012914658,5.447991847991943,0.35621846560388803,"
+
+The patient is a 32 year old female with no prior surgeries. She is a 20 pack-year smoker, but quit smoking 10 years ago. She denies any history of substance abuse. She was diagnosed with bipolar disorder 10 years ago and takes the following medications:
+
+- Lithium carbonate 900mg twice a day
+- Hydroxyzine 25mg twice a day
+- Clonazepam 1mg twice a day
+- Sertraline 50mg once a day
+- Mirtazapine 45mg once a day
+
+The patient is scheduled for a hysterectomy and is taking the following medications:
+
+- Gabapentin 300mg three times a day
+- Amitriptyline 25mg three times a day
+- Hydroxyzine 25mg twice a day
+- Clonazepam 1mg twice a day
+- Sertraline 50mg once a day
+- Mirtazapine 45mg once a day
+
+The patient is allergic to latex and any narc","Subjective:
+- No past surgeries reported.
+
+Objective:
+- (No measurable or observable data provided.)
+
+Assessment:
+- (No clinician's interpretation provided.)
+
+Plan:
+- (No actions, medications, tests, follow-up, or patient education provided.)"
+soap_00085,0.0631,0.0364,0.0631,201,23,0.10679548978805542,0.013711722567677498,6.441629409790039,0.3348228752613068,"
+
+The patient, who is a 19-year-old male, states that he has no known allergies to medication. The patient does not have any history of allergies to medication. The patient also has no known drug reactions to medication. The patient does not have any known drug allergies to medication.
+
+Acknowledgment:
+
+Thank you for the information provided. I am grateful for your help. I am grateful for your assistance. I am grateful for your support. I am grateful for your guidance. I am grateful for your advice. I am grateful for your encouragement. I am grateful for your help. I am grateful for your support. I am grateful for your guidance. I am grateful for your advice. I am grateful for your encouragement. I am grateful for your help. I am grateful for your support. I am grateful for your guidance. I am grateful for your advice. I am grateful for your encouragement. I am grateful for your help. I am grateful for your support. I am grateful for your guidance. I am grateful for your advice. I am grateful for your encouragement. I am grateful for your help. I am grateful for your support. I am grateful for your guidance. I am","Subjective:
+- No known allergies to medications.
+
+Objective:
+- (No objective data mentioned.)
+
+Assessment:
+- (No assessment provided.)
+
+Plan:
+- (No plan provided.)"
+soap_00090,0.4615,0.1591,0.276,212,241,0.10454452037811279,0.01715678907930851,7.617305755615234,0.15579690937942603,"
+The patient is a 37 year old male who presented with pain in the left shoulder. The pain is progressive and started 5 days ago. The patient was lifting weights at the gym when the pain started. The pain is achy in nature and worse with certain movements. It radiates to the left shoulder. The pain is worse with carrying anything with the left arm or lifting anything. The pain is worse at night. The patient has had an overuse injury of the left shoulder in the past. The patient has a history of playing tennis, but has stopped due to the pain in the left shoulder. The patient has not had any recent infections or any other symptoms. The patient has not been diagnosed with any medical conditions in the past and is not taking any medications. The patient lives with his wife in a small condominium in downtown. He is working as a real estate agent and rarely drinks alcohol. He does not smoke cigarettes or use recreational drugs. The physical exam revealed pain with shoulder AB duction, a positive jobes test, a positive Neer's test, and a painful arc for the shoulder. The patient has pain to palpation and reflexes are normal. The strength is slightly reduced. The patient","Subjective:
+- Left shoulder pain for the last couple weeks, worsened over the past 5 days
+- Pain is achy in character, with some sharp pain on certain movements (carrying objects, lifting arm overhead)
+- Pain is worse with activity (lifting weights at gym, carrying objects) and lying on left side; better with rest and avoiding use of left arm
+- Severity: 2-3/10 at rest, 7/10 with activity
+- No recent trauma, but h/o overuse injury to left shoulder 2 years ago due to tennis
+- Denies fevers, chills, night sweats, skin changes, chest pain, SOB, other joint pains, recent infections, N/V, abd pain, bowel/bladder changes 
+- Reports decreased strength in left arm and reduced ROM due to pain
+- Difficulty sleeping due to pain when lying on left side
+
+PMHx:
+- Left shoulder overuse injury 2 years ago related to tennis 
+- Otherwise healthy
+
+Medications: 
+- Advil PRN recently for shoulder pain
+
+SocHx:
+- Lives with wife in condo
+- Works as real estate agent
+- Rare alcohol use, denies smoking or recreational drug use
+
+Objective:
+- Pain with shoulder abduction, especially 60-120 degrees (painful arc)
+- Positive Job's test and Neer's test 
+- Tenderness to palpation over anterior shoulder
+- Slightly reduced strength in left arm
+- Sensation and reflexes normal
+
+Assessment:
+- Likely rotator cuff tear or subacromial impingement syndrome
+
+Plan:
+- Left shoulder ultrasound to evaluate structures 
+- Consider X-ray or MRI to determine extent of injury"
+soap_00007,0.2599,0.0511,0.1356,202,166,0.10049348324537277,0.01654755137860775,7.619258403778076,0.15567703653022508,"
+
+The patient is a 39 year old male, who presents to the hospital with chest pain. The pain started last night and has been constant since. He describes the pain as sharp and located on the left side of his chest. He describes the pain as getting worse when he lays down and better when he sits up. He states that the pain is radiating anywhere. The patient describes the pain as getting worse when he takes a deep breath. He states that the pain is severe, a 7 or 8 on a scale of 1-10, and the pain is associated with lightheadedness and trouble breathing. The patient states that he has not been immobilized and he feels sick. He states that he has not had any nausea or vomiting, fevers, or chills. He states that he has not had any abdominal pain, urinary problems, bowel problems, cough, or any blood. The patient states that he has not had any wheezing or noisy breathing. The patient states that he has never experienced this pain before. The patient states that he has not had any night sweats, rashes, or skin changes. The patient states that his neck seems to be a little sw","Subjective:
+- Chest pain
+- Duration: Started last night, constant for ~8 hours
+- Location: Left side of chest
+- Quality: Sharp
+- Severity: 7-8/10
+- Worsens: Laying down, deep breaths
+- Alleviates: Not laying down
+- Associated symptoms: Lightheadedness, trouble breathing, racing heart, sweating, noisy breathing, neck swelling
+- No radiation of pain
+- No previous episodes
+
+Past Medical History:
+- No prior medical conditions
+- No recent hospitalisations
+- No prior surgeries
+- Medications: None
+- Allergies: None
+- Immunisations: Up to date
+- SocHx: Lives alone in an apartment, accountant, smokes 1 pack/day for 10-15 years, occasional cannabis use (~5mg/week), drinks 1-2 drinks/day (~10 drinks/week), tries to eat healthy dinners, eats out for lunch, exercises every other day (runs for 30 mins)
+- FHx: Father had a heart attack at 45, father had cholesterol problems, no strokes, no cancers
+
+Objective:
+- Vitals: Not provided
+- Physical exam: Not provided
+- Investigations with results: Not provided
+
+Assessment:
+- Not provided
+
+Plan:
+- Not provided"
+soap_00006,0.0678,0.0085,0.0508,205,34,0.10504370927810669,0.011630160734057426,6.922029495239258,0.2956320461299684,"
+
+In this clinical note, the doctor asks the patient if she is allergic to anything. The patient answers no, she is not allergic to anything. The doctor then asks if the patient has any drug allergies, and the patient confirms that she does not.
+
+The doctor is likely checking for any allergies that the patient may have before prescribing any medication. Allergies can cause serious reactions, so it is important to know if the patient has any before prescribing any medication.
+
+The patient is likely feeling well and does not have any concerns. She is likely cooperating with the doctor and answering the questions truthfully.
+
+The doctor is likely using the information from the clinical note to make a diagnosis and prescribe medication. The doctor may also use the information to make a referral to a specialist or to order further testing.
+
+The patient is likely feeling relieved that she does not have any allergies. She may be feeling confident that the doctor will be able to help her with her condition.
+
+The doctor is likely feeling confident that the patient does not have any allergies. The doctor may be feeling relieved that the patient is cooperative and is answering the questions truthfully.
+
+The patient","Subjective:
+- No allergies reported (including drug allergies).
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinical impressions or diagnoses provided.
+
+Plan:
+- No actions, medications, tests, or follow-up explicitly mentioned."
+soap_00010,0.186,0.0157,0.124,65,70,0.10745295882225037,0.01648600399494171,6.557699680328369,0.303346652913531,"
+
+The patient is a 54 year old woman with a history of breast cancer who is receiving adjuvant chemotherapy with paclitaxel (Taxol). She has had no complications from the therapy and her only complaint is a generalized itchiness. She is seen for a routine follow-up appointment and her physical exam is unremarkable. She is scheduled to receive a total of 12 weekly doses of paclitaxel.","Subjective:
+- Patient is married and has a spouse and three children.
+- One child is preparing to go to college.
+- Patient was an attorney but retired from their official position two years ago.
+- Currently working part-time at a private company.
+- Denies smoking, drinking alcohol, or using drugs.
+
+Objective:
+- [No objective data provided.]
+
+Assessment:
+- [No assessment or clinical impressions provided.]
+
+Plan:
+- [No plan provided.]"
+soap_00056,0.2797,0.0849,0.19,181,211,0.10648678988218307,0.01730392873287201,7.866340160369873,0.15837876773515686,"
+
+The patient is a 6-year-old male who presented with abdominal pain, vomiting, and diarrhea. The abdominal pain started 3 days ago and was accompanied by vomiting and fever two days ago. The patient has had six episodes of vomiting in the last two days, and his fever was measured at 38.3 degrees Celsius yesterday. The patient's behavior has been irritable and quiet, and he has been sleeping most of the day. The vomit was initially food-related, but later became yellowish and had a foul odor. The patient had no blood or bile in his vomit, and it was triggered by eating. The patient has had six to seven episodes of diarrhea in the last day, and his vomiting has been random. The patient has had no headaches, ear pain, eye pain, or runny nose. He has had a sore throat and cough, but no shortness of breath or wheezing. He has had no pain anywhere, and no urinary problems. The patient has had a fever, chills, and muscle aches. He has been meeting all developmental milestones, and he has no medical","Subjective:
+- 6 yo M presents with abdominal pain x 3 days, vomiting x 2 days (6 episodes total), and fever (38.3°C) x 1 day
+- Vomitus: Initially food contents, now yellowish material without blood or bile
+- Diarrhea x 1 day (6-7 episodes), watery without blood
+- Fever associated with chills requiring multiple blankets
+- Abdominal pain generalized, non-tender to palpation
+- Denies headache, ear/eye pain, eye redness, rhinorrhea, sore throat, dysphagia, anosmia, ageusia, cough, dyspnea, wheezing, chest pain, dysuria, increased urinary frequency, rash, myalgia, arthralgia
+- Behavior: Irritable initially, now lethargic
+- No sick contacts, recent travel, or diet changes
+- Attends school (possible infectious exposure)
+
+PMHx:
+- Term infant, SVD, no complications
+- Up-to-date on immunizations
+- No prior hospitalizations or surgeries
+- No known allergies
+- No medications
+
+SocHx:
+- Lives with mother, father, brother (7 yo), sister (10 yo)
+- No smokers in the home
+- No pets
+- No safety concerns
+
+FHx:
+- Sister undergoing evaluation for asthma
+- No congenital/genetic disorders
+- No IBD or celiac disease
+
+Objective:
+- Vitals not provided
+
+Assessment:
+- Acute gastroenteritis (viral vs. COVID-19)
+- Dehydration
+
+Plan:
+- COVID-19 testing
+- CBC, CMP
+- IV fluids for rehydration
+- Anticipate discharge with supportive care once hydrated and tolerating PO"
+soap_00050,0.4196,0.156,0.2517,61,89,0.10889346897602081,0.016819415614008904,7.765491962432861,0.17486618394559283,"The patient is a 13-year-old girl who was seen by another doctor for a second opinion. Her mother was there and told the doctor that her daughter had thoracic kyphosis, which was also present in her grandfather and aunt. She also reported that her daughter had no pain, numbness, tingling or weakness in her limbs and no problems with her bowels.","Subjective:
+- Patient is a 13-year-old girl.
+- Complaints of rounded back posture (thoracic spine).
+- Family history of kyphosis (aunt and grandfather).
+- No back pain, numbness, or tingling reported.
+- No weakness, numbness, or tingling in legs and arms.
+- Patient states she feels very strong for her age.
+- Regular bathroom habits reported.
+
+Objective:
+- Observed rounded back posture (thoracic kyphosis).
+
+Assessment:
+- Thoracic kyphosis.
+
+Plan:
+- Further observation as recommended by the previous orthopedist.
+- Consideration for a second opinion on management or treatment options."
+soap_00087,0.1447,0.0,0.0851,152,84,0.10198615491390228,0.016661768779158592,5.500786304473877,0.2805503142344487,"
+A 74 year old female with a history of hypertension, hyperlipidemia, and type 2 diabetes mellitus presents with a one month history of dyspnea on exertion. Her symptoms have progressively worsened and she is now unable to walk up a flight of stairs without becoming short of breath. She denies cough, sputum production, chest pain, fevers, or chills. She denies recent travel or sick contacts. She denies use of tobacco, alcohol, or illicit substances. She denies a history of heart disease or a family history of cardiovascular disease. Her only medications are lisinopril, metformin, and atorvastatin. She denies allergies to medications. Her vitals on presentation are as follows: BP 140/80 mmHg, P 80, RR 18, T 36.6 C, and O2 Sat 98% on room air. Her physical exam was unremarkable with the exception of mild crackles at the bases of her lungs. Her labs revealed a WBC of 7.5, Hgb of 1","Subjective:
+- Patient has three cats (two Persian cats and one Chartreux).
+- Patient retired a few months ago after working for thirty-two years as a psych aide for the State of Pennsylvania.
+- Patient drinks wine occasionally.
+- Patient used to smoke but has been smoke-free for five years.
+- Patient does not use recreational drugs.
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinician's interpretation or diagnoses provided.
+
+Plan:
+- No actions, medications, tests, follow-up, or patient education provided."
+soap_00070,0.2576,0.1077,0.197,45,96,0.09781166166067123,0.01568658836185932,7.849109649658203,0.15944800441412582,The patient is a 50 year old female who is experiencing back pain and joint pain after deep breathing. She is also experiencing a little fatigue but no fevers or chills. She does not seem to be out of breath when doing her normal activities.,"Initial:
+
+Subjective:
+- Symptoms: Back pain, joint pain, increased fatigue.
+- Severity: Not specified.
+- Duration: Symptoms noted yesterday.
+- Associated symptoms: No cough, no mucus production, no fever or chills.
+- Relevant medical history: Interstitial disease secondary to lupus pneumonitis.
+- Family history: Not mentioned.
+- Allergies: Not mentioned.
+- Concerns: Patient is feeling more tired than usual but does not have breathing issues during daily activities.
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinician's interpretation or diagnoses provided.
+
+Plan:
+- No actions, medications, tests, follow-up, or patient education explicitly mentioned."

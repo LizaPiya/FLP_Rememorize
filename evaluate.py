@@ -99,7 +99,21 @@ def compute_bleu(predictions: List[str], references: List[str]) -> Dict[str, flo
 def compute_bertscore(predictions: List[str], references: List[str], device: str = "cpu") -> Dict[str, float]:
     try:
         from bert_score import score as bscore
-        _, _, F1 = bscore(predictions, references, lang="en", device=device, verbose=False)
+        # Use bert-base-uncased explicitly: bert_score 0.3.13 + transformers >=5
+        # breaks with lang="en" (resolves to roberta-large whose tokenizer lost
+        # build_inputs_with_special_tokens in transformers 5.x).
+        # Guard empty/whitespace-only strings — bert_score calls
+        # tokenizer.build_inputs_with_special_tokens([]) for empty inputs which
+        # also fails in transformers 5.x.
+        predictions = [p if p.strip() else "." for p in predictions]
+        references  = [r if r.strip() else "." for r in references]
+        _, _, F1 = bscore(
+            predictions, references,
+            model_type="bert-base-uncased",
+            num_layers=9,
+            device=device,
+            verbose=False,
+        )
         return {"bertscore_f1": float(F1.mean())}
     except ImportError:
         log.warning("bert_score not installed; skipping BERTScore.")
@@ -112,33 +126,52 @@ def compute_minicheck(
     device: str = "cpu",
 ) -> Dict[str, float]:
     """
-    MiniCheck faithfulness scoring (Tang et al., EMNLP 2024).
+    Faithfulness and hallucination scoring via DeBERTa-v3 NLI cross-encoder.
 
-    Decomposes each summary into atomic claims and checks each claim
-    against the source document. Returns the mean document-level
-    support score across the corpus.
+    Uses the same cross-encoder/nli-deberta-v3-base model used in training
+    rewards (R_factual = entailment prob, R_hallucination = contradiction prob).
+    Consistent with the paper's reward formulation.
 
-    Requires: pip install minicheck
-    Falls back gracefully if not installed.
+    Returns:
+        minicheck_support   — mean entailment probability (faithfulness)
+        hallucination_score — mean contradiction probability (hallucination)
     """
     try:
-        from minicheck.minicheck import MiniCheck
-        scorer = MiniCheck(model_name="flan-t5-large", device=device)
+        import torch
+        from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-        doc_scores: List[float] = []
+        model_name = "cross-encoder/nli-deberta-v3-base"
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForSequenceClassification.from_pretrained(model_name)
+        model.to(device)
+        model.eval()
+
+        # DeBERTa NLI label order: contradiction=0, neutral=1, entailment=2
+        entail_scores: List[float] = []
+        contradict_scores: List[float] = []
+
         for src, pred in zip(sources, predictions):
-            # MiniCheck.score() takes lists; returns (labels, probs, used_chunks, support_probs)
-            _, pred_probs, _, _ = scorer.score(docs=[src], claims=[pred])
-            doc_scores.append(float(pred_probs[0]))
+            # Truncate to avoid exceeding model max length
+            src_trunc  = src[:1500]
+            pred_trunc = pred[:500]
+            inputs = tokenizer(
+                src_trunc, pred_trunc,
+                return_tensors="pt", truncation=True, max_length=512
+            ).to(device)
+            with torch.no_grad():
+                logits = model(**inputs).logits
+            probs = torch.softmax(logits, dim=-1)[0]
+            entail_scores.append(float(probs[2]))       # entailment
+            contradict_scores.append(float(probs[0]))   # contradiction
 
-        mean_score = sum(doc_scores) / max(len(doc_scores), 1)
-        return {"minicheck_support": mean_score}
-    except ImportError:
-        log.warning("minicheck not installed (pip install minicheck); skipping MiniCheck.")
-        return {"minicheck_support": None}
+        n = max(len(entail_scores), 1)
+        return {
+            "minicheck_support":   sum(entail_scores)    / n,
+            "hallucination_score": sum(contradict_scores) / n,
+        }
     except Exception as e:
-        log.warning("MiniCheck failed: %s", e)
-        return {"minicheck_support": None}
+        log.warning("NLI faithfulness scoring failed: %s", e)
+        return {"minicheck_support": None, "hallucination_score": None}
 
 
 def compute_per_example_rouge(pred: str, ref: str) -> Dict[str, float]:

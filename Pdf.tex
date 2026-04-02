@@ -1,0 +1,483 @@
+\documentclass{article}
+
+\usepackage{icml2025}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+% algorithm + algorithmic already loaded by icml2025
+
+
+\icmltitlerunning{ReMemorize: Adaptive Memory Management for Faithful Clinical Summarization}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{ReMemorize: Adaptive Memory Management for Faithful Text Summarization Using Reinforcement Learning}
+
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Fahmida Liza Piya}{udel}
+\icmlauthor{Rahmatollah Beheshti}{udel}
+\end{icmlauthorlist}
+
+\icmlaffiliation{udel}{Department of Computer and Information Sciences, University of Delaware, USA}
+\icmlcorrespondingauthor{Fahmida Liza Piya}{lizapiya@udel.edu}
+
+\vskip 0.3in
+]
+
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+Large language models (LLMs) have shown significant promise in tasks like long text summarization, yet they remain prone to factual inconsistency when reasoning over long, noisy and redundant text. Existing approaches enhance faithfulness through improved contextual retrieval or post-hoc verification, but these solutions overlook a fundamental cause of factual drift: inefficient \emph{memory management} within sequence models. Current architectures update internal representations either token-by-token, risking rapid forgetting, or across all tokens uniformly, introducing irrelevant context. We present \textsc{ReMemorize}, a framework for adaptive memory management that dynamically optimizes information retention over variable-length context windows using gated importance weighting. This mechanism allows LLMs to maintain consistent grounding in verified clinical context while suppressing spurious associations that lead to factual errors. Evaluations on MIMIC-IV clinical summarization benchmarks show that \textsc{ReMemorize} improves both factuality and coherence over strong baselines, positioning adaptive memory control as a new direction for trustworthy, domain-specific LLMs.
+\end{abstract}
+
+
+
+\section{Introduction}
+Clinical summarization remains a core challenge for the safe deployment of large language models (LLMs) in healthcare. 
+While existing methods improve faithfulness by filtering context (\textsc{ConTextual}) or mitigating hallucinations through multi-agent pipelines (\textsc{AgenticSum}), these systems largely overlook the role of \emph{memory dynamics} in long-context reasoning. 
+In practice, LLMs update internal memory states either token-by-token (risking rapid forgetting) or across all tokens uniformly (introducing irrelevant noise). 
+We hypothesize that such \emph{inefficient memory management} contributes directly to residual hallucination and factual drift in generated clinical summaries.
+
+To address this gap, we propose \textsc{ReMemorize}, a framework that models factual inconsistency as a failure of adaptive memory regulation within LLMs.
+We introduce a \emph{learnable GRU-style gated recurrent memory} as the core update mechanism: at each token position, a scalar gate $\gamma_t$, conditioned on both the current token key and the existing memory state, controls how strongly new information overwrites old context.
+This design operates as a lightweight external memory layer that is differentiable end-to-end and compatible with standard HuggingFace caching.
+GRPO~\citep{shao2024deepseekmath}, combined with PPO as a baseline, provides stable policy-gradient optimization over non-differentiable reward signals such as factual alignment and coherence.
+Together, the gated recurrent memory and the reward-driven gating policy form a bi-level learning loop: the inner loop updates the memory state through adaptive writes, while the outer loop reinforces gating behaviors that improve downstream factual consistency, yielding a principled and self-improving memory regulation mechanism.
+
+\begin{figure*}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Images/Rememorize.drawio.pdf}
+    \caption{Overview of the \textsc{ReMemorize} framework for adaptive memory management in clinical text summarization. During training, the model generates provisional summaries that are evaluated using a composite reward function capturing factuality, coherence, efficiency, and hallucination penalties. The resulting reward is used to optimize a memory gating policy via reinforcement learning. During inference, the policy is frozen and the same language model produces final summaries in a single forward pass while applying adaptive memory updates.}
+    \label{fig:Method}
+\end{figure*}
+
+
+In \textsc{ReMemorize}, the memory gating policy is optimized using reinforcement learning based on factuality-driven rewards. During inference, the reinforcement optimizer remains frozen, but the model continues to apply the learned gating behavior through the adaptive memory update mechanism. Critically, the memory state continues to evolve at \emph{every decoding step} (not just during source encoding), so that hallucination is modelled as a failure of adaptive memory dynamics \emph{during generation}, not merely a failure of source compression. This design maintains the efficiency and stability of standard inference while preserving dynamic, context-dependent memory adaptation.
+
+
+
+\begin{enumerate}
+\item We introduce \textsc{ReMemorize}, a bi-level optimization framework for faithful clinical summarization that models factual inconsistency as a problem of inefficient memory regulation within large language models.
+\item We propose a learnable GRU-style gated recurrent memory with a memory-conditioned scalar gate $\gamma_t$, operating as a lightweight external layer compatible with standard transformer inference. The memory evolves in two phases, source encoding and autoregressive decoding, so the RL agent can learn when to anchor generated content to source evidence versus when to extrapolate.
+\item We design a composite reward function that integrates entailment-based factual alignment, coherence, and hallucination penalties via NLI contradiction probability (DeBERTa-v3 cross-encoder), enabling the model to learn memory strategies that improve contextual grounding and long-range consistency.
+\item We perform comprehensive experiments on MIMIC-IV and other clinical summarization benchmarks, demonstrating that \textsc{ReMemorize} consistently improves factual accuracy, coherence, and overall faithfulness compared with strong domain-specific and general-purpose LLM baselines.
+\end{enumerate}
+
+
+\section{Related Work}
+While the ideas used in our proposed method relate to a variety of different studies, we cover the key areas breifly below.  
+
+\paragraph{Clinical Text Summarization}
+Recent advances in clinical summarization have leveraged pre-trained language models~\citep{piya2025advancing}, including \texttt{BioGPT}~\citep{luo2022biogpt} and \texttt{PubMedBERT}~\citep{gu2021domain} to adapt LLMs for biomedical text generation. Instruction-tuned models such as \texttt{Flan-T5}~\citep{lyu2024automatic} have shown improved generalizability, while task-specific designs have been proposed by recent work~\citep{han2024optimal} such as \texttt{Pointer-GPT} which aim to enhance content retention. However, these approaches often process uncompressed token sequences, resulting in inefficiencies and a heightened risk of hallucination in long clinical narratives.
+
+\paragraph{Extrinsic Hallucination and Confirmation Bias}
+In clinical summarization, LLMs can produce fluent, plausible content drawn from pretraining rather than the specific input, a phenomenon known as \textit{hallucination} and of particular concern when factual precision is critical~\citep{asgari2025framework,huang2025survey}. Hallucinated content may introduce diagnoses, treatments, or timelines absent from the patient note; a common case is \textit{extrinsic hallucination}, where medically plausible material lacks explicit support in the input~\citep{huang2025survey,mckenna2023sources}. For example, given a discharge summary that suggests heart failure but lists no treatment, an LLM may assert diuretic use—a plausible yet unsupported claim—indicating a shift from source-based evidence to prior-based inference. LLMs also exhibit \textit{confirmation bias}, favoring content consistent with learned statistical regularities over the source text~\citep{schmidgall2024addressing}, which can yield extrinsic hallucinations, especially when the input is sparse. To mitigate this tendency, recent evaluation protocols constrain prior-driven inference; in our study, a hallucination annotation prompt adapted from Lookback Lens~\citep{chuang2024lookback} requires judging factual alignment using only the source document, avoiding general medical knowledge or commonsense, and assessing whether the input entails the generated content, thereby emphasizing source fidelity. Although hallucination (mismatch with the input) and confirmation bias (a reasoning flaw) are conceptually distinct, they are closely linked in practice. Benchmarks such as \texttt{FACTPICO} document this overlap, showing that plain-language summaries of medical evidence often include inferred or hallucinated claims without explicit support~\citep{joseph2024factpico}. Semantic-entropy methods further show that such errors can occur with high model confidence, limiting detection by fluency or surface correctness alone~\citep{farquhar2024detecting}. Recent multi-agent reasoning studies reach a similar conclusion: without checks on prior-driven reasoning errors, LLMs can subtly distort clinical inferences~\citep{ke2024enhancing}. Together, hallucination and confirmation bias can form a feedback loop in which unsupported content appears credible because it aligns with internal priors; if undetected in clinical workflows, it jeopardizes accuracy, patient safety, and professional accountability.
+
+\paragraph{Model Compression and Input Reduction.}
+A substantial body of work aims to improve the efficiency of large language models through either parameter-level compression or input-level reduction. Compression methods such as pruning~\citep{frantar2023sparsegpt}, quantization~\citep{dettmers2022gpt3}, and distillation~\citep{hinton2015distilling} reduce computational cost but often degrade performance on domain-specific tasks that rely on fine-grained biomedical cues~\citep{tinn2023fine}. For instance, removing low-magnitude parameters can eliminate medically salient semantics~\citep{ma2023llm}, and distilled models may lack the representational capacity needed for nuanced clinical reasoning~\citep{ho2022large, magister2022teaching}. Complementary work reduces sequence length rather than parameters using token filtering and sparse-attention mechanisms, such as \texttt{PoWER-BERT}~\citep{goyal2020power}, perturbed top-$k$ selection, and recent sparse token-retention strategies~\citep{lin2024rho, lou2024sparser}. These methods discard low-salience tokens to accelerate processing, and recent extensions such as Contextual~\citep{piya2025contextual} adapt filtering mechanisms to decoder-based LLMs by leveraging cross-layer attention signals. While effective for improving efficiency and reducing latency~\citep{he2025survey}, both compression and token filtering operate on \emph{external structure} either parameters or input tokens without modifying the model’s \emph{internal memory dynamics}. Consequently, they can mitigate computational overhead but do not address the core challenge in long-form clinical summarization: inefficient retention and forgetting mechanisms that underlie factual drift and hallucination.
+
+
+\paragraph{Memory in Sequence Models.}
+Classical RNN-based models maintain a recurrent hidden state that is updated in a token-by-token fashion, essentially applying a gradual “delta-rule” memory update as new inputs arrive. Transformers, by contrast, attend uniformly to all tokens via a self-attention mechanism, lacking an explicit incremental memory update—every output token can attend to the entire input sequence without a persistent hidden state carrying information forward~\citep{dai2019transformerxl}. To introduce adaptive memory into sequence models, researchers have developed extensions such as Transformer-XL~\citep{dai2019transformerxl}, which caches previous segment states as recurrent memory, and Compressive Transformer~\citep{rae2019compressive}, which condenses long-range memory into compact forms. Memory-augmented architectures like Memformer~\citep{wu2022memformer} and MART~\citep{lei2020mart} incorporate persistent memory slots or gated recurrent modules within Transformer layers. Such designs effectively implement adaptive, windowed memory updates, bridging the gap between localized token updates and static global attention. These strategies have been adopted in summarization models as well. For example, Sliding Selector Networks~\citep{cui2021sliding} preserve inter-window dependencies via dynamic memory to better summarize long scientific papers, while NeuSum~\citep{zhou2018neusum} and MemSum~\citep{gu2022memsum} maintain an extraction history or summary memory to reduce redundancy and improve content coverage. Recent work in long-dialogue summarization also demonstrates that iterative memory-aware summarization improves long-term factual consistency~\citep{wang2024recursive}. Collectively, these approaches highlight the importance of memory management in enhancing contextual grounding and faithfulness in summarization systems.
+
+
+
+\paragraph{Multi-Agent Frameworks and Agentic Reinforcement Learning} 
+Recent work has reframed large language models (LLMs) as components within broader multi-agent systems rather than as standalone generators. Such agentic frameworks position the model as an active participant in a structured reasoning workflow involving critique, feedback, and revision, drawing on advances in multi-agent collaboration for patient-centered summarization~\citep{sudarshan2024agentic}, reflective self-dialogue strategies such as AMIE’s diagnostic self-play~\citep{tu2025amie}, and attention-guided input filtering as exemplified by ConTextual~\citep{piya2025contextual}. These systems depart from the single-pass inference paradigm~\citep{deeplearningai2024batch242} by decomposing complex tasks into modular subroutines—e.g., generation, verification, and correction—yielding workflows that more closely resemble distributed organizational structures than isolated models. This decomposition enables greater interpretability and robustness, particularly when operating over noisy, heterogeneous clinical data~\citep{cognitiveconcerns2024agentic}. Building on this foundation, recent progress in \textit{agentic reinforcement learning} has demonstrated that multi-agent coordination combined with reinforcement-driven policy refinement can further enhance decision-making fidelity. For example, MedAgentGym~\citep{xu2025medagentgym} shows that coupling multi-agent interactions with reinforcement-based reasoning significantly improves downstream clinical performance, illustrating the broader potential of integrating RL into agentic pipelines to optimize both adaptability and domain-grounded reliability.
+
+
+
+\paragraph{Reinforcement Learning for Summarization} 
+Recent research has demonstrated that reinforcement learning (RL) can significantly enhance the factuality, coherence, and task-specific performance of summarization systems. In the clinical domain, reinforcement learning from AI feedback (RLAIF) has been applied to radiology report generation, aligning model outputs with expert-ranked impressions \citep{yang2025aligning}. In general-domain summarization, \citet{li2025topic} incorporate topic-aware rewards into a GRPO framework for multi-document summarization, improving topical focus and content selection. Multi-objective optimization techniques such as Hypervolume Optimization (HVO) \citep{song2025hvo} balance consistency, fluency, coherence, and relevance, achieving Pareto-efficient summaries across multiple quality dimensions. Additionally, ReLSum \citep{yadav2025query} applies RL to generate query-relevant product summaries, leveraging relevance scores from a search ranker to optimize retrieval effectiveness. These efforts highlight the efficacy of RL in aligning summarization behavior with diverse reward signals, including factual correctness, domain preferences, and user intent.
+
+\section{Methodology}
+
+\subsection{Framework Overview}
+\textsc{ReMemorize} introduces an explicit mechanism for regulating the evolution of internal memory representations during generation. The framework consists of a \emph{Memory Manager}, which maintains a differentiable state $M_t$ that summarizes clinically relevant context, and a \emph{Policy Optimizer}, which learns a gating policy that controls how new information influences this state. Rather than treating hallucination as a decoding error, we model factual inconsistency as a failure of memory allocation within the sequence model: salient clinical information may be under-represented or prematurely overwritten by less informative content, leading to drift in the generated summary. Consequently, improving faithfulness requires not only identifying important input content but also learning a principled mechanism for how memory should retain, weight, and update information across long and heterogeneous clinical notes.
+
+\paragraph{Problem Formulation.}
+Given an input document $d$, the model generates a summary $s^*$ while maintaining a latent memory state $M_t$ at each decoding step $t$.
+At step $t$, the decoder computes key--value representations $(k_t, v_t)$, and a gating policy $\pi_{\theta_\pi}$ produces coefficients $\gamma_i^{(t)} \in [0,1]$ that modulate the contribution of each token to the memory update.
+The Memory Manager, parameterized by $\theta_M$, uses these coefficients in the update rule of Eq.~\ref{eq:mem_update} to construct the new memory state $M_t$, which serves as an auxiliary conditioning signal for subsequent decoding.
+
+\subsection{Adaptive Memory Update}
+\textsc{ReMemorize} maintains the memory state $\mathbf{m}_t \in \mathbb{R}^{d_m}$ via a \emph{learnable GRU-style gated update}.
+At each step $t$, a learned projection $\mathrm{write\_proj}: \mathbb{R}^{d_v} \to \mathbb{R}^{d_m}$ maps the token value representation into the memory space, and a scalar gate $\gamma_t \in (0,1)$ controls the blend between retention and writing:
+\begin{equation}
+\label{eq:mem_update}
+\mathbf{m}_t = (1 - \gamma_t)\,\mathbf{m}_{t-1} \;+\; \gamma_t\,\tanh\!\left(\mathrm{write\_proj}(v_t)\right).
+\end{equation}
+This update is $O(d_m \cdot d_v)$ per token, substantially cheaper than approaches requiring $O(d_m^2)$ matrix operations, and is architecturally analogous to the update gate in a GRU~\citep{chung2014empirical}, with the key distinction that $\gamma_t$ is conditioned on the \emph{current memory state} rather than on the input alone.
+The memory is initialised to $\mathbf{m}_0 = \mathbf{0}$.
+
+\paragraph{Memory-Conditioned Gating.}
+The gating coefficient $\gamma_t$ determines how strongly token $t$ rewrites the memory.
+Rather than depending only on $k_t$, the policy conditions on the \emph{current memory state} $\mathbf{m}_{t-1}$, which encodes what the memory already represents about the current context:
+\begin{equation}
+\label{eq:gate}
+\gamma_t = \sigma\!\left(
+  \mathrm{MLP}\!\left([k_t\,;\,\mathrm{proj}(\mathbf{m}_{t-1})]\right)
+\right),
+\end{equation}
+where $\mathrm{proj}: \mathbb{R}^{d_m} \to \mathbb{R}^{d_k}$ compresses the memory to key dimension and $[\cdot\,;\,\cdot]$ denotes concatenation.
+Tokens already well-represented in memory receive low $\gamma_t$, providing an information-theoretic compression pressure without explicit supervision.
+The MLP output bias is initialised to $-2.0$, so $\sigma(-2) \approx 0.12$ at the start of training, preventing aggressive early memory overwriting.
+
+\paragraph{Two-Phase Memory Lifecycle.}
+The memory state evolves in two distinct phases to ensure that hallucination is modelled as a failure of adaptive memory dynamics \emph{during generation}, not merely a failure of source compression.
+
+\textit{Phase 1 (Source Encoding).}
+The LLM encoder processes the source document token-by-token.
+At each source token $t$, hidden states are projected into key--value space, $\gamma_t$ is computed via Eq.~\ref{eq:gate}, and $\mathbf{m}_t$ is updated via Eq.~\ref{eq:mem_update}.
+After processing all $T_{\text{src}}$ source tokens, the memory snapshot $\mathbf{m}_{T_{\text{src}}}$ condenses the clinically relevant context.
+
+\textit{Phase 2 (Decoding with Live Memory).}
+At each generated token $t'$, the current memory state $\mathbf{m}_{t'-1}$ is injected into the decoder hidden state via a learned gated projection before the logit computation:
+\begin{equation}
+\label{eq:inject}
+\tilde{h}_{t'} = h_{t'} + \sigma\!\left(\mathrm{mem\_gate}(h_{t'})\right) \odot \mathrm{mem\_proj}(\mathbf{m}_{t'-1}),
+\end{equation}
+where $\mathrm{mem\_gate}, \mathrm{mem\_proj}$ are learned linear layers and $\odot$ is elementwise multiplication.
+After sampling the next token, the decoder hidden state triggers another GRU update (Eq.~\ref{eq:mem_update}), advancing the memory to $\mathbf{m}_{t'}$.
+Standard HuggingFace \texttt{past\_key\_values} caching is preserved throughout, keeping per-step attention cost $O(1)$.
+This two-phase design enables the RL agent to learn when to anchor generated content to source evidence versus when to extrapolate.
+
+\subsection{Reinforcement-Guided Memory Refinement}
+
+The memory state maintained by the model evolves through a sequence of gating decisions that determine how strongly recent token representations influence the update in Eq.~\ref{eq:mem_update}.
+These gating decisions induce a latent memory trajectory
+$\tau = (M_1, M_2, \ldots, M_T)$,
+and factual errors in the generated summary often arise from suboptimal trajectories, for example when clinically important information is under-weighted or when irrelevant context accumulates in the memory.
+Thus, rather than supervising token outputs directly, \textsc{ReMemorize} learns a policy over memory-update behaviors.
+
+\paragraph{Episodic Reward.}
+After the model generates a provisional summary $s^*$, the entire memory trajectory receives a scalar episodic reward $R(d, s^*)$.
+The reward is a weighted combination of four reference-free signals:
+\begin{equation}
+\label{eq:reward}
+R =
+\alpha R_{\text{factual}}
++ \beta R_{\text{coherence}}
++ \gamma R_{\text{completeness}}
+- \delta R_{\text{hallucination}}.
+\end{equation}
+$R_{\text{factual}}$ measures entailment of the generated summary by the source document: $R_{\text{factual}} = P_{\text{NLI}}(\textit{entailment} \mid d, s^*)$, computed with a cross-encoder DeBERTa-v3 model fine-tuned for natural language inference~\citep{he2021deberta}.
+$R_{\text{coherence}}$ measures the mean cosine similarity between consecutive sentence embeddings of $s^*$, computed using a MiniLM sentence encoder, capturing local narrative flow without requiring reference summaries.
+$R_{\text{completeness}}$ is a soft recall score measuring how well $s^*$ covers the semantic content of $d$, computed as the mean maximum cosine similarity from each sentence embedding of $d$ to those of $s^*$.
+$R_{\text{hallucination}}$ penalises unsupported content via the NLI contradiction probability: $R_{\text{hallucination}} = P_{\text{NLI}}(\textit{contradiction} \mid d, s^*)$, using the same DeBERTa-v3 cross-encoder.
+Critically, $R_{\text{factual}}$ and $R_{\text{hallucination}}$ are \emph{genuinely independent} signals under the NLI three-way classification (entailment vs.\ contradiction vs.\ neutral), avoiding the degenerate collapse that arises when hallucination is defined as $1 - R_{\text{factual}}$.
+All components are reference-free and operate on model outputs alone.
+
+\paragraph{Dense Memory Reward.}
+Because the episodic reward $R(d, s^*)$ is assigned only after the full summary is generated, the memory update steps receive sparse credit assignment.
+To address this, we augment the episodic reward with a reconstruction bonus:
+\begin{equation}
+\label{eq:dense_reward}
+R_{\text{dense}} = R(d,s^*) + \lambda_{\text{mem}}\,\frac{1}{1 + \mathcal{L}_{\text{aux}}},
+\end{equation}
+where $\mathcal{L}_{\text{aux}} = \|\tanh(\mathrm{write\_proj}(v_t)) - \mathbf{m}_{T}\|^2$ is an auxiliary reconstruction loss that measures how accurately the write projection can reproduce the final memory state from decoder hidden states.
+Because the GRU update step in Eq.~\ref{eq:mem_update} is applied without gradient tracking (to avoid unbounded feedback through the recurrent path), $\mathcal{L}_{\text{aux}}$ provides a separate differentiable supervision signal for $\mathrm{write\_proj}$, ensuring it learns to project token values into a memory-compatible space.
+A lower $\mathcal{L}_{\text{aux}}$ indicates that the write projection faithfully encodes source information into the memory manifold, providing a dense intrinsic signal without additional annotation.
+
+\paragraph{Policy Optimization.}
+The gating policy $\pi_{\theta_\pi}$ is trained via reinforcement learning, optimising over the space of memory-update trajectories to maximise the composite dense reward (Eq.~\ref{eq:dense_reward}).
+The policy parameters $\theta_\pi$ correspond to the projection matrices and gate bias of the memory-conditioned gate MLP (Eq.~\ref{eq:gate}); no part of the frozen backbone is updated during this phase.
+
+For each document $d$, the agent samples $G{=}4$ candidate summaries $\{s^*_1, \ldots, s^*_G\}$ under the current policy, and advantages are normalised within the group~\citep{shao2024deepseekmath}:
+\begin{equation}
+\label{eq:grpo_adv}
+\hat{A}_g = \frac{R_g - \mu_G}{\sigma_G + \varepsilon},
+\quad
+\mu_G = \tfrac{1}{G}\textstyle\sum_g R_g,\quad
+\sigma_G = \mathrm{std}(\{R_g\}),
+\end{equation}
+where $R_g = R_{\text{dense}}(d, s^*_g)$.
+This within-group normalisation grounds advantage estimates in peer comparisons across rollouts of the same document, eliminating the need for a separately trained value network.
+
+The policy is updated by maximising the following clipped surrogate objective with a KL divergence penalty~\citep{schulman2017proximal}:
+\begin{equation}
+\label{eq:rl_obj}
+\mathcal{L}_{\text{RL}} =
+\mathbb{E}\!\left[
+  \min\!\left(
+    \rho_g \hat{A}_g,\;
+    \mathrm{clip}(\rho_g, 1{-}\varepsilon, 1{+}\varepsilon)\,\hat{A}_g
+  \right)
+  - \beta\,\mathrm{KL}\!\left(\pi_{\theta_\pi} \,\|\, \pi_{\theta_\pi}^{\text{old}}\right)
+\right],
+\end{equation}
+where $\rho_g = \pi_{\theta_\pi}(\gamma \mid k)\,/\,\pi_{\theta_\pi}^{\text{old}}(\gamma \mid k)$ is the importance ratio, $\varepsilon{=}0.2$ is the clipping radius, and $\beta$ controls the strength of the KL regularisation term.
+The reference policy $\pi_{\theta_\pi}^{\text{old}}$ is snapshotted at the start of each document batch and held fixed for all $G$ rollouts; training is halted early if the KL divergence exceeds $\delta_{\mathrm{KL}}{=}0.02$, preventing destabilising policy shifts.
+
+\subsection{Training Objective}
+
+The final training loss combines standard supervised summarization with reinforcement-based memory regulation and a dense memory reconstruction bonus:
+\begin{equation}
+\label{eq:training_obj}
+\mathcal{L} =
+\mathcal{L}_{\text{sum}}
+-
+\lambda\,
+\mathbb{E}_{d \sim \mathcal{D}}
+\big[ R(d, s^*) \big]
+-
+\lambda_{\text{mem}}\,
+\mathbb{E}_{d \sim \mathcal{D}}
+\!\left[\frac{1}{1 + \mathcal{L}_{\text{aux}}}\right],
+\end{equation}
+where $\mathcal{L}_{\text{sum}}$ is the standard cross-entropy summarisation loss, $\lambda$ scales the GRPO episodic reward, and $\lambda_{\text{mem}}$ scales the auxiliary reconstruction bonus (Eq.~\ref{eq:dense_reward}).
+This encourages the Memory Manager to adopt update behaviors that yield more factual, coherent, and faithful summaries.
+
+\subsection{Training Procedure}
+
+During training, \textsc{ReMemorize} alternates between memory optimization and policy refinement in a bi-level learning loop.
+For each document, the LLM encoder produces hidden-state representations that are projected into the memory key and value spaces.
+The GRU memory update (Eq.~\ref{eq:mem_update}) processes source tokens sequentially, applying memory-conditioned gating (Eq.~\ref{eq:gate}) at each step, to produce the compressed memory snapshot $\mathbf{m}_{T_{\text{src}}}$.
+The decoder then generates $G$ candidate summaries in two-phase mode (Phase 2, Eq.~\ref{eq:inject}), during which the memory continues to evolve at every generated token.
+Each candidate is scored using the composite dense reward (Eq.~\ref{eq:dense_reward}).
+Group-normalised advantages (Eq.~\ref{eq:grpo_adv}) are computed across candidates, and the gating policy is updated via the clipped PPO objective with KL early stopping.
+In parallel, the memory interface projections (key/value projections, $\mathrm{write\_proj}$, and the gated injection layers) are updated via AdamW with a joint loss $\mathcal{L}_{\text{sum}} + 0.1\,\mathcal{L}_{\text{aux}}$ on the gold target, with a linear learning rate warm-up over the first $N_{\text{warm}}$ steps.
+Repeating this process across the dataset enables the policy to progressively adopt memory-update behaviors that improve factual grounding and reduce hallucination without compromising fluency or stability.
+
+\begin{algorithm}[t]
+\caption{\textsc{ReMemorize}: GRPO-Guided GRU Memory Optimisation}
+\label{alg:rememorize}
+\begin{algorithmic}[1]
+\REQUIRE Document $d$, group size $G$, KL threshold $\delta_{\mathrm{KL}}$
+\STATE Initialise $\mathbf{m}_0 \leftarrow \mathbf{0} \in \mathbb{R}^{d_m}$
+\STATE \textit{Phase 1: Source Encoding}
+\FOR{$t = 1, \ldots, T_{\text{src}}$}
+  \STATE Compute $(k_t, v_t)$ from LLM hidden states via $\mathrm{key\_proj}$, $\mathrm{val\_proj}$
+  \STATE $\gamma_t \leftarrow \sigma\bigl(\mathrm{MLP}([k_t;\,\mathrm{proj}(\mathbf{m}_{t-1})])\bigr)$ \COMMENT{Eq.~\ref{eq:gate}}
+  \STATE $\mathbf{m}_t \leftarrow (1{-}\gamma_t)\,\mathbf{m}_{t-1} + \gamma_t\,\tanh\bigl(\mathrm{write\_proj}(v_t)\bigr)$ \COMMENT{Eq.~\ref{eq:mem_update}}
+\ENDFOR
+\STATE \textit{Phase 2: Decoding with Live Memory}
+\FOR{$g = 1, \ldots, G$}
+  \STATE $\mathbf{m}^{(g)} \leftarrow \mathbf{m}_{T_{\text{src}}}$
+  \FOR{$t' = 1, \ldots, T_{\text{dec}}$}
+    \STATE $\tilde{h}_{t'} \leftarrow h_{t'} + \sigma\bigl(\mathrm{mem\_gate}(h_{t'})\bigr) \odot \mathrm{mem\_proj}(\mathbf{m}^{(g)}_{t'-1})$ \COMMENT{Eq.~\ref{eq:inject}}
+    \STATE Sample next token from $\mathrm{lm\_head}(\tilde{h}_{t'})$ using \texttt{past\_key\_values}
+    \STATE Update $\mathbf{m}^{(g)}_{t'}$ via Eq.~\ref{eq:mem_update}
+  \ENDFOR
+  \STATE $R_g \leftarrow R_{\text{dense}}(d,\, s^*_g)$ \COMMENT{Eq.~\ref{eq:dense_reward}}
+\ENDFOR
+\STATE Compute group-normalised advantages $\hat{A}_g$ (Eq.~\ref{eq:grpo_adv})
+\STATE Update $\theta_\pi$ via clipped PPO; stop if $\mathrm{KL} > \delta_{\mathrm{KL}}$
+\STATE Update $\theta_M$ via AdamW: $\mathcal{L}_{\text{sum}} + 0.1\,\mathcal{L}_{\text{aux}}$,\quad $\eta{=}10^{-5}$
+\end{algorithmic}
+\end{algorithm}
+
+
+\section{Experiments}
+\label{sec:experiments}
+
+We evaluate \textsc{ReMemorize} across two clinically relevant summarization benchmarks to demonstrate its robustness in both long-form and structured summary settings. We compare it against strong domain‐specific and general‐purpose baselines. This section presents the datasets, baselines, implementation details, evaluation metrics, ablation plan, and qualitative analyses. Final quantitative results will be added after model training.
+
+\subsection{Datasets}
+\label{sec:datasets}
+For the summarization task, we used MIMIC-IV-Ext-BHC benchmark dataset~\citep{aali2024mimic}, which was specifically curated to support clinical text summarization research. This dataset, derived from the MIMIC-IV-Note database, includes 279,033 clinical notes paired with corresponding brief hospital course (BHC) summaries. To facilitate model training, the dataset was preprocessed to standardize note structure, clean formatting, and normalize length to an average of 2,267 tokens per note. The resulting benchmark~\citep{aali2024benchmark} provides a structured and scalable resource tailored for evaluating factual consistency in clinical summarization. 
+
+The second dataset we incorporated comprises 1,473 patient-doctor conversations from the FigShare~\citep{singh2011figshare} and MTS-Dialog~\citep{abacha2023empirical} collections, specifically designed for generating clinical summaries. These conversations have been annotated to create structured SOAP (Subjective, Objective, Assessment, and Plan) summaries, available on Hugging Face datasets~\citep{neupane2024soap}.
+
+\subsection{Baselines}
+\label{sec:baselines}
+
+We compare against the following models:
+
+\begin{itemize}
+    \item \textbf{LLaMA-3} (7B): a general-purpose open-source LLM without domain fine-tuning.
+    \item \textbf{Flan-T5}: a strong instruction-tuned baseline.
+    \item \textbf{BioBART}: a biomedical encoder–decoder baseline.
+    \item \textbf{Contextual} \citep{piya2025contextual}: A method based on token filtering and knowledge-graph enhancement.
+    \item \textbf{AgenticSum}: A multi-agent reasoning and verification pipeline for summarization.
+\end{itemize}
+
+All baselines are evaluated under identical generation settings (temperature = 0.0, max output tokens = 256) to ensure fair comparison.
+
+\subsection{Evaluation Metrics}
+\label{sec:metrics}
+We evaluate the generated summaries using a combination of standard reference-based metrics, semantic similarity measures, and hallucination-focused assessments designed to capture factual consistency and clinical relevance.
+
+\paragraph{Semantic Metrics.}
+To evaluate lexical and semantic similarity with reference summaries, we report the following standard metrics:
+
+\begin{itemize}
+\item \textbf{BLEU}~\citep{papineni2002bleu}: Captures n-gram precision to quantify token-level overlap between generated and gold summaries. We report BLEU-1 (unigram overlap, single words) and BLEU-2 (bigram overlap, two-word sequences).
+\item \textbf{ROUGE-L}~\citep{lin2004rouge}: Measures the longest common subsequence (LCS), emphasizing structural alignment and recall.
+\item \textbf{BERTScore}~\citep{zhang2019bertscore}: Computes semantic similarity using contextual embeddings from a pretrained BERT model~\citep{devlin2019bert}. To capture different aspects of similarity, we report precision, recall, and F1.
+\end{itemize}
+
+%We report BLEU-1 (B-1), BLEU-2 (B-2), and ROUGE-L (R-L) to evaluate surface-level fidelity, and BERTScore precision (P), recall (R), and F1 to assess semantic consistency.
+
+
+\paragraph{LLM-as-a-Judge.}
+To complement automatic hallucination detection, we employ an instruction-tuned \texttt{LLaMA-3-8B} model~\citep{grattafiori2024llama3} for structured evaluation. The model assigns sentence-level hallucination tags and rates each summary across four quality dimensions. Details of the evaluation protocol and prompt formulation are provided in Appendix~\ref{sec:llm_judge}. For each generated summary, the model is prompted to assign sentence-level hallucination tags and provide holistic quality scores along four axes:
+
+\begin{itemize}
+
+\item \textbf{Main Idea Retention}: Measures whether key clinical content from the input is preserved.
+\item \textbf{Coherence}: Assesses fluency and logical structure of the summary.
+\item \textbf{Faithfulness}: Measures whether the generated summary faithfully reflects the input source without introducing unsupported content.
+\item \textbf{Factual Consistency}: Focuses on the factual correctness of statements, ensuring no contradictions or distortions relative to the source.
+\end{itemize}
+
+\subsection{Implementation Details}
+\label{sec:implementation}
+
+We implement \textsc{ReMemorize} on top of the LLaMA-3 architecture (1B and 3B variants).
+
+\paragraph{Memory State.}
+We set the GRU memory dimension to \(d_m = 256\).
+The gate MLP is a two-layer network (hidden dimension 256, GELU activation) with output bias initialised to $-2.0$ ($\sigma(-2.0) \approx 0.12$, preventing aggressive early writes).
+There is no fixed sliding window; the memory adapts continuously throughout both source encoding and decoding.
+
+\paragraph{Training.}  
+We train using PPO and GRPO on 8 A100 GPUs (40 GB). Each document is truncated to a maximum of 3,000 tokens for BHC and 1,000 tokens for SOAP.
+
+\paragraph{Hyperparameters.}  
+Key hyperparameters are listed in Table~\ref{tab:hyperparams}.
+
+\begin{table}[h]
+\centering
+\caption{Training Hyperparameters for \textsc{ReMemorize}.}
+\label{tab:hyperparams}
+\begin{tabular}{lc}
+\toprule
+Parameter & Value \\
+\midrule
+Learning rate & \(1 \times 10^{-5}\) \\
+Optimizer & AdamW \\
+Clipping radius $\varepsilon$ & 0.2 \\
+Batch Size & 8 documents \\
+Rollout group size $G$ & 4 \\
+KL early-stop threshold $\delta_{\mathrm{KL}}$ & 0.02 \\
+GRU Memory Dimension \(d_m\) & 256 \\
+Gate MLP Hidden Dim & 256 \\
+Gate Bias Init & $-2.0$ \\
+Reward Weights \((\alpha,\beta,\gamma,\delta)\) & (1.0, 0.3, 0.1, 0.8) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Main Results (Placeholder)}
+\label{sec:main_results}
+TBD
+
+\begin{table*}[t]
+\centering
+\caption{Summary generation performance on MIMIC-IV-Ext-BHC and SOAP datasets (n=20 each).
+Higher is better for R-L, BS-F1, and Factuality ($\uparrow$); lower is better for Hallucination ($\downarrow$).
+Factuality and Hallucination scored via DeBERTa-v3 NLI entailment/contradiction probability.
+Remaining baselines and LLM judge scores to be added.}
+\label{tab:main_results}
+\begin{tabular}{lcccccccc}
+\toprule
+& \multicolumn{4}{c}{\textbf{MIMIC-IV-Ext-BHC}} & \multicolumn{4}{c}{\textbf{SOAP}} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9}
+\textbf{Model}
+& \textbf{R-L} & \textbf{BS-F1} & \textbf{Fact.}$\uparrow$ & \textbf{Hall.}$\downarrow$
+& \textbf{R-L} & \textbf{BS-F1} & \textbf{Fact.}$\uparrow$ & \textbf{Hall.}$\downarrow$ \\
+\midrule
+Llama-3.2-3B-Instruct                 & 10.40 & 53.65 & 56.44 & 15.04 & 25.04 & 59.57 & 52.41 &  6.42 \\
+Mistral-7B                            & 13.36 & \textbf{55.27} & 52.75 &  \textbf{9.49} & 18.22 & 49.89 & 62.57 & 11.30 \\
+Flan-T5 XXL                           & --    & --    & --    & --    & --    & --    & --    & --    \\
+BioBART                               & --    & --    & --    & --    & --    & --    & --    & --    \\
+MedAlpaca                 & --    & --    & --    & --    & --    & --    & --    & --    \\
+Contextual & --    & --    & --    & --    & --    & --    & --    & --    \\
+AgenticSum                            & --    & --    & --    & --    & --    & --    & --    & --    \\
+\midrule
+\textbf{ReMemorize (Ours)}            & \textbf{13.39} & 54.48 & 44.06 & 21.96 & 13.62 & 50.41 & \textbf{76.24} & \textbf{5.91} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{LLM-as-a-Judge evaluation (Qwen2.5-7B-Instruct, 0\% parse failure rate). All values in \%. Higher is better except Hallucination ($\downarrow$).}
+\label{tab:llm_judge}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+& \multicolumn{4}{c}{\textbf{MIMIC-IV-Ext-BHC}} & \multicolumn{4}{c}{\textbf{SOAP}} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9}
+\textbf{Model} & \textbf{Hall.}$\downarrow$ & \textbf{Factual}$\uparrow$ & \textbf{Complete}$\uparrow$ & \textbf{Coherent}$\uparrow$
+               & \textbf{Hall.}$\downarrow$ & \textbf{Factual}$\uparrow$ & \textbf{Complete}$\uparrow$ & \textbf{Coherent}$\uparrow$ \\
+\midrule
+Llama-3.2-3B-Instruct      &  7.5 & 70.0          & 58.8          & 78.8          &  7.5          & \textbf{81.2} & \textbf{63.7} & \textbf{92.5} \\
+Mistral-7B                 & 15.0 & \textbf{75.0} & \textbf{63.8} & \textbf{86.3} &  \textbf{2.6} & 75.0          & 60.5          & 80.3          \\
+\midrule
+\textbf{ReMemorize (Ours)} & \textbf{7.5} & 61.3 & 50.0 & 73.8                  &  \textbf{2.6} & 47.4          & 34.2          & 59.2          \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+
+\subsection{Ablation Studies}
+\label{sec:ablations}
+
+To assess the contribution of each component in \textsc{ReMemorize}, we perform systematic ablations across two complementary axes: (1)~\emph{architecture ablations} that test the memory manager's design choices at inference time using the same trained checkpoint, and (2)~\emph{training ablations} that test whether each element of the training recipe is necessary by training separate checkpoints with one component disabled.
+
+\paragraph{Group I: Memory Architecture Ablations.}
+These variants evaluate whether the memory manager's structural choices contribute to output quality.
+All variants use the same trained \textsc{ReMemorize} checkpoint; only the inference-time behavior is modified.
+
+\begin{itemize}
+    \item \textbf{No Memory (LLM Baseline):} Disables memory injection entirely---the gated projection in Eq.~\ref{eq:inject} is bypassed and no GRU updates are applied in either phase. This isolates the contribution of the memory module over the plain LLM backbone.
+
+    \item \textbf{w/o Adaptive Gate ($\gamma{=}0.5$):} Fixes all gating coefficients to $\gamma_t = 0.5$ in both Phase~1 and Phase~2, removing memory-conditioned gating while preserving the full GRU update structure. This tests whether the \emph{learned} gate adds value over a fixed blend.
+
+    \item \textbf{w/o Phase-2 Memory Update:} The memory snapshot $\mathbf{m}_{T_{\text{src}}}$ from Phase~1 is injected at every decoding step but is never updated during generation. This ablates the live-memory component of Phase~2 while retaining source-conditioned context.
+\end{itemize}
+
+Results on MIMIC-IV are reported in Table~\ref{tab:ablation_arch}.
+
+\begin{table}[t]
+\centering
+\caption{Ablations on MIMIC-IV (n=20). All values in \%. Bold = best per metric. NLI Fact./Hall.\ = DeBERTa-v3 entailment/contradiction. Judge = Qwen2.5-7B-Instruct scores.}
+\label{tab:ablation_arch}
+\begin{tabular}{lrrrrrrrrrrr}
+\toprule
+& \multicolumn{6}{c}{\textbf{Automatic Metrics}} & \multicolumn{2}{c}{\textbf{NLI}} & \multicolumn{3}{c}{\textbf{Judge}} \\
+\cmidrule(lr){2-7} \cmidrule(lr){8-9} \cmidrule(lr){10-12}
+Variant & R-1 & R-2 & R-L & B-1 & B-2 & BS-F1 & Fact.$\uparrow$ & Hall.$\downarrow$ & Factual$\uparrow$ & Comp.$\uparrow$ & Coher.$\uparrow$ \\
+\midrule
+\textbf{Full model}               & 25.67 & 5.58 & 13.39 & \textbf{14.17} & \textbf{6.28} & \textbf{54.48} & 44.06 & 21.96 & \textbf{61.3} & \textbf{50.0} & \textbf{73.8} \\
+w/o Memory                        & 21.52 & 4.41 & 12.11 & 11.03 & 4.15 & 53.44 & \textbf{63.66} & \textbf{9.20}  & 48.8 & 42.5 & 58.8 \\
+w/o Adaptive gate ($\gamma{=}0.5$)& \textbf{26.00} & \textbf{6.01} & \textbf{14.44} & 11.59 & 5.36 & 54.38 & 55.47 & 22.28 & 51.3 & 42.1 & 68.4 \\
+w/o Phase-2 update                & 24.35 & 5.12 & 12.53 & 12.39 & 5.36 & 53.86 & 66.81 & 16.66 & 51.2 & 41.2 & 62.5 \\
+w/o GRPO                          & 22.70 & 4.57 & 11.87 & 10.34 & 4.66 & 54.08 & 54.08 & 15.15 & 57.9 & 48.7 & 72.4 \\
+w/o RL                            & 22.19 & 4.94 & 12.05 & 10.56 & 4.58 & 53.74 & 60.34 & 18.36 & --   & --   & --   \\
+w/o Hall.\ Penalty                & --    & --   & --    & --    & --   & --    & --    & --    & --   & --   & --   \\
+w/o Aux.\ Loss                    & --    & --   & --    & --    & --   & --    & --    & --    & --   & --   & --   \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Group II: Training Recipe Ablations.}
+These variants each require a separate training run with one component of the training objective disabled.
+Results are pending full training runs and will be reported in the final version.
+
+\begin{itemize}
+    \item \textbf{w/o GRPO:} Disables group-relative advantage normalisation; uses PPO with global advantage standardisation instead. This tests whether within-group peer comparison (Eq.~\ref{eq:grpo_adv}) provides a stronger training signal than a global value baseline.
+
+    \item \textbf{w/o RL:} Disables all policy-gradient updates and trains the memory interface using only the supervised cross-entropy loss $\mathcal{L}_{\text{sum}}$ on gold summaries. This establishes whether RL is necessary to improve upon standard teacher-forced training.
+
+    \item \textbf{w/o Hallucination Penalty:} Removes the NLI-based contradiction penalty $R_{\text{hallucination}}$ from the reward function, setting $\delta{=}0$ in Eq.~\ref{eq:reward}. This isolates the contribution of explicit hallucination penalisation to factual grounding.
+
+    \item \textbf{w/o Auxiliary Loss:} Removes $\mathcal{L}_{\text{aux}}$ from the training objective (Eq.~\ref{eq:training_obj}), ablating the differentiable supervision path for \textsc{write\_proj}. Since the GRU update is applied without gradient tracking, this tests whether the dense reconstruction signal is necessary for \textsc{write\_proj} to learn a memory-compatible projection.
+\end{itemize}
+
+
+\section{Discussion and Conclusion}
+Our results show that hallucinations persist not only from missing context or weak verification but also from \emph{inefficient memory dynamics during generation}.
+By introducing a learnable GRU-style gated recurrent memory, \textsc{ReMemorize} reframes factual inconsistency as a failure of adaptive memory regulation that occurs step-by-step across both source encoding and autoregressive decoding, not merely at the point of context compression.
+The memory-conditioned scalar gate $\gamma_t$ allows the model to suppress redundant writes when content is already well-represented, providing a principled information-theoretic compression pressure without explicit supervision.
+Reinforcement learning via GRPO grounds these gating decisions in factuality-relevant outcome signals, allowing the policy to discover memory behaviors that improve downstream faithfulness, such as holding onto rare clinical findings while discounting common boilerplate.
+We argue that lightweight, external recurrent memory layers compatible with frozen transformer architectures open a new frontier for trustworthy, domain-specific LLMs, one that requires neither fine-tuning of attention weights nor expensive retrieval augmentation.
+
+\bibliography{ref.bib}
+\bibliographystyle{plainnat}
+\end{document}

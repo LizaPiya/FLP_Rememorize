@@ -1,0 +1,556 @@
+id,rouge1,rouge2,rougeL,pred_len,ref_len,gamma_mean,gamma_std,memory_norm,recon_mse,prediction,reference
+10641243-DS-9,0.1662,0.0597,0.1187,127,220,,,,,"Here is a concise Brief Hospital Course (BHC) summary:
+
+**Patient Information:**
+- Age: Not specified
+- Sex: Male
+- Service: Surgery
+- Chief Complaint: Fall
+- History of Present Illness: A male with a history of epilepsy presented to the ED after a 15-foot fall from a lift, resulting in multiple injuries, including scalp laceration, L1-L4 transverse process fractures, and L11th rib fracture.
+
+**Vital Signs:**
+- Blood pressure: Not specified
+- Oxygen saturation: 100% on room air
+- Respiratory rate: 24 breaths per minute
+- Temperature: Not specified
+
+**Lab Results:**
+- Blood work: 
+  - WBC: 7.8
+  - RBC: 3.73
+  - Hgb: 11.5
+  - Hct: 36.0
+  - MCV: 97
+  - MCH: 30.8
+  - MCHC: 31.9
+  - RDW: 12.9
+  - RDWSD: 46.2
+- Neutrophil count: 74.2
+- Lymphocyte count:","Mr. ___ is a ___ year old male, with a PMH significant for epilepsy who fell 15 ft w/ head strike and +LOC. His imaging upon admission showed left posterior scalp hematoma/abrasion, frontal scalp laceration, L1-4 transverse process fractures, left 11th rib fracture, and right inferior and superior pubic rami fracture. He was seen by the orthopedics service for his pubic rami fracture, who felt he did not need surgical intervention and weight-bearing as tolerated. He was transferred to the floor hemodynamically stable. His pain was controlled on oral analgesics. ___ were consulted and he was ambulating with crutches. On HD3, he was noted to be in respiratory distress with tachypnea, increased oxygen requirement, and tachycardia to the 160s. CXR, CTA, ABGs, and labs were ordered. He was transferred to the TSICU due to his acute hypoxia. He was weaned off the non-rebreather to hiflow oxygen and eventually nasal cannula. On HD4, he was transferred back to the floor. Patient recuperated well on the floor, he worked with physical therapy which recommended discharge to home. He was weaned off O2 and on ___ was found ready to head home. Patient was instructed regarding warning signs and discharge instructions, he was also instructed to continue his respiratory recovery at home using his IS. He will follow up with us in clinic. "
+18141970-DS-8,0.234,0.0428,0.1223,146,229,,,,,"**Patient Information:**
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Service: Obstetrics/Gynecology
+* Chief Complaint: Shortness of breath (SOB)
+* Major Surgical or Invasive Procedure: None
+
+**History of Present Illness:**
+
+* The patient is a 40-year-old woman with a history of two previous spontaneous deliveries (SVDs) and one previous Lower Segment Cesarean Section (LTCS).
+* She presents with SOB that initially began during pregnancy and has worsened since discharge.
+* She has a history of orthopnea and paroxysmal nocturnal dyspnea, and endorses dyspnea on exertion.
+* The patient has been started on Labetalol for elevated blood pressures post-partum, which was titrated up to 600mg PO TID.
+
+**Physical Examination:**
+
+* Vital signs: T: 98.9, HR: 97, BP: 150/91 -> 137/93, RR: 25, O2: 96-97%
+* Physical exam findings: Decreased breath sounds bilaterally at the bases, slight crackles at the bases, and 1+ edema to mid-shin, DTR","Ms. ___ was admitted given her persistent shortness of breath and hypertension. With regards to her shortness of breath, her work up included a CXR, ECHO, and CTA. Her CXR showed cardiac enlargement and prominent pulmonary vasculature. Her ECHO showed a normal ejection fraction however did have elevated pulmonary artery pressures. This finding prompted a CTA given concern for PE causing pulmonary hypertension. The CTA was negative for PE however did show small pleural effusions. Cardiac enzymes were checked and were normal. Given orthopnea/ PND/ and ?fluid overload on CXR/CTA, lasix was given x2 with excellent UOP response and significant improvement in her symptoms. Throughout her admission she was afebrile and her O2sat remained 95-98% on room air. Following the 2nd dose of lasix she required no further intervention as she was asymptomatic. Ms. ___ blood pressures were very labile and this was the focus of much of the admission. Her blood pressures ranged from 120-170/80-100's. She was started on nifedipine CR 30 daily which was titrated up to 30 BID. Labetalol was initially held on admission as she was started on nifedipine, however this was restarted at 200mg BID ___ persistently elevated BP's and this brought her BP's to normal/ mild range. Ms. ___ was discharged on HD #4 in stable condition. She was no longer short of breath and her blood pressures were stable x 24 hours. "
+14711846-DS-15,0.2164,0.0265,0.0897,140,247,,,,,"Here is a concise Brief Hospital Course (BHC) summary:
+
+**Patient Information:**
+- Age: Not specified
+- Sex: Not specified
+- Service: Medicine
+- Allergies: Gold Salts, Penicillins, Remicade, Erythromycin Base
+
+**Chief Complaint:** Shortness of breath
+
+**Major Surgical or Invasive Procedure:** None
+
+**History of Present Illness:** The patient, a 40-year-old female with a history of hypertension, rheumatoid arthritis (on prednisone/methotrexate/orencia), presented with shortness of breath that worsened throughout the day. She experienced pleuritic shoulder pain, dry cough, and malaise.
+
+**Vital Signs:** On admission, the patient's vital signs were: BP 127/63, HR 79, 20, SpO2 96% on room air.
+
+**Diagnosis:** Community-Acquired Pneumonia (CAP) with a diffuse pulmonary infiltrate and consolidation on chest X-ray.
+
+**Treatment:** 750mg IV levofloxacin was administered for presumed CAP.
+
+**Transfer:** The patient was transferred to another hospital due to lack of bed availability.
+
+**Past Medical History:** Community-acquired pneumonia (","Ms. ___ was admitted for diagnosis and treatment of her shortness of breath. She remained afebrile. Outside records were obtained from ___ and CXR showed evidence of possible pulm edema. # Shortness of breath: DDx was broad, given hx of RA and immunosuppresion. Pleuritic chest pain was thought to be radiation from lung process (given negative extremity exam). CAP was considered most likely etiology of SOB. Less likely etiologies included: legionella (esp considering hyponatremia although urine ag negative)), TB (no hx of exposure, prior PPD negative). She was also treated for pulm edema suggested by CXR (however, echo was not consistent with CHF and EKG not suggestive of MI/ACS as cause of CHF). Her leukocytosis resolved (16.3-->10.8) on Levofloxacin. Pt also rec'd Lasix w good urine output. Crackles improved on hospital day 3. - Levofloxacin to 750mg PO per day for CAP (___) Inactive Issues: #Macrocytosis Likely ___ MTX therapy. B12 and folate wnl. # RA: Followed by rheumatologist. On prednisone, orencia, relafen, leukovorin, and methotrexate and vicodin, robaxin, and tylenol 3 for pain. # Post-menopausal symptoms On medroxyprogesterone and estrogen # Depression On lexapro, gabapentin, nortryptiline, and buspirone # HTN On lisinopril and hctz # Health maintenance - continue ASA, Fe, MVI Transitional Issues: - Consider CT after resolution of infectious process given likely recurrence of PNA in R lobe (post-obstructive PNA possible). - Pls ___ blood cx from ___ (negative as of ___ - Pt on Levofloxacin until ___. Pls confirm that full course completed. "
+16153507-DS-8,0.0856,0.0045,0.0586,138,320,,,,,"**Patient Information:**
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Sex: [Not provided]
+
+**Chief Complaint:**
+
+* Fall
+
+**History of Present Illness:**
+
+* S/p fall down 14 steps with change in mental status, transported to hospital for further care.
+
+**Past Medical History:**
+
+* Cervical spondylosis with mild myelopathy
+* Peripheral neuropathy
+* Hearing loss
+* Prostate cancer (s/p ""surgery"")
+* Cirrhosis (by radiographic appearance of liver on CT)
+* Depression
+* Cognition: no history of memory loss
+
+**Social History:**
+
+* Not provided
+
+**Family History:**
+
+* Not provided
+
+**Physical Examination:**
+
+* VS: 97/112/64
+* Height: 69 in.
+* Weight: 87 kgs (191.80 lbs)
+* BMI: 28.3
+* Overweight
+* Sleeping in bed; opens eyes briefly to name/sternal rub, then falls asleep
+* HEENT: Anicteric sclerae, OP clear without E/E
+* NECK: No LAD/TM, JVP 6
+* CV: RRR, S1/S2","He was admitted to the Trauma ICU with following injuries parietal/occipital subgaleal hematoma, right post 7 rib fracture, T1 spinous process fracture as well as a right buttock hematoma with active extravasation. He was actively resuscitated in the ICU with aggressive fluid therapy. A TTE showed hypovolemia and for a low hematocrit of 23 he was given units of packed red cells on ___ post transfusion hematocrit 26. His respiratory status was tenuous likely due to fluid overload and he was given 60mg IV Lasix for pulmonary edema. On ___ he was given another 20mg IV Lasix; a deep sputum culture was obtained showing GPC and GNR and he was started on vancomycin and ceftriaxone. The antibiotics will continue for 2 weeks. He remained in the ICU for several days becoming delirious. Geriatrics was consulted and made several recommendations pertaining to his medications such as scheduling Tylenol, minimizing narcotics, and use of small doses of anti-psychotic to manage behaviors. He was eventually transferred to the regular nursing unit where later in the evening had a desaturation episode. He was also at that time noted with low urine output and was given a fluid challenge with increase in his urine output. He has a 22 Coudé catheter in placed which was inserted by Urology during his ICU stay because of problems with urinary retention. The catheter may removed at the discretion of the primary team once voiding adequately while at rehab. His oxygen saturations did improve and he is currently 97% with forehead probe on ___ liters per minute. Of note on CT imaging of his chest a small nodule was detected; it is being recommended that he have follow up CT of his chest in the next several months. He will require follow up with his primary care doctor for this as an outpatient. He was evaluated by Physical and Occupational therapy and is being recommended for acute care rehab. "
+19868904-DS-20,0.3256,0.0585,0.1628,175,185,,,,,"**Brief Hospital Course Summary**
+
+**Patient Information:**
+
+* Age: Not specified
+* Sex: Female
+* Service: Neurology
+* Chief Complaint: Perineal numbness
+* Allergies: None
+* Attending Physician: Not specified
+* Major Surgical or Invasive Procedure: None
+* History of Present Illness: The patient was recently diagnosed with Multiple Sclerosis (MS) and presented with groin numbness for 4 days. She experienced numbness that began in the right axilla, radiating to the right leg above the knee, and involved the entire right leg circumferentially. The numbness was accompanied by tingling and burning sensations, which worsened in a hot shower. She also experienced dizziness, weakness in the knees, and bilateral foot tingling in the soles, which has not improved since discharge.
+
+**Diagnostic Findings:**
+
+* Laboratory Results: CSF analysis showed 4 WBC, protein 24, and glucose 54. MRI spine and brain showed abnormal signal changes and multifocal white matter lesions.
+* Medications: 5-day course of IV steroids and prescribed Copaxone, which she has not started due to insurance issues.
+
+**Current Presentation:**
+
+* The patient now presents with groin numb","Ms. ___ was admitted to the neurology service on ___ due to numbness in her perineal area. Her initial neurologic exam demonstrated a mild decrease in pinprick sensation in the S5 dermatome but was otherwise intact. By the next morning she had no objective sensory loss and rectal tone was normal. MRI L spine was performed which showed multiple focal areas of abnormal signal intensity and a single focus of abnormal enhancement in the lower thoracic cord, consistent with her prior imaging from ___ and consistent with her known diagnosis of MS. ___ has just received a course of IV steroids and is due to start Copaxone therapy. Given her mild and improving symptoms with no loss of bladder/bowel function and little to no objective findings on exam, she does not warrant further acute steroid treatment at this time. We advised her to start Copaxone as planned (insurance approval is currently pending), and to follow up with Dr. ___ in clinic as advised by her PCP. She was discharged home in good condition on ___. She has a follow-up appointment scheduled with Dr. ___ ___. "
+17989869-DS-18,0.1886,0.0573,0.1057,155,553,,,,,"**Brief Hospital Course Summary**
+
+**Patient Information:**
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Sex: [Not provided]
+* Service: Orthopedics
+* Chief Complaint: Infected total knee arthroplasty
+* Attending Physician: [Not provided]
+* Major Surgical Procedure: Left knee resection arthroplasty with antibiotic spacer placement
+
+**History of Present Illness:**
+
+* The patient had an uncomplicated total knee replacement by Dr. [Not provided] on the left side, but developed drainage from the incision since then.
+* The patient experienced a syncopal episode on [Date] due to dizziness in the shower, which led to hypoglycemia and significant drainage from the surgical site.
+* Labs revealed septic shock, hypotension, and a troponin leak thought to be due to demand ischemia and hypotension.
+* The patient was treated with antibiotics (levofloxacin, rifampin, and cefazolin) and had a troponin leak that resolved.
+
+**Past Medical History:**
+
+* Type 2 diabetes
+* Aortic stenosis
+* Hypertension
+* Osteoarthritis
+
+**Social History:**
+
+* Non","The patient presented from ___ to ___ ___ where he was admitted to the Orthopaedic service. He was a direct admit for infected left total knee replacement. On physical exam of the left knee, his surgical staples were intact, with mild serosanguineous drainage from the inferior portion of the wound. There was local erythema and edema of the lower extremity. ID was consulted and made recommendations including for his antibiotic regimen (please see their note for full details). Per their recommendation, a PICC was placed and his right femoral catheter was removed on ___. The patient was transferred to the Joints service on the ___ on ___. The patient was taken to the operating room for above described procedure. Please see separately dictated operative report for details. The surgery was uncomplicated and the patient tolerated the procedure well. Postoperative course was remarkable for the following: On POD #0, patient was given 5mg of Coumadin for INR 1.3. On POD #1, patient had a hematocrit of 22.7 and low magnesium level of 1.5, which was repleted. INR was 1.9 and Coumadin was held. Patient was triggered for asymptomatic hypotension and 1 liter bolus of IV fluids was given. In the afternoon, patient was noted to be drowsy per RN and a repeat hematocrit was obtained, which was stable at 22.9. On POD #2, hematocrit was 22.8 and blood pressures were within normal limits. Patient was not given a blood transfusion given that he was asymptomatic with stable vital signs. INR was 2.5 and coumadin was held. Patient's hemovac drain remained in placed due to high output. On POD #3, his hematocrit remained stable at 23.1 and his vital signs remained stable. He was started on 40mg of lovenox daily after his INR returned at 1.7. His pain medication was then switched to Dilaudid for inadequate pain control. The drain remained in place. On POD #4, the patient's pain was better controlled with Dilaudid and expressed feeling better. His hematocrit returned at 22.2 and his vital signs continued to remain stable. On POD#5, the drain was removed, his hematocrit was 23.1 with asymptomatic mild hypotension, systolic blood pressure of 98, he was given a bolus, 500cc of normal saline. At the time of discharge his blood pressure was 120 systolic and the patient was asymptomatic. Otherwise, pain was controlled with a combination of IV and oral pain medications. The patient received Coumadin for DVT prophylaxis on POD #0 and Coumadin was dosed daily based on INR levels. He was then switched to Lovenox 40mg daily on POD#3. The ___ surgical dressing will remain in place until follow visit with Dr. ___ on ___. The patient was seen daily by physical therapy. Labs were checked throughout the hospital course and repleted accordingly. At the time of discharge the patient was tolerating a diabetic diet and feeling well. The patient was afebrile with stable vital signs. The patient's hematocrit was acceptable and pain was adequately controlled on an oral regimen. The operative extremity was neurovascularly intact and the dressing was intact. The patient's weight-bearing status is toe touch weight bearing on the operative extremity. No range of motion of left knee. Please keep the knee immobilizer on for ambulation. Please use walker or 2 crutches at all times. Mr. ___ is discharged to rehab in stable condition. "
+16672169-DS-11,0.1833,0.046,0.0958,138,371,,,,,"**Patient Information:**
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Sex: [Not provided]
+* Service: Medicine
+* Allergies: Tegaderm, chlorhexidine, Bactrim
+
+**Chief Complaint:** Neutropenia
+
+**Major Surgical or Invasive Procedure:** None
+
+**History of Present Illness:** The patient has a history of dilated cardiomyopathy, with a previous heart transplant and implantable cardioverter-defibrillator (ICD) placement, and subsequent orthotopic heart transplant (OHT). She was recently diagnosed with hypothyroidism and has been taking levothyroxine. The patient presents with fatigue, which has not improved despite recent changes to her medication regimen.
+
+**Past Medical History:**
+
+* Idiopathic dilated cardiomyopathy
+* Previous heart transplant
+* Previous OHT
+* Hypothyroidism
+* Osteoporosis with compression fractures
+* Diabetes
+* Dyslipidemia
+* Hypertension
+* Paroxysmal atrial fibrillation (pAF)
+* Fibroid uterus
+* Breast mass
+* Gastritis (H. pylori)
+* Diabetes
+* Depression
+* Sleep apnea
+* Allergic rh","SUMMARY: ___ with PMH of dilated cardiomyopathy ___ class IV s/p VAD/ICD placement ___ and subsequent OHT ___, newly diagnosed hypothyroidism, presented after routine labs discovered neutropenia. ACTIVE ISSUES # Neutropenia Unclear etiology but a concerning finding. Fortunately, the patient was asymptomatic and had no fevers. Multiple possibilities could be involved: too much immunesuppression from her regimen, an occult infection (no symptoms however), Bactrim toxicity (has been on it for some time though). Had positive urine culture no treatment needed given no symptoms. Hematology and ID were consulted. CMV/EBV viral load negative, flow cytometry negative for concerning clonal populations to suggest hematological malignancy. After stopping Bactrim and decreasing the dose of MMF from 1000mg BID to ___ BID, her ANC slowly recovered and was at 638 at discharge. Therefore, most likely explanation was Bactrim toxicity. Bone marrow biopsy was deferred given recovery. Filgrastim was not given due to no signs of infection. # Dilated Cardiomyopathy s/p OHT Patient endorsed shortness of breath that had been chronic and stable since transplant. She had only mild rejection on recent biopsy and appeared euvolemic. Her immunesuppression was modified to MMF 750mg BID from 1000mg BID. Prednisone was continued at 2.5mg daily. Tacrolimus levels were monitored every day, and due to persistent levels <7, her tacrolimus was increased to 3mg BID from 2mg in AM and 3mg in ___. Bactrim was stopped and atovaquone started at 1500mg daily for PCP and toxoplasmosis prophylaxis. Nystatin was continued. # Hypothyroidism Patient continued to be very symptomatic from her hypothyroidism despite recent increase in levothyroxine. However, TSH appeared to be lowering with increasing free T4. Endocrine recommended continuing current regimen as she had yet to reach steady-state yet. She continued to take levothyroxine 75mcg daily while inpatient. CHRONIC ISSUES # Compression Fractures: She received Tylenol and oxycodone PRN, and continued vitamin D and calcium supplementation. 24hr urine collection for calcium, creatinine, and UPEP were collected based on outpatient endocrine recommendations. # T2DM: Continued home insulin regimen. # GERD: Continued pantoprazole 40mg BID. # Anxiety: Continued sertraline 75mg daily and clonazepam 2.5mg QHS. # Anemia: Chronic but stable. Continued ferrous sulfate 325mg daily. TRANSITIONAL ISSUES - Follow up labs on ___ for CBC w/ diff and tacrolimus trough level "
+16002318-DS-17,0.2234,0.0308,0.1117,151,58,,,,,"Patient Information:
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Sex: [Not provided]
+* Service: Surgery
+* Chief Complaint: Morbid obesity
+* Major Surgical Procedure: Laparoscopic gastric bypass
+
+History:
+
+* Past Medical History: Sleep apnea, hypothyroidism, back pain, iron deficiency anemia, headaches, urticaria (with chronic steroids)
+* Social History: Family history of obesity with mother
+* Medications: Levothyroxine, Zyrtec, Benadryl, Albuterol sulfate, Fioricet, Clobetasol, Tylenol, Ferrous sulfate, multivitamin, and vitamin D
+
+Physical Examination:
+
+* Vital signs: Stable
+* Physical exam findings: No acute distress, supple neck, breathing comfortably, lungs clear to auscultation, abdomen soft and nontender with a lower abdominal scar, good range of motion, good strength, normal gait and station
+
+Lab Results:
+
+* HCT-36.3 (not specified what this value represents)
+
+Discharge Instructions:
+
+* Medications to treat pain from the operation
+* Follow-up with [not provided]
+
+Note: The patient is being discharged home with a stable condition and vital signs",This is a ___ yo F admitted to the hospital after a lap gastric bypass. There were no intraoperative complications. Her post operative course was uneventful. She remained afebrile and vital signs were stable. Her diet was advanced to bariatric stage 3 and her pain was well controlled with oral pain medications. She was ambulating well at discharge. 
+18782032-DS-30,0.1919,0.0385,0.0938,136,358,,,,,"**Brief Hospital Course Summary**
+
+**Patient Information:**
+
+* Name: [REDACTED]
+* Age: [REDACTED]
+* Sex: [REDACTED]
+* Service: Medicine
+* Allergies: Penicillins, Enalapril, Nifedipine
+
+**Chief Complaint:**
+
+* Shortness of breath and cough
+
+**History of Present Illness:**
+
+* The patient presents with shortness of breath and cough for 2 days, worsening over time, with productive cough and chest tightness. She reports difficulty swallowing pills and feeling like food gets stuck in her throat.
+
+**Past Medical History:**
+
+* Pulmonary: Asthma, diagnosed [REDACTED], with multiple hospitalizations but no intubations. Not on home steroids since [REDACTED].
+* Chronic Sinus Disease: s/p bilateral CT guided endoscopic maxillary antrostomies, left anterior ethmoidectomy, right anterior and posterior ethmoidectomy, right sphenoidotomy, excision of lateral lamella, left concha bullosa.
+* Seasonal Allergies: h/o hives and lip swelling.
+* Cardiac: Hypertension, heart murmur, h/o atypical chest pain","___ yo F with Asthma, HTN, OSA and GERD who presents with SOB, cough and fever consistent with asthma exacerbation and CAP. . # Asthma exacerbation: Patient known asthma, multiple hospitalization for exacerbations, but no intubations. Most likely cause of exacerbation was felt to be community acquired pneumonia. Influenza was neg by DFA. She was treated with a 7 day course of levofloxacin ending on the day of discharge, and prednisone 60 mg orally for five days, followed by a decrease to 40 mg daily. She was instructed to complete a slow prednisone taper over the next several weeks. Additionally, she was treated with albuterol and atrovent nebulizers every four hours, as well as benzonatate and guafenesin for symptomatic relief. At discharge her cough and shortness of breath were significantly improved, but still decreased from baseline. She was able to ambulate with some mild dyspnea, but no decrease in oxygen saturation. . . # GERD: Pt provided a history of significant reflux symptoms, on PPI at home. Last EGD in ___ was normal. She also provided history of more recent dysphagia particularly with solid foods and pills. She underwent a video swallow evaluation, which showed no evidence of aspiration, but some slight penetration with thin liquids. Consequently, she was advised to take thin liquids slowly (one sip at a time), soft solids and pills whole with puree. Differential for her dysphagia includes esophageal stricture, web, or malignancy. She was proved with an appointment to follow-up in GI clinic three days after discharge for possible EGD to evaluate her dysphagia. She was also continued on omeprazole during this admission. . . # ARF: Creatinine was found to be elevated from baseline several days into admission. This resolved with gentle IV fluids, and was felt to be prerenal in etiology, likely secondary to decreased PO intake during period of dyspnea with asthma exacerbation. . # Hypertension: Continued on home regimen of valasartan and verapamil. . # Anemia: Stable normocytic anemia, which appeared to be at patient's baseline of ___. . # OSA: Uses CPAP at home, which was continued during this admission. . # Hypothyroidism: Continued on home dose levothyroxane. "
+17134883-DS-11,0.2513,0.0309,0.1385,162,228,,,,,"**Brief Hospital Course Summary**
+
+**Patient Information:**
+
+* Sex: Female
+* Service: Orthopedics
+* Allergies: Sulfa (Sulfonamide Antibiotics)
+
+**Chief Complaint:**
+
+* Recurrent instability, right revision Total Hip Replacement (THR)
+
+**Major Surgical Procedure:**
+
+* Revision Right Total Hip Replacement (THR)
+
+**History of Present Illness:**
+
+* The patient had a third crescendo dislocation of her total hip replacement revision, which was performed two months ago.
+* She had a history of significant osteolysis and a previous THR revision due to an ingrown acetabulum that was modified with a revision acetabulum.
+* The patient has had posterior dislocation three times despite wearing an abductor brace and has been compliant with post-operative instructions.
+
+**Plan:**
+
+* The patient will undergo a revision acetabulum procedure to address the recurrent instability and potential infection.
+* A fluoroscopic-guided aspiration of the hip will be performed to check for cultures and cell count.
+* The patient will be monitored for signs of infection and will be re-evaluated if the results show abnormality.","The patient was admitted to the orthopaedic surgery service and was taken to the operating room for above described procedure. Please see separately dictated operative report for details. The surgery was uncomplicated and the patient tolerated the procedure well. Patient received perioperative IV antibiotics. Postoperative course was remarkable for the following: 1. Post-op anemia requiring transfusion of 1U PRBCs. The patient's Hct stabilized at the time of dischrage. Otherwise, pain was initially controlled with a PCA followed by a transition to oral pain medications on POD#1. The patient received lovenox for DVT prophylaxis starting on the morning of POD#1. The foley was removed on POD#2 and the patient was voiding independently thereafter. The surgical dressing was changed on POD#2 and the surgical incision was found to be clean and intact without erythema or abnormal drainage. The patient was seen daily by physical therapy. Labs were checked throughout the hospital course and repleted accordingly. At the time of discharge the patient was tolerating a regular diet and feeling well. The patient was afebrile with stable vital signs. The patient's hematocrit was acceptable and pain was adequately controlled on an oral regimen. The operative extremity was neurovascularly intact and the wound was benign. The patient's weight-bearing status is weight bearing as tolerated on the operative extremity with posterior precautions. Ms. ___ is discharged to home with services in stable condition. "
+15302216-DS-14,0.2934,0.0482,0.1557,144,188,,,,,"Patient: <SEX> F
+
+Chief Complaint: Abdominal pain
+
+History of Present Illness: The patient presented with RUQ pain that worsened throughout the day, initially dull, and was relieved after coming to the ED. She reported nausea but no vomiting. She had a recent C-section and similar episodes of pain during pregnancy that resolved on their own.
+
+Past Medical History: GERD, migraines
+
+Physical Exam: Vital signs were stable, with a mild fever and tenderness in the RUQ. The abdomen was soft and mildly tender to palpation.
+
+Lab Results: Blood work showed mild leukocytosis and anemia.
+
+Imaging: RUQ ultrasound showed cholelithiasis without gallbladder wall thickening or pericholecystic fluid.
+
+Diagnosis: Symptomatic cholelithiasis/cholecystitis.
+
+Treatment: Acetaminophen, docusate sodium, and oxycontin for pain management.
+
+Disposition: Discharged home.
+
+Note: The patient's symptoms and lab results suggest cholelithiasis, but the absence of gallbladder wall thickening or pericholecystic fluid makes acute cholecystitis less likely.","The patient was admitted to the General Surgical Service on ___ for evaluation and treatment of abdominal pain. Admission abdominal ultra-sound revealed cholelithiasis. The patient underwent laparoscopic cholecystectomy, which went well without complication (reader referred to the Operative Note for details). After a brief, uneventful stay in the PACU, the patient arrived on the floor tolerating sips, on IV fluids, and IV analgesia for pain control. The patient was hemodynamically stable. . Pain was well controlled. Diet was progressively advanced as tolerated to a regular diet with good tolerability. The patient voided without problem. During this hospitalization, the patient ambulated early and frequently, was adherent with respiratory toilet and incentive spirometry, and actively participated in the plan of care. The patient received subcutaneous heparin and venodyne boots were used during this stay. . At the time of discharge, the patient was doing well, afebrile with stable vital signs. The patient was tolerating a regular diet, ambulating, voiding without assistance, and pain was well controlled. The patient was discharged home without services. The patient received discharge teaching and follow-up instructions with understanding verbalized and agreement with the discharge plan. "
+19042495-DS-24,0.2,0.0234,0.0837,136,316,,,,,"**Patient Information:**
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Sex: [Not provided]
+* Service: Surgery
+* Chief Complaint: Pain in wrists, left hand, hips, and face
+
+**History of Present Illness:**
+
+* The patient, a 11-year-old female, presented with pain in her wrists, left hand, hips, and face after tripping on a rug and hitting her face while caring for her puppy.
+
+**Past Medical History:**
+
+* CVA (cerebrovascular accident) x 2
+* Cerebral aneurysms
+* CHF (congestive heart failure)
+* HTN (hypertension)
+* HLD (hypothyroidism)
+* Gait instability
+* Renal cell cancer treated with cryoablation therapy
+* Paravertebral muscle hematoma (complication of vertebroplasty)
+* OA (osteoarthritis)
+* Depression/anxiety
+* UTI (urinary tract infection)
+* Constipation
+* Scoliosis
+* Cervical spondylosis with cord compression
+* Osteoporosis
+* HTN (hypertension)
+* Past surgical history:
+	+ Thumb surgery","___ with PMH afib on Coumadin, prior CVAs ___ no residual deficits), cerebral aneurysm, renal cell cancer s/p cryoablation, CHF, gait instability uses walker who presented s/p mechanical fall ___ with mildy displaced right C2 tranverse process fracture, and left ___ phalanx fracture. Also noted to have a nasal bone fracture. The patient is hemodynamically stable. She was seen by Neurosurgery who recommended nonoperative management of the C1 fracture, hard cervical collar for ___ weeks and outpatient follow-up for repeat films. Hand surgery saw the patient for the phalanx fracture who splinted the finger and recommended outpatient follow-up in 1 week. The patient was admitted for ___ consult and pain control. On HD1, the tertiary survey revealed no other injuries. Physical Therapy worked with the patient, and recommended rehab once medically stable. During this hospitalization, the patient ambulated early and frequently with the help of nursing, was adherent with respiratory toilet and incentive spirometry, and actively participated in the plan of care. The patient received subcutaneous heparin and venodyne boots were used during this stay. The patient's INR was noted to be supratherapeutic on HD4 (___) so Coumadin was held. The patients INR ___ was 2.4, she will receive 2.5 mg Coumadin at 1400. Repeat INR ordered for ___. At the time of discharge, the patient was doing well, afebrile with stable vital signs. The patient was tolerating a regular diet, ambulating with walker assistance, and voiding without difficulty. She continues to get headaches frequently, getting Tylenol for pain with minimal effect. She was educated that these headaches are likely due to her cervical fracture and may persist while this fracture is healing. Her Tylenol was changed from PRN to scheduled to improve with breakthrough pain. The patient will be discharged to rehab. The patient received discharge teaching and follow-up instructions. She will be following up with Urology outpatient regarding hematuria, and with hand surgery outpatient. "
+12824384-DS-13,0.1289,0.018,0.06,133,568,,,,,"**Brief Hospital Course Summary**
+
+**Patient Information:**
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Sex: [Not provided]
+* Admission Date: [Not provided]
+
+**Chief Complaint:**
+
+* Chest pain and shortness of breath
+
+**History of Present Illness:**
+
+* 88-year-old man with a history of CAD, MI, HTN, COPD, cognitive decline, and a recent bad cold.
+
+**Vital Signs:**
+
+* Temperature: 99.6°F
+* Pulse: 96
+* Blood Pressure: 173/91
+* Respiratory Rate: 20
+* Oxygen Saturation: 88% on room air, improved to 98% after nebulizer treatment
+
+**Physical Examination:**
+
+* Notable findings: bilateral lower lobe rales, wheezing throughout right lung, 1+ edema to knees, and hyperpigmentation of dorsal forearms.
+
+**Laboratory Results:**
+
+* BNP: [Not provided]
+* Leukocytosis: No
+* Electrolytes: Within normal limits
+* Flu PCR: Negative
+* Creatinine: 1.3, decreased to 1.1 with Lasix
+* Troponin:","___ h/o CAD s/p MI, COPD, cognitive decline, p/w shortness of breath and chest pain c/f CHF exacerbation. ACTIVE ISSUES =============== # Shortness of breath and leg swelling #Acute heart failure with reduced ejection fraction Clinical findings with patient presenting with new shortness of breath and increased ___ edema most consistent with new onset heart failure with pulmonary edema noted on chest x-ray. No evidence of infection. Reports of COPD on notes but unclear if accurate and appeared more consistent with volume overload. Received 20 mg of IV Lasix x2 while in ED observation with good urine output and significant improvement in both pulmonary symptoms and ___ edema but still with volume overload with plan to continue IV diuresis with 20 mg of IV Lasix until euvolemia. Had mild elevation of troponin from 0.03 to 0.04 x2 but negative CK-MB. EKG consistent with LBBB that was known per ___ records with no significant acute ST changes. TTE was performed on ___ that revealed a depressed EF of 40% (new per report but prior imaging not available for comparison) as well as mild regional left ventricular systolic dysfunction, c/w CAD (LAD distribution), calcific aortic valve disease with minimal stenosis and mild regurgitation, mild mitral regurgitation, elevated intracardiac filling pressures and moderate pulmonary hypertension. Weight on ___ was 76 kg. Unclear patient baseline dry weight. Continued on home metop and losartan. Planned transfer to ___ cardiology service. It is unclear if pt's drop in LVEF is acute vs. subacute vs. chronic. Could consider medical management and assessment of symptoms vs. pharmacologic stress to determine degree of ischemia vs. cardiac catheterization to attempt revascularization. # Atrial Fibrillation with RVR No reports per patient or family of prior episode of afib. Received metoprolol 5mg IV in ED on ___, as well as fractionated metoprolol tartrate 25mg at that time with improvement. Elevated CHADS2 score such that patient should be anticoagulated. This was not initiated as pt may need procedure. Additionally, discussion with patient and family discussing the risks and benefits of anticoagulation should be addressed. # Weight Loss Poor PO intake ___ cognitive decline and less active. Low clinical suspicion for underlying malignancy. Needs nutritional education also given new heart failure. Touch base with outpatient PCP. Consider age appropriate cancer screening if within goals of care. CHRONIC ISSUES: ================ # T2DM Continued on Glargine 10 units daily with saxagliptin held while on insulin sliding scale. #Gout Continued on Allopurinol # Cognitive Dysfunction Continued Donepezil. Confused but at baseline mental status while here. # Unspecified Mood Disorder Continued buspirone and sertraline. Clarify with ___ records. # BPH: Continue finasteride # HTN: Continue metoprolol, losartan # OSA: Unclear if on CPAP. TRANSITIONAL ISSUES: ===================== [] Recommend continued cards input regarding whether medical management of new onset heart failure vs pursuing further diagnostic intervention with pharmacologic stress or possibly proceeding immediately to cath would be most ideal. Recommend comparison to prior ___ records and patient/families treatment goals. [] Will need to consider anticoagulation given afib and elevated CHADS2 [] Adjust metoprolol as needed for afib rate control [] Increase ongoing goal directed therapy given new HFrEF [] Continue to follow-up on weight loss [] Clarify on COPD history [] ___ evaluation while at the ___, social situation at home that may require assistance upon eventual discharge # CODE: Full (presumed) Pt's wife states they have never thought about this before. # CONTACT: ___ (wife): ___. "
+13097183-DS-3,0.1366,0.0707,0.0911,124,370,,,,,"**Patient Information:**
+
+* Name: [REDACTED]
+* Age: [REDACTED]
+* Sex: [REDACTED]
+* Service: Surgery
+* Chief Complaint: Incisional hernia
+* Attending Physician: [REDACTED]
+
+**History of Present Illness:**
+
+* The patient had a laparoscopic repair of a perisupraumbilical ventral hernia with recurrence, which led to an exploratory laparotomy, lysis of adhesions, recurrent incarcerated ventral incisional hernia with mesh and component separation.
+
+**Past Medical History:**
+
+* Obesity
+* Depression
+* GERD
+* Osteoarthritis
+* Non-insulin dependent DM
+* Hypertension
+* Previous surgeries: cholecystectomy, rotator cuff repair, laparotomy for ventral hernia repair
+
+**Physical Examination:**
+
+* Vital signs: BP 151/100, HR 94, RR 18, O2 sat 98%
+* General: A&Ox3, NAD, resting comfortably
+* Head and Neck: EOMI, sclera anicteric
+* Cardiovascular: RRR
+* Pulmonary: no respiratory distress","Mr. ___ is a ___ who underwent an exploratory laparotomy, lysis of adhesions, recurrent incarcerated ventral incisional hernia with mesh and component separation; please see the operative note for details. Pt was extubated, taken to the PACU until stable, then transferred to the ward for observation. Neuro: The patient was alert and oriented throughout hospitalization; pain was initially managed with a thoracic epidural and intravenous acetaminophen and ketorolac, but was split to a bupivacaine containing epidural and hydromorphone PCA on POD1. On POD2, the epidural catheter was inadvertently dislodged and ultimately removed by the Acute Pain Service. Once tolerating a diet, the pain regiment was transitioned to oral acetaminophen and oxycodone. CV: The patient was hypotensive on POD0-1 requiring fluid and albumin boluses and a decrease in the epidural rate with complete resolution. Pulmonary: The patient remained stable from a pulmonary standpoint; vital signs were routinely monitored. Good pulmonary toilet, early ambulation and incentive spirometry were encouraged throughout hospitalization. Given a temp of 101.1 on POD3, a chest x-ray was obtained and revealing for left sided atelectasis. He remained afebrile throughout the remainder of his hospitalization and his WBC normalized (6.3) by the day of discharge. GI/GU/FEN: The patient was initially kept NPO. On POD1, the diet was advanced to clears, but made NPO again on POD2 due to increased abdominal distention. However, on POD2, the patient began passing flatus and the diet was gradually progressed to regular which was well tolerated. On POD1, he was noted to have an acute kidney injury which resolved with fluid resuscitation. The Foley catheter was removed on POD2. The JP drain output was serosanguinous and left in place at the time of discharge. HEME: The patient's blood counts were closely watched for signs of bleeding, of which there were none. Prophylaxis: The patient received subcutaneous heparin and ___ dyne boots were used during this stay and was encouraged to get up and ambulate as early as possible. At the time of discharge, the patient was doing well, afebrile and hemodynamically stable. The patient was tolerating a diet, ambulating, voiding without assistance, and pain was well controlled. The patient received discharge teaching and follow-up instructions with understanding verbalized and agreement with the discharge plan. "
+19390920-DS-20,0.1187,0.0044,0.0527,145,330,,,,,"Here is a concise Brief Hospital Course (BHC) summary:
+
+**Patient Information:**
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Sex: [Not provided]
+* Service: Surgery
+* Chief Complaint: Right upper quadrant (RUQ) abdominal pain
+* Allergies: None
+* Attending Physician: [Not provided]
+
+**History:**
+
+* Admitted with RUQ abdominal pain
+* Pain began last night
+* Improved with morphine
+* No vomiting, mild nausea
+* History of similar episodes since colon surgery
+* Work-up by GI doctors was negative (CT scan, no EGD)
+* Last episode of pain lasted less than overnight after eating peanuts
+* No diarrhea, constipation, anorexia, melena, hematochezia, dysuria, frequency, headache, dizziness, palpitations, CP, SOB, myalgias
+
+**Past Medical History:**
+
+* PMHx: Colon polyps, rosacea
+* PSHx: Partial colectomy secondary to polyps
+
+**Physical Examination:**
+
+* Vital signs: Stable
+* General examination: Afebrile
+* Lung examination: Clear bilaterally
+* Abdominal examination: Soft, nondist","The patient was admitted to the General Surgical Service on ___ for evaluation of the aforementioned problem. Admission liver/gallbladder ultra-sound revealed multiple small gallstones at the gallbladder neck and mildly thickened gallbladder wall with a normal CBD consistent with acute cholecystitis versus chronic cholelithiasis. He was made NPO, started on IV fluids, and given Morphine IV PRN for pain. He was started on empiric IV Ciprofloxacin and Flagyl. The patient underwent ERCP, which revealed three irregular stones in the distal CBD. A sphincterotomy and stone extraction were successfully performed. He was subsequently placed on aggressive IV fluid hydration and allowed clear liquids. . On ___, the patient then underwent laparoscopic exploration, extensive lysis of adhesions and laparoscopic cholecystectomy, which went well without complication (see Operative Note). The patient was alos found to have chronic cholecystitis intra-operatively. After a brief, uneventful stay in the PACU, he was returned to the floor tolerating clears, on IV fluids, and received Dilaudid IV PRN for pain control. He remained hemodynamically stable. . Post-operative pain was adequately controlled with the Dilaudid IV PRN, which was converted to oral oxycodone when tolerating clear liquids. Due to inadequate pain control, the oxycodone was changed to Dilauid PO PRN and IV Toradol added with improved pain control. The patient tolerated clears on POD#0. Diet was advanced as to a regular diet by later that day with good tolerability. The patient voided normally. Laparoscopic incisions remained clean and intact. . During this hospitalization, the patient ambulated early and frequently, was adherent with respiratory toilet and incentive spirrometry, and actively participated in the plan of care. Labwork was routinely followed; electrolytes were repleted when indicated. . At the time of discharge, the patient was doing well, afebrile with stable vital signs. The patient was tolerating a regular diet, ambulating, voiding without assistance, and pain was well controlled. He was discharged home without services. The patient received discharge teaching and follow-up instructions with understanding verbalized and agreement with the discharge plan. "
+13560848-DS-6,0.1939,0.0608,0.1,130,551,,,,,"**Brief Hospital Course Summary**
+
+**Patient Information:**
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Sex: [Not provided]
+* Admission Date: [Not provided]
+
+**Chief Complaint:**
+
+* Dyspnea (shortness of breath) and 3-pound weight gain
+
+**History of Present Illness:**
+
+* The patient presents with worsening dyspnea and weight gain over the past week, with a recent history of hematemesis, abdominal pain, and incarceration of a left inguinal hernia with mesh repair. He has a history of atrial fibrillation, aortic bioprosthetic valve, systolic heart failure (LVEF 25%), and a history of venous thromboembolism (VTE) on Pradaxa.
+
+**Medications:**
+
+* Metoprolol succinate 25 mg daily (previously held due to hypotension)
+* Lasix (furosemide) 40 mg IV
+* Apap (acetaminophen) 1000 mg
+* Tamsulosin 0.4 mg
+
+**Vital Signs:**
+
+* Initial vitals: 97.1°F, 64°F, 120/75 mmHg","___ yo M w/ PMHx significant for HFrEF (EF 25%), ICD, CAD, AS s/p bioprosthetic AVR, paroxysmal Afib on AC, HLD, PAD, dementia, recent hospitalization for left inguinal hernia s/p mesh repair presents from home with dyspnea and 3 pound weight gain. Patient with a recent hospitalization from ___ to ___ for for left inguinal hernia incarceration s/p repair. Metoprolol Succinate XL 25 mg was held on discharge on ___ secondary to hypotension during admission but restarted once back at home by daughter. During hernia surgery hospitalization, was felt to be euvolemic with stable chronic systolic heart failure. Of note, patient hospitalized ___ to ___ for decompensated HFrEF in the setting of pneumonia complicated by cdiff infection and IVF resuscitation. Once diuresed and clinically euvolemic, he was discharged on 40mg torsemide (preload), 5mg lisinopril (afterload), metoprolol succinate 25mg, and spironolactone 12.5mg. Discharge weight was 63.4kg on ___. He was admitted to ___ service on ___ with admission weight of 63 kg with acute insult of dyspnea and acute 3 pound weight gain likely dietary indiscretion (admitted to eating ___. He was diuresed with IV Lasix boluses (40 on admission and then 80 IV Lasix on ___ to a discharge dry weight of 62.5 kg. He was discharged home in stable condition with no changes to home medications. HOSPITAL COURSE BY ISSUE ========================= # Acute on chronic systolic CHF exacerbation: Likely acute insult is dietary indiscretion at home. Of note patient admitted ___ for decompensated HFrEF in the setting of pneumonia complicated by cdiff infection and IVF resuscitation. Once diuresed and clinically euvolemic, he was discharged on 40mg torsemide (preload), 5mg lisinopril (afterload), metoprolol succinate 25mg, and spironolactone 12.5mg. Discharge weight was 63.4kg on ___. Patient then hospitalized from ___ to ___ for for left inguinal hernia incarceration s/p repair. He was felt to be euvolemic with stable chronic systolic heart failure during his hernia admission and was discharged on 40 mg torsemide. This admission, on ___ patient possibly ___ up from dry weight. He was given IV Lasix bolsues on ___ and ___ and discharged on ___ on torsemide 40mg with discharge weight of 62.5kg. # Paroxysmal Atrial Fibrillation: Rate controlled. On NOAC. Continued home metoprolol and dabigatraban. # CAD: Patient with CAD w/ diffuse luminal irregularities in LAD/LCx, 50% lesion in proximal RCA, prior MI. No anginal symptoms. Continued home aspirin and statin. Patient had two negative troponins and unchanged EKG. # Hx VT: s/p secondary prevention. ICD ___ Evera) placed ___. Last interrogatation ___ showed underlying rhythm Atrial flutter with variable block, and mode, base and upper track rate: VVI 40. Patient was asymptomatic in house and re-interrogation was deferred. # Iron deficiency Anemia: stable continue home ferrous sulfate. Ferritin 106 in house (wnl). # S/P hernia repair ___: Continued prn oxycodone for pain. # BPH: Continued home tamsulosin/finasteride TRANSITIONAL ISSUES ===================================== Discharge Weight: 62.5kg -No medication changes; continue home metoprolol/lisiniprol/torsemide for HF, metoprolol/dabigatraban for atrial fibrillation, and aspirin/atorvastatin for CAD -Patient scheduled for cardiology and PCP follow up next week -Please have patient call cardiologist ___ if weight increses > 3 lbs, can take 20 mg Torsemide extra prn if weight up per outpt cardiologist. Daughter ___, with whom patient lives, has good understanding of this heart failure condition and diuretic regimen and doses his medications at home. "
+15682570-DS-25,0.2522,0.0578,0.0973,146,311,,,,,"**Brief Hospital Course Summary**
+
+**Patient Information:**
+
+* Name: [Not provided]
+* Age: [Not provided]
+* Sex: [Not provided]
+* Admission Date: [Not provided]
+
+**Chief Complaint:**
+Dyspnea
+
+**History of Present Illness:**
+The patient presented to the emergency department (ED) with sudden onset dyspnea, which developed over 30 minutes. He had been in his usual state of health after prior discharge from the hospital two weeks ago. The patient has a history of coronary artery disease (CAD), coronary artery bypass grafting (CABG), heart failure (HF), mitral regurgitation (MR), and a pacemaker for Mobitz II atrioventricular (AV) block. He also has a history of prostate cancer, rectal bleeding, and cognitive decline.
+
+**Vital Signs:**
+* Initial vitals: 93, 141/86, respiratory rate 40, saturation 100% on bipap support
+* Current vitals: 86, 116/65, respiratory rate 20, saturation 99% on bipap support
+
+**Laboratory Results:**
+* Arterial blood gas (ABG): pH 7.32, PaCO2","___ w/ h/o CAD ___ CABG LIMA to LAD, SVG to D1, SVG to RI), CHF (EF 30%), mod-sever MR and TR, dual chamber pacer for Mobitz II, history of prostatectomy for CA, Recently discharged 2 weeks ago after admission for rectal bleeding, presents with acute onset dyspnea. # Respiratory distress: Pt with acute onset dyspnea ___ cardiogenic pulmonary edema. Pt started on BiPAP by EMS and continued on MICU admission after downtitration of settings. Pt diuresed with IV lasix and nitro gtt for afterload reduction and transferred to the CCU in the setting of positive cardiac enzymes. He was sent home on PO lasix to help prevent further CHF exacerbations and subsequent respiratory distress. # Positive cardiac enzymes: Most recent cath on ___ showed 3 vessel coronary artery disease, a patent LIMA-LAD graft, and 70% stenosis of the SVG-Diag-Ramus graft at the site of the Diag touchdown. Patient never complained of chest pain. His ECG was unremarkable for ischemia but he did have an elevated troponin and CK-MB likely due to demand ischemia in the context of CHF exacerbation and stable severe coronary artery disease. Patient was not started on dual anticoagulation and not cathed. # Melena: Hct stable from recent discharge. Pt with 10 days of intermitent melena at rehab and remained hemodynamic stability suggesting slow GIB. Pt initially on PPI gtt and transitioned to IV PPI BID. Trended Hct and was stable. Pt subsequently transitioned back to PO PPI. Gi consulted and felt that diarrhea and melena could be ___ to his infection vs. hyperthyroidism vs. malabsorptive syndrome vs. vasculitis. Will be seen as an outpt in GI clinic for further follow-up with possible EGD/colonoscopy. # Cdiff: Patient has had diarrhea for the past 3 weeks prior to admission. In house he was found to be C. Diff positive and started on PO antibiotics with improvement in diarrhea. "
+18477272-DS-18,0.131,0.0,0.0873,133,105,,,,,"**Patient Information:**
+
+* Name: [REDACTED]
+* Age: [REDACTED]
+* Sex: [REDACTED]
+* Service: Obstetrics/Gynecology
+
+**Chief Complaint:**
+Menorrhagia
+
+**History of Present Illness:**
+The patient presented with increasingly erratic and heavy bleeding since about [REDACTED] years ago. She underwent a Hysteroscopy, D&C, and Mirena placement, which initially provided relief but was discontinued due to side effects. She prefers definitive surgical management.
+
+**Past Medical History:**
+* Anxiety states, panic disorder
+* Anemia, vitamin B12 deficiency
+* Headache, migraine occasional aura, N/V
+* Irritable bowel syndrome
+* Hypercholesterolemia
+* Past surgical history of:
+	+ Sinus surgery
+	+ Right toe surgery
+	+ Hysteroscopy, endomet bx &/or polypectomy
+* OB history: Para term, preterm abortions, 3 cesarean sections, 2 vaginal births after cesarean (VBAC), largest baby 7.5 lbs
+* GYN history: Menstrual irregularities and heavy bleeding
+* Contraception: Tubal","On ___, Ms. ___ was admitted to the gynecology service after undergoing diagnostic laparoscopy, total vaginal hysterectomy, cystoscopy. Please see the operative report for full details. Her post-operative course was uncomplicated. Immediately post-op, her pain was controlled with dilaudid and toradol. On post-operative day 1, her urine output was adequate so her foley was removed and she voided spontaneously. Her diet was advanced without difficulty and she was transitioned to vicodin, ibuprofen. By post-operative day 1, she was tolerating a regular diet, voiding spontaneously, ambulating independently, and pain was controlled with oral medications. She was then discharged home in stable condition with outpatient follow-up scheduled. "
+15564508-DS-16,0.2385,0.0436,0.1355,149,225,,,,,"**Brief Hospital Course Summary**
+
+**Patient Information:**
+
+* Name: [Not provided]
+* Age: 50 years old
+* Sex: Female
+
+**Chief Complaint:** Right hip OA
+
+**Major Surgical Procedure:** Right hip replacement
+
+**History of Present Illness:** The patient has a history of right hip OA and has undergone a right hip replacement surgery.
+
+**Past Medical History:** Hypertension, history of skin carcinoma, and a history of a broken right ankle.
+
+**Social History:** Not provided
+
+**Physical Exam:** The patient is well-appearing, afebrile, and has stable vital signs. The patient has pain well-controlled and is ambulatory with assistance.
+
+**Medications:**
+
+* Acetaminophen (PRN pain - mild/fever)
+* Calcium Carbonate (500 mg PO daily)
+* Vitamin D (unit PO daily)
+* Aspirin EC 325 mg PO BID
+* Docusate Sodium 100 mg PO BID
+* Gabapentin 100 mg PO TID
+* Hydrocodone-Acetaminophen (5mg-325mg) PO Q4H (PRN pain - moderate)
+* Pantoprazole 40 mg PO Q24H
+* S","The patient was admitted to the orthopedic surgery service and was taken to the operating room for above described procedure. Please see separately dictated operative report for details. The surgery was uncomplicated and the patient tolerated the procedure well. Patient received perioperative IV antibiotics. Postoperative course was remarkable for the following: Overnight on POD#0, the patient was switched to Vicodin due to psychiatric complaints with Tramadol in past. POD #1, drain was discontinued. Patient cleared ___ without further issues. Otherwise, pain was controlled with a combination of IV and oral pain medications. The patient received Aspirin 325 mg twice daily for DVT prophylaxis starting on the morning of POD#1. The surgical dressing was changed on POD#1 and the surgical incision was found to be clean and intact without erythema or abnormal drainage. The patient was seen daily by physical therapy. Labs were checked throughout the hospital course and repleted accordingly. At the time of discharge the patient was tolerating a regular diet and feeling well. The patient was afebrile with stable vital signs. The patient's hematocrit was acceptable and pain was adequately controlled on an oral regimen. The operative extremity was neurovascularly intact and the wound was benign. The patient's weight-bearing status is weight bearing as tolerated on the operative extremity with posterior precautions. Ms. ___ is discharged to home with services in stable condition. "
+12140506-DS-13,0.2457,0.0617,0.119,156,379,,,,,"**Patient Information:**
+
+* Name: [REDACTED]
+* Age: [REDACTED]
+* Sex: [REDACTED]
+* Service: Medicine
+* Allergies: None
+* Attending Physician: [REDACTED]
+
+**Chief Complaint:**
+The patient presents with chills, myalgias, headache, and meningismus.
+
+**History of Present Illness:**
+The patient has a history of Prader-Willi, ADHD, chronic migraine without auras, and a 2mm right posterior communicating artery (PCA) aneurysm. She recently went on a hiking trip and developed body aches, extreme headache, meningismus, and subjective fevers and chills. The headache worsened over time, with a notable progression from a localized occipital headache to a generalized headache with neck stiffness, which resolved prior to presentation. The patient reports a sore throat, intermittent painful swallowing, and joint pain in her ankles, knees, and hips, which has worsened in the past few days.
+
+**Past Medical History:**
+The patient has a history of chronic migraines and a personal scan showed a 2mm PCA aneurysm.
+
+**Social History:**
+The patient is single, lives with","___ is a ___ female high school senior with PMH of Prader-Willi, ADHD, chronic migraine without auras, known 2mm R PCA aneurysm, hx Kawasaki's disease who presents with headache, fevers, myalgias, c/f meningitis vs severe migraine in setting of a concominant viral illness, with improving symptoms. # chills # myalgias # headache Initial concern for meningitis given chills, HA, and report of photophobia so started on empiric therapy with vanc/ceftriaxone/acyclovir in the ED after several failed attempts at LP. Her exam on the floor was notable for improving headache, without any evidence of nuchal rigidity, which was not felt to be suggestive of meningitis. Notably, she does have a 2 mm PCA aneurysm; however, given new onset, ""worst headache"" symptoms and family history of hemorrhagic stroke from aneurysm x2, obtained NCHCT on ___ that was within normal limits. Low suspicion of expanding PCA aneurysm, which would need to be worked up with CTA, because expansion would not be consistent with her systemic symptoms. ___ guided LP performed on ___ with CSF that was bland (1 WBC, 8 RBCs) and antibiotics/antivirals were stopped at that time. Given clear CSF without xanthochromia and only 8 RBCs, as well as negative head CT, subarachnoid hemorrhage felt to be ruled out. Other infectious workup, including CXR, UA, and flu swabs were negative. Some infectious studies, including respiratory viral panel, Lyme, serum anaplasma PCR, CSF HSV PCR, and CSF Arborvirus IgM and IgG, are pending at time of discharge. We think overall picture most consistent with a particularly severe migraine in setting of a concominant viral illness. For patient headache, pain at site of LP attempts, and myalgias, recommended ibuprofen PRN, tylenol, and lidocaine patch. # Migraines Continued home topiramate. # Depression Continued home citalopram. # Allergic rhinitis Continued home loratadine. #Nausea/vomiting Continued home Prochlorperazine 10 mg PO TID:PRN. #Insomnia Continued home HydrOXYzine 25 mg PO/NG QHS insomnia #Menses regulation Held home OCP because non-formulary. =================== TRANSITIONAL ISSUES =================== #stopped meds: none #changed meds: none #new meds: none [ ] please follow-up symptoms of chills, myalgias, and headache and ensure resolution [ ] please follow-up studies pending at time of discharge: respiratory viral panel, serum anaplasma PCR, CSF HSV PCR, and CSF Arborvirus IgM and IgG. # CODE: full # CONTACT: ___, Mother, ___ "

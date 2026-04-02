@@ -208,7 +208,15 @@ def compute_bertscore(predictions: List[str], references: List[str], device: str
     """Compute BERTScore F1."""
     try:
         from bert_score import score as bscore
-        _, _, F1 = bscore(predictions, references, lang="en", device=device, verbose=False)
+        predictions = [p if p.strip() else "." for p in predictions]
+        references  = [r if r.strip() else "." for r in references]
+        _, _, F1 = bscore(
+            predictions, references,
+            model_type="bert-base-uncased",
+            num_layers=9,
+            device=device,
+            verbose=False,
+        )
         return {"bertscore_f1": float(F1.mean())}
     except ImportError:
         log.warning("bert_score not installed; skipping BERTScore.")

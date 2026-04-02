@@ -1,0 +1,624 @@
+id,rouge1,rouge2,rougeL,pred_len,ref_len,gamma_mean,gamma_std,memory_norm,recon_mse,prediction,reference
+soap_00016,0.4724,0.1605,0.2515,164,170,,,,,"**SOAP Note**
+
+**S:** Subjective: The patient reports experiencing dizziness and vertigo, which are described as general and lightheaded. She also mentions headaches, neck pain, and muscle aches that are intermittent. Additionally, she has noticed a new rash on her right calf and bruising on her legs.
+
+**O:** Objective: The patient's vital signs are not reported in the conversation. However, she reports a blood sugar level of 155 after lunch.
+
+**A:** Assessment: The patient's symptoms of dizziness, vertigo, headaches, neck pain, muscle aches, and bruising on her legs are noted. The presence of a new rash on her right calf is also observed. The patient's history of gestational diabetes is noted, and the elevated blood sugar level is a potential contributing factor to her symptoms.
+
+**P:** Plan: Further evaluation and testing are recommended to determine the cause of the patient's symptoms. The patient will be monitored for any changes in her symptoms and will be educated on the importance of managing her blood sugar levels.","Subjective:
+- Symptoms: Dizziness (general dizziness and vertigo), lightheadedness, headaches (off and on), neck pain (intermittent), muscle aches (intermittent), tightness in the chest (not currently), discomfort and tenderness in the left shoulder, new rash on the right calf, new bruises (more than usual).
+- Severity: Lightheadedness, symptoms of dizziness are concerning.
+- Duration: Dizziness spells and other symptoms are ongoing; headaches are random; rash and bruises noted in the past couple of days.
+- Associated symptoms: Nausea associated with dizziness (but no vomiting), no diarrhea, no fever or chills.
+- Relevant medical history: History of gestational diabetes.
+- Family history: Not mentioned.
+- Allergies: Not mentioned.
+- Other concerns: The patient expresses concern regarding the dizziness, headaches, and the new rash.
+
+Objective:
+- Blood sugar measurement: 155 mg/dL after lunch.
+- Examination findings: New rash on the right calf, new bruises noted.
+
+Assessment:
+- No formal assessment or diagnosis provided.
+
+Plan:
+- Further evaluation of dizziness and rash needed.
+- Monitor blood sugar levels due to history of gestational diabetes."
+soap_00080,0.3953,0.0714,0.2791,52,44,,,,,"Here is a concise SOAP note summarizing the conversation:
+
+**S** - Subjective: The patient reported receiving Procrit for anemia in the past.
+
+**O** - Objective: None mentioned.
+
+**A** - Assessment: The patient's current marital status and living situation were discussed, but no relevant medical information was provided.
+
+**P** - Plan: None mentioned.","Subjective:
+- Patient has anemia.
+- Patient was treated with Procrit in the past for anemia.
+- Patient lives alone.
+- Patient does not smoke or drink alcohol.
+
+Objective:
+- (No objective data mentioned)
+
+Assessment:
+- (No assessment provided)
+
+Plan:
+- (No plan provided)"
+soap_00082,0.2968,0.0523,0.1935,103,58,,,,,"Here is a concise SOAP note summarizing the conversation:
+
+**S** - Subjective:
+Patient reports symptoms of a cough, which started 3 days ago, and has been worsening over the past 24 hours. They mention a history of exposure to someone with pertussis.
+
+**O** - Objective:
+The guest clinician is aware of the patient's name and date of birth, but this information is not provided in the conversation.
+
+**A** - Assessment:
+The guest clinician suspects pertussis, a bacterial infection that causes a severe cough.
+
+**P** - Plan:
+The guest clinician will pull up the patient's information to confirm the diagnosis and discuss treatment options.","Subjective:
+- Patient is suspected to have pertussis.
+- No specific symptoms, severity, duration, associated symptoms, relevant medical history, family history, allergies, or concerns were explicitly mentioned by the patient in the conversation.
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- Suspected diagnosis: Pertussis.
+
+Plan:
+- No specific actions, medications, tests, follow-up, or patient education mentioned."
+soap_00052,0.2927,0.0757,0.1863,152,315,,,,,"**Subjective:**
+The patient reports a sudden, severe pain in the middle of the lower leg, described as sharp and throbbing, with a pain level of 10/10. The pain is constant and has not changed since the injury. The patient also reports numbness and tingling below the injury site, which comes and goes.
+
+**Objective:**
+The patient has a visible deformity and swelling in the middle of the lower leg, consistent with a possible fracture. The patient is unable to bear weight on the affected leg.
+
+**Assessment:**
+The patient's pain is severe and constant, with no improvement or worsening since the injury. The patient reports numbness and tingling below the injury site, which may indicate nerve involvement. The patient's vital signs are not reported.
+
+**Plan:**
+The patient will be taken to the radiology department for imaging studies to confirm the diagnosis. The patient will be admitted for observation and treatment of the suspected fracture.","Subjective:
+- Presents with right leg pain and deformity after a fall during a traditional dance class (long dress got caught on foot causing slip and fall with leg twisting)
+- Fall occurred 1 hour ago
+- Unable to bear weight 
+- Pain localized to middle part of lower leg/shin area
+- Sharp, throbbing pain rated 10/10 in severity 
+- Pain has remained constant since onset
+- Some intermittent numbness and tingling below the site of injury
+- Denies loss of sensation or coldness in the affected area
+- Denies headache, dizziness, confusion, memory loss, weight loss, fever, chills, skin/hair/nail changes, vision/hearing/smell/taste changes, cough, shortness of breath, wheezing, chest pain, palpitations, bowel/bladder changes, nausea, vomiting, or abdominal pain
+
+PMHx:
+- No chronic medical conditions
+- No medications
+- No allergies
+- Surgical history significant for 2 uncomplicated vaginal deliveries
+- Mother with history of osteoporosis diagnosed in her 50s
+- Maternal aunt with history of ovarian cancer diagnosed in her 60s
+- Denies personal history of musculoskeletal, pulmonary, cardiac, autoimmune conditions, or cancer
+- Up to date with immunizations
+- Denies recent sick contacts or travel
+
+Objective:
+- Obvious deformity of right lower leg with visible bending of the bone
+- Swelling, redness, and bruising of right lower leg
+- No open wounds or bony protrusion through skin
+- Increased warmth of right lower leg compared to left
+- Unable to actively flex or extend right knee due to pain
+- Unable to bear weight on right leg
+
+Assessment:
+- Suspected right tibial fracture
+
+Plan:
+- X-rays of right tibia/fibula to assess for fracture location and characteristics
+- Splint application to affected leg until swelling subsides
+- Referral to orthopedic surgery for definitive management (likely intramedullary nailing vs open reduction internal fixation with plates/screws)
+- Anticipate 4-6 month healing time
+- Pain management
+- Physical therapy for strength and range of motion after surgical fixation"
+soap_00048,0.2941,0.06,0.2157,79,30,,,,,"S - Subjective:
+The patient reported that they do not have any family members with significant health issues.
+
+O - Objective:
+No specific objective findings were noted during the conversation.
+
+A - Assessment:
+The patient's family medical history appears to be relatively healthy, with no notable conditions or concerns mentioned.
+
+P - Plan:
+The patient will be asked to provide more information about their family medical history during future visits to ensure a comprehensive understanding of their overall health.","Subjective:
+- Family medical history: No one in the family has any health problems.
+
+Objective:
+- [No objective data provided]
+
+Assessment:
+- [No assessment provided]
+
+Plan:
+- [No plan provided]"
+soap_00041,0.425,0.1795,0.275,40,48,,,,,"Here is a concise SOAP note summarizing the conversation:
+
+**S** - Subjective:
+Patient expresses concern about being careful while continuing work.
+
+**O** - Objective:
+None reported.
+
+**A** - Assessment:
+None reported.
+
+**P** - Plan:
+Patient will continue working with caution.","Subjective: 
+- Patient expresses gratitude to the doctor. 
+- Patient intends to continue working but is advised to be careful.
+
+Objective: 
+- (No measurable or observable data provided.)
+
+Assessment: 
+- (No clinician's interpretation or diagnoses provided.)
+
+Plan: 
+- Patient is advised to be careful while continuing to work."
+soap_00026,0.4498,0.1882,0.2768,168,127,,,,,"Here is a concise SOAP note summarizing the patient-doctor conversation:
+
+**S** - Subjective:
+The patient reports feeling very tired and expresses concern about recent self-harm attempts. They mention having seen the doctor three times in the last two months for self-harm and have not had any other incidents. The patient attributes the recent episodes to recent life events, including job loss and a breakup.
+
+**O** - Objective:
+The patient has a history of self-harm attempts, with three documented incidents in the last two months. They have been seeing Doctor Lin for depression and have previously taken Lexapro.
+
+**A** - Assessment:
+The patient is experiencing significant emotional distress and appears to be struggling with recent life events. The patient's self-harm attempts and recent life changes (job loss and breakup) suggest a possible exacerbation of underlying depression.
+
+**P** - Plan:
+The patient will be referred to Doctor Lin for continued management of depression. The patient's medication regimen will be reviewed, and options for adjusting or adding medication may be explored.","Subjective:
+- Symptoms: Feeling very tired, depressed.
+- Severity: Not explicitly stated, but the context implies significant distress.
+- Duration: Recent episodes of self-harm; third attempt in the last two months.
+- Associated Symptoms: Emotional distress related to job loss and relationship ending.
+- Relevant Medical History: Previous diagnosis of depression by Doctor Lin; history of self-harm (three attempts).
+- Family History: Not mentioned.
+- Allergies: Not mentioned.
+- Other Concerns: Recently lost job and boyfriend, leading to emotional difficulties.
+
+Objective:
+- No objective data provided.
+
+Assessment:
+- Diagnosis: Depression (previously diagnosed by Doctor Lin).
+- Clinical Impression: Patient is experiencing significant emotional distress due to life events (job loss, relationship issues) and has a history of self-harm.
+
+Plan:
+- No specific plan mentioned in the conversation."
+soap_00019,0.551,0.2917,0.3673,46,61,,,,,"Here is a concise SOAP note summarizing the patient-doctor conversation:
+
+**S** - Subjective: None reported.
+
+**O** - Objective: Normal blood pressure.
+
+**A** - Assessment: No history of heart attack, chest pain, palpitations, shortness of breath on exertion, swelling, or irregular heartbeats.
+
+**P** - Plan: None specified.","Subjective:
+- No history of heart attack.
+- No chest pain, palpitations, or shortness of breath on exertion.
+- Patient reports normal blood pressure.
+- No swelling.
+- No history of irregular heartbeats.
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinician's interpretation or diagnoses provided.
+
+Plan:
+- No actions, medications, tests, follow-up, or patient education explicitly mentioned."
+soap_00004,0.3342,0.096,0.1645,155,230,,,,,"**Subjective:** The patient reports experiencing chest discomfort on the left side, described as sharp, that comes and goes, lasting 20-30 minutes. The pain is rated a 4 out of 10 in severity. The patient attributes the pain to recent stress, specifically the separation from their husband 2 years ago.
+
+**Objective:** The patient's vital signs and physical examination results are not documented in this conversation.
+
+**Assessment:** The patient's symptoms are consistent with musculoskeletal or musculoskeletal-related chest pain, possibly exacerbated by stress. The lack of response to over-the-counter pain medications (Advil, Tylenol, and Tums) suggests that the pain may not be related to a simple musculoskeletal issue.
+
+**Plan:** The patient will undergo further evaluation to determine the underlying cause of their chest pain. The doctor will consider the patient's recent stress and separation from their husband as potential contributing factors. The patient will be advised to continue monitoring their symptoms and report any changes to the doctor.","Subjective:
+- Presenting with chest pain for the last 2 weeks
+- Location: left-sided chest discomfort
+- Quality: sharp pain
+- Severity: 4/10
+- Timing: intermittent, lasting 20-30 minutes per episode
+- Context: occurs most often while at work or driving
+- Alleviating/Aggravating factors: no clear aggravating or alleviating factors identified; pain is not exacerbated by physical activity
+- Associated symptoms: denies SOB, N/V, or fevers
+- Self-treatment: tried Advil, Tylenol, and Tums without relief
+
+PMHx:
+- Previously healthy
+- Denies chronic conditions or regular follow-up with PCP
+- Medications: none; has only tried Advil and Tylenol for current chest pain
+- Allergies: NKDA
+- FHx: father had MI at age 60 last year
+
+SocHx:
+- Separated from husband 2 years ago, causing significant stress
+- Tobacco: current smoker, 0.5-1 PPD; has reduced from 1 PPD and is actively trying to quit
+- Alcohol: 1-2 glasses of wine on weekends
+- Denies other substance use
+- Exercise: runs or cycles 3-4 days/week without chest pain or issues
+
+ROS:
+- Denies prior history of HTN or hyperlipidemia, but has never been tested for the latter
+- Denies history of GERD
+
+Objective:
+- Vitals signs not provided
+- Physical examination not performed
+
+Assessment:
+- Differential diagnosis not provided
+
+Plan:
+- Investigations: none mentioned
+- Treatment: none mentioned
+- Other: will discuss case with PCP and follow up with patient regarding next steps"
+soap_00046,0.2245,0.0,0.1633,42,67,,,,,"S - Subjective:
+The patient reports having a headache.
+
+O - Objective:
+None mentioned.
+
+A - Assessment:
+The patient's symptoms of a headache are noted.
+
+P - Plan:
+The doctor will assess the patient's headache further and provide a plan for treatment.","Subjective:
+- Symptoms: Headache
+- Severity: Not specified
+- Duration: Not specified
+- Associated symptoms: Not specified
+- Relevant medical history: Not mentioned
+- Family history: Not mentioned
+- Allergies: Not mentioned
+- Other concerns: None explicitly mentioned
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinician's interpretation, diagnoses, or clinical impressions provided.
+
+Plan:
+- No actions, medications, tests, follow-up, or patient education mentioned."
+soap_00011,0.338,0.058,0.2535,44,31,,,,,"S - Subjective:
+The patient reported no past surgeries.
+
+O - Objective:
+None documented.
+
+A - Assessment:
+The patient's medical history was taken, but no specific findings were noted.
+
+P - Plan:
+The patient's medical history will be further discussed and documented as needed.","Subjective:
+- No past surgeries reported.
+
+Objective:
+- (No measurable or observable data provided.)
+
+Assessment:
+- (No clinician's interpretation provided.)
+
+Plan:
+- (No actions, medications, tests, follow-up, or patient education provided.)"
+soap_00085,0.3333,0.1538,0.3333,39,23,,,,,"Here is a concise SOAP note summarizing the conversation:
+
+**S** - Subjective:
+Patient reported no known allergies to medication.
+
+**O** - Objective:
+None documented.
+
+**A** - Assessment:
+Patient denied any known allergies to medication.
+
+**P** - Plan:
+None specified.","Subjective:
+- No known allergies to medications.
+
+Objective:
+- (No objective data mentioned.)
+
+Assessment:
+- (No assessment provided.)
+
+Plan:
+- (No plan provided.)"
+soap_00090,0.401,0.0733,0.1979,150,241,,,,,"**Subjective:**
+The patient reports a 5-day history of progressive left shoulder pain, which worsened over the past week. The pain is described as achy, with a sharp component during certain movements. The patient attributes the pain to increased weight lifting over the past two weeks.
+
+**Objective:**
+The patient's left shoulder is tender to palpation, with pain localized to the front and sides. The pain radiates to the entire left shoulder, and worsens with carrying or lifting.
+
+**Assessment:**
+The patient's pain is rated 2-7 on a scale of 1-10, with a higher rating when attempting to carry or lift. The patient reports a history of repetitive overhead activities, including weight lifting and tennis, which may have contributed to the current condition.
+
+**Plan:**
+The patient will be evaluated for possible musculoskeletal injury or strain. Further assessment and treatment will be determined based on the results of the physical examination and diagnostic testing.","Subjective:
+- Left shoulder pain for the last couple weeks, worsened over the past 5 days
+- Pain is achy in character, with some sharp pain on certain movements (carrying objects, lifting arm overhead)
+- Pain is worse with activity (lifting weights at gym, carrying objects) and lying on left side; better with rest and avoiding use of left arm
+- Severity: 2-3/10 at rest, 7/10 with activity
+- No recent trauma, but h/o overuse injury to left shoulder 2 years ago due to tennis
+- Denies fevers, chills, night sweats, skin changes, chest pain, SOB, other joint pains, recent infections, N/V, abd pain, bowel/bladder changes 
+- Reports decreased strength in left arm and reduced ROM due to pain
+- Difficulty sleeping due to pain when lying on left side
+
+PMHx:
+- Left shoulder overuse injury 2 years ago related to tennis 
+- Otherwise healthy
+
+Medications: 
+- Advil PRN recently for shoulder pain
+
+SocHx:
+- Lives with wife in condo
+- Works as real estate agent
+- Rare alcohol use, denies smoking or recreational drug use
+
+Objective:
+- Pain with shoulder abduction, especially 60-120 degrees (painful arc)
+- Positive Job's test and Neer's test 
+- Tenderness to palpation over anterior shoulder
+- Slightly reduced strength in left arm
+- Sensation and reflexes normal
+
+Assessment:
+- Likely rotator cuff tear or subacromial impingement syndrome
+
+Plan:
+- Left shoulder ultrasound to evaluate structures 
+- Consider X-ray or MRI to determine extent of injury"
+soap_00007,0.3011,0.0289,0.1505,124,166,,,,,"**Subjective:**
+The patient, a 39-year-old male, reports experiencing sharp chest pain on the left side that started 2 hours ago. He describes the pain as a 7 or 8 out of 10 in severity. The pain is constant and worsens with laying down.
+
+**Objective:**
+The patient is lightheaded and having trouble breathing. He reports a slight racing of the heart and some sweating, primarily due to breathing difficulties. The patient's vital signs are not reported.
+
+**Assessment:**
+The patient's symptoms suggest possible acute coronary syndrome or a cardiac issue. The sharp chest pain, lightheadedness, and difficulty breathing warrant further evaluation and potential cardiac testing.
+
+**Plan:**
+The patient will undergo further evaluation, including electrocardiogram (ECG) and possibly cardiac biomarkers, to determine the cause of his symptoms.","Subjective:
+- Chest pain
+- Duration: Started last night, constant for ~8 hours
+- Location: Left side of chest
+- Quality: Sharp
+- Severity: 7-8/10
+- Worsens: Laying down, deep breaths
+- Alleviates: Not laying down
+- Associated symptoms: Lightheadedness, trouble breathing, racing heart, sweating, noisy breathing, neck swelling
+- No radiation of pain
+- No previous episodes
+
+Past Medical History:
+- No prior medical conditions
+- No recent hospitalisations
+- No prior surgeries
+- Medications: None
+- Allergies: None
+- Immunisations: Up to date
+- SocHx: Lives alone in an apartment, accountant, smokes 1 pack/day for 10-15 years, occasional cannabis use (~5mg/week), drinks 1-2 drinks/day (~10 drinks/week), tries to eat healthy dinners, eats out for lunch, exercises every other day (runs for 30 mins)
+- FHx: Father had a heart attack at 45, father had cholesterol problems, no strokes, no cancers
+
+Objective:
+- Vitals: Not provided
+- Physical exam: Not provided
+- Investigations with results: Not provided
+
+Assessment:
+- Not provided
+
+Plan:
+- Not provided"
+soap_00006,0.25,0.037,0.2143,29,34,,,,,"Here is a concise SOAP note summarizing the conversation:
+
+**S** - Subjective: Patient reported no allergies.
+
+**O** - Objective: None reported.
+
+**A** - Assessment: None.
+
+**P** - Plan: None.","Subjective:
+- No allergies reported (including drug allergies).
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinical impressions or diagnoses provided.
+
+Plan:
+- No actions, medications, tests, or follow-up explicitly mentioned."
+soap_00010,0.5116,0.2047,0.4031,68,70,,,,,"Here is a concise SOAP note summarizing the patient-doctor conversation:
+
+**S** - Subjective:
+The patient is married with three children, including one who is preparing to attend college. The patient is retired from their previous position as an attorney but is currently working part-time.
+
+**O** - Objective:
+None mentioned.
+
+**A** - Assessment:
+The patient reports no history of smoking, drinking, or substance use.
+
+**P** - Plan:
+None mentioned.","Subjective:
+- Patient is married and has a spouse and three children.
+- One child is preparing to go to college.
+- Patient was an attorney but retired from their official position two years ago.
+- Currently working part-time at a private company.
+- Denies smoking, drinking alcohol, or using drugs.
+
+Objective:
+- [No objective data provided.]
+
+Assessment:
+- [No assessment or clinical impressions provided.]
+
+Plan:
+- [No plan provided.]"
+soap_00056,0.277,0.0544,0.1622,111,211,,,,,"**Patient Information:**
+- Age: 6 years old
+- Sex: Male
+- Chief Complaint: Abdominal pain and vomiting
+
+**History of Present Illness:**
+- Started experiencing abdominal pain 3 days ago
+- Vomited 6 times over the last 2 days
+- Fever of 38.3°C (100.9°F) yesterday
+- Diarrhea with watery stool, no blood or bile in vomit
+- Irritability and lethargy, especially with fever
+- Vomiting triggered by random events, including after lunch 2 days ago
+
+**Physical Examination:**
+- No notable findings
+
+**Assessment and Plan:**
+- Further evaluation and diagnostic testing to determine cause of symptoms
+- Monitoring for dehydration and electrolyte imbalance
+- Follow-up appointment scheduled for further evaluation and treatment plan","Subjective:
+- 6 yo M presents with abdominal pain x 3 days, vomiting x 2 days (6 episodes total), and fever (38.3°C) x 1 day
+- Vomitus: Initially food contents, now yellowish material without blood or bile
+- Diarrhea x 1 day (6-7 episodes), watery without blood
+- Fever associated with chills requiring multiple blankets
+- Abdominal pain generalized, non-tender to palpation
+- Denies headache, ear/eye pain, eye redness, rhinorrhea, sore throat, dysphagia, anosmia, ageusia, cough, dyspnea, wheezing, chest pain, dysuria, increased urinary frequency, rash, myalgia, arthralgia
+- Behavior: Irritable initially, now lethargic
+- No sick contacts, recent travel, or diet changes
+- Attends school (possible infectious exposure)
+
+PMHx:
+- Term infant, SVD, no complications
+- Up-to-date on immunizations
+- No prior hospitalizations or surgeries
+- No known allergies
+- No medications
+
+SocHx:
+- Lives with mother, father, brother (7 yo), sister (10 yo)
+- No smokers in the home
+- No pets
+- No safety concerns
+
+FHx:
+- Sister undergoing evaluation for asthma
+- No congenital/genetic disorders
+- No IBD or celiac disease
+
+Objective:
+- Vitals not provided
+
+Assessment:
+- Acute gastroenteritis (viral vs. COVID-19)
+- Dehydration
+
+Plan:
+- COVID-19 testing
+- CBC, CMP
+- IV fluids for rehydration
+- Anticipate discharge with supportive care once hydrated and tolerating PO"
+soap_00050,0.5646,0.2705,0.3636,127,89,,,,,"Here is a concise SOAP note summarizing the patient-doctor conversation:
+
+**S** - Subjective:
+The patient, a 13-year-old female, reports no back pain, numbness, or tingling. She denies any weakness, numbness, or tingling in her legs and arms. She is strong, especially for her age.
+
+**O** - Objective:
+The patient's mother reports a rounded back posture, specifically thoracic kyphosis, which was previously diagnosed by another orthopedist. The patient has a family history of kyphosis, with her aunt and grandfather having the condition.
+
+**A** - Assessment:
+The patient's physical examination is unremarkable, with no reported back pain, numbness, or tingling. The patient's posture is described as rounded, consistent with thoracic kyphosis.
+
+**P** - Plan:
+The patient will undergo further observation and evaluation to monitor the progression of the condition.","Subjective:
+- Patient is a 13-year-old girl.
+- Complaints of rounded back posture (thoracic spine).
+- Family history of kyphosis (aunt and grandfather).
+- No back pain, numbness, or tingling reported.
+- No weakness, numbness, or tingling in legs and arms.
+- Patient states she feels very strong for her age.
+- Regular bathroom habits reported.
+
+Objective:
+- Observed rounded back posture (thoracic kyphosis).
+
+Assessment:
+- Thoracic kyphosis.
+
+Plan:
+- Further observation as recommended by the previous orthopedist.
+- Consideration for a second opinion on management or treatment options."
+soap_00087,0.4762,0.1793,0.3673,69,84,,,,,"Here is a concise SOAP note summarizing the patient-doctor conversation:
+
+**S** - Subjective:
+The patient reports living with three cats, including two Persian and one Chartreux, and is retired from working as a psych aide for 32 years.
+
+**O** - Objective:
+None mentioned.
+
+**A** - Assessment:
+The patient reports occasional wine consumption and a history of smoking, but is now smoke-free for five years.
+
+**P** - Plan:
+None mentioned.","Subjective:
+- Patient has three cats (two Persian cats and one Chartreux).
+- Patient retired a few months ago after working for thirty-two years as a psych aide for the State of Pennsylvania.
+- Patient drinks wine occasionally.
+- Patient used to smoke but has been smoke-free for five years.
+- Patient does not use recreational drugs.
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinician's interpretation or diagnoses provided.
+
+Plan:
+- No actions, medications, tests, follow-up, or patient education provided."
+soap_00070,0.3514,0.1,0.1892,134,96,,,,,"Here is a concise SOAP note summarizing the patient-doctor conversation:
+
+**S - Subjective:**
+The patient reports experiencing back and joint pain, particularly when breathing deeply, and is feeling more tired than usual. She denies coughing, fever, chills, and shortness of breath during daily activities.
+
+**O - Objective:**
+The patient's respiratory issues have been well-managed since the last visit, with no major breathing difficulties. No coughing or mucus production is reported.
+
+**A - Assessment:**
+The patient's symptoms of back and joint pain, particularly exacerbated by deep breathing, and increased fatigue are noted. The patient's pulmonary system appears to be functioning well, with no reported shortness of breath during daily activities.
+
+**P - Plan:**
+The patient will be monitored for worsening symptoms, and further evaluation may be necessary to determine the cause of the new symptoms.","Initial:
+
+Subjective:
+- Symptoms: Back pain, joint pain, increased fatigue.
+- Severity: Not specified.
+- Duration: Symptoms noted yesterday.
+- Associated symptoms: No cough, no mucus production, no fever or chills.
+- Relevant medical history: Interstitial disease secondary to lupus pneumonitis.
+- Family history: Not mentioned.
+- Allergies: Not mentioned.
+- Concerns: Patient is feeling more tired than usual but does not have breathing issues during daily activities.
+
+Objective:
+- No measurable or observable data provided.
+
+Assessment:
+- No clinician's interpretation or diagnoses provided.
+
+Plan:
+- No actions, medications, tests, follow-up, or patient education explicitly mentioned."

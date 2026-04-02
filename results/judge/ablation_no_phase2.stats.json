@@ -1,0 +1,53 @@
+{
+  "per_judge": {
+    "qwen": {
+      "hallucination": {
+        "mean": 0.025,
+        "std": 0.10897247358851682,
+        "n": 20
+      },
+      "factual": {
+        "mean": 0.5125,
+        "std": 0.2792288487961085,
+        "n": 20
+      },
+      "complete": {
+        "mean": 0.4125,
+        "std": 0.2132340263653998,
+        "n": 20
+      },
+      "coherent": {
+        "mean": 0.625,
+        "std": 0.3112474899497183,
+        "n": 20
+      }
+    }
+  },
+  "ensemble": {
+    "hallucination": {
+      "mean": 0.025,
+      "std": 0.10897247358851682
+    },
+    "factual": {
+      "mean": 0.5125,
+      "std": 0.2792288487961085
+    },
+    "complete": {
+      "mean": 0.4125,
+      "std": 0.2132340263653998
+    },
+    "coherent": {
+      "mean": 0.625,
+      "std": 0.3112474899497183
+    }
+  },
+  "corpus_agreement": {
+    "hallucination": NaN,
+    "factual": NaN,
+    "complete": NaN,
+    "coherent": NaN
+  },
+  "parse_failure_rates": {
+    "qwen": 0.0
+  }
+}
