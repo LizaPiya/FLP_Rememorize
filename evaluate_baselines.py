@@ -114,7 +114,11 @@ def run_inference(args: argparse.Namespace, output_dir: Path) -> Path:
     log.info("Device: %s", device)
     log.info("Loading model: %s", args.model)
 
-    tokenizer = AutoTokenizer.from_pretrained(args.model)
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(args.model)
+    except Exception:
+        from transformers import LlamaTokenizer
+        tokenizer = LlamaTokenizer.from_pretrained(args.model, use_fast=False, legacy=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
