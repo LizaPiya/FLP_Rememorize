@@ -66,18 +66,19 @@ echo "=== Starting jobs at $(date) ===" | tee $LOG
 run_when_free "train:no_rl" conda run -n FLP_ReMemorize python train.py \
     --model mistralai/Mistral-7B-v0.1 \
     --dataset mimic \
-    --train_file Datasets/mimic_train.jsonl \
-    --eval_file  Datasets/mimic_val.jsonl \
+    --train_file Datasets/mimic_5k_train.jsonl \
+    --eval_file  Datasets/mimic_5k_val.jsonl \
     --training_ablation no_rl \
     --no_flash_attn \
     --output_dir runs/ablation_no_rl \
     --num_epochs 3 --group_size 4 \
+    --max_train 1000 \
     --save_every 500 --eval_every 200
 
 # 2. Eval no_rl
 run_when_free "eval:no_rl" conda run -n FLP_ReMemorize python evaluate.py \
     --checkpoint runs/ablation_no_rl/best_ckpt \
-    --eval_file  Datasets/mimic_test_extended.jsonl \
+    --eval_file  Datasets/mimic_5k_test.jsonl \
     --output_dir results/ablation_study_test/no_rl \
     --run_name   no_rl --ablation full --no_flash_attn \
     --notes "ablation=no_rl"
@@ -86,18 +87,19 @@ run_when_free "eval:no_rl" conda run -n FLP_ReMemorize python evaluate.py \
 run_when_free "train:no_halluc" conda run -n FLP_ReMemorize python train.py \
     --model mistralai/Mistral-7B-v0.1 \
     --dataset mimic \
-    --train_file Datasets/mimic_train.jsonl \
-    --eval_file  Datasets/mimic_val.jsonl \
+    --train_file Datasets/mimic_5k_train.jsonl \
+    --eval_file  Datasets/mimic_5k_val.jsonl \
     --training_ablation no_hallucination_penalty \
     --no_flash_attn \
     --output_dir runs/ablation_no_hallucination_penalty \
     --num_epochs 3 --group_size 4 \
+    --max_train 1000 \
     --save_every 500 --eval_every 200
 
 # 4. Eval no_hallucination_penalty
 run_when_free "eval:no_halluc" conda run -n FLP_ReMemorize python evaluate.py \
     --checkpoint runs/ablation_no_hallucination_penalty/best_ckpt \
-    --eval_file  Datasets/mimic_test_extended.jsonl \
+    --eval_file  Datasets/mimic_5k_test.jsonl \
     --output_dir results/ablation_study_test/no_hallucination_penalty \
     --run_name   no_hallucination_penalty --ablation full --no_flash_attn \
     --notes "ablation=no_hallucination_penalty"
@@ -106,18 +108,19 @@ run_when_free "eval:no_halluc" conda run -n FLP_ReMemorize python evaluate.py \
 run_when_free "train:no_aux" conda run -n FLP_ReMemorize python train.py \
     --model mistralai/Mistral-7B-v0.1 \
     --dataset mimic \
-    --train_file Datasets/mimic_train.jsonl \
-    --eval_file  Datasets/mimic_val.jsonl \
+    --train_file Datasets/mimic_5k_train.jsonl \
+    --eval_file  Datasets/mimic_5k_val.jsonl \
     --training_ablation no_aux_loss \
     --no_flash_attn \
     --output_dir runs/ablation_no_aux_loss \
     --num_epochs 3 --group_size 4 \
+    --max_train 1000 \
     --save_every 500 --eval_every 200
 
 # 6. Eval no_aux_loss
 run_when_free "eval:no_aux" conda run -n FLP_ReMemorize python evaluate.py \
     --checkpoint runs/ablation_no_aux_loss/best_ckpt \
-    --eval_file  Datasets/mimic_test_extended.jsonl \
+    --eval_file  Datasets/mimic_5k_test.jsonl \
     --output_dir results/ablation_study_test/no_aux_loss \
     --run_name   no_aux_loss --ablation full --no_flash_attn \
     --notes "ablation=no_aux_loss"
