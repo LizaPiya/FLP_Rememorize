@@ -375,34 +375,34 @@ Table~\ref{tab:main_results} reports automatic metrics for all evaluated models.
 \begin{table*}[t]
 \centering
 \caption{Summary generation performance on MIMIC-IV-Ext-BHC and SOAP datasets.
-All models evaluated on n=100 (MIMIC extended test set) for MIMIC; n=20 for SOAP.
-Higher is better for R-L, BS-F1, and Factuality ($\uparrow$); lower is better for Hallucination ($\downarrow$).
-Factuality scored via MiniCheck; Hallucination via NLI contradiction probability.
-Contextual and AgenticSum results to be added.}
+MIMIC evaluated on $n{=}500$ test samples; SOAP on $n{=}300$ test samples.
+All values in \%. Higher is better for R-1, R-2, R-L, BS-F1, and Factuality ($\uparrow$); lower is better for Hallucination ($\downarrow$).
+Factuality scored via MiniCheck (NLI entailment probability); Hallucination via NLI contradiction probability.
+Values reported as mean $\pm$ bootstrap std (1000 iterations).}
 \label{tab:main_results}
-\begin{tabular}{lcccccccc}
+\begin{tabular}{lrrrrrrrrrrrr}
 \toprule
-& \multicolumn{4}{c}{\textbf{MIMIC-IV-Ext-BHC}} & \multicolumn{4}{c}{\textbf{SOAP}} \\
-\cmidrule(lr){2-5} \cmidrule(lr){6-9}
+& \multicolumn{6}{c}{\textbf{MIMIC-IV-Ext-BHC}} & \multicolumn{6}{c}{\textbf{SOAP}} \\
+\cmidrule(lr){2-7} \cmidrule(lr){8-13}
 \textbf{Model}
-& \textbf{R-L} & \textbf{BS-F1} & \textbf{Fact.}$\uparrow$ & \textbf{Hall.}$\downarrow$
-& \textbf{R-L} & \textbf{BS-F1} & \textbf{Fact.}$\uparrow$ & \textbf{Hall.}$\downarrow$ \\
+& \textbf{R-1} & \textbf{R-2} & \textbf{R-L} & \textbf{BS-F1} & \textbf{Fact.}$\uparrow$ & \textbf{Hall.}$\downarrow$
+& \textbf{R-1} & \textbf{R-2} & \textbf{R-L} & \textbf{BS-F1} & \textbf{Fact.}$\uparrow$ & \textbf{Hall.}$\downarrow$ \\
 \midrule
-Llama-3.2-3B-Instruct                 & 10.40 & 53.65 & 56.44 & 15.04 & 25.04 & 59.57 & 52.41 &  6.42 \\
-Mistral-7B                            & 13.36 & \textbf{55.27} & 52.75 & \textbf{9.49} & 18.22 & 49.89 & 62.57 & 11.30 \\
-Flan-T5 XXL                           & 10.58 & 53.13 & 37.68 & 16.98 & --    & --    & --    & --    \\
-MedAlpaca-7B                          & \textbf{13.70} & 56.87 & 53.89 & 18.00 & --    & --    & --    & --    \\
-Contextual                            & --    & --    & --    & --    & --    & --    & --    & --    \\
-AgenticSum                            & --    & --    & --    & --    & --    & --    & --    & --    \\
+Llama-3.2-3B-Instruct  & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+Mistral-7B             & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+Flan-T5 XXL            & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+MedAlpaca-7B           & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 \midrule
-\textbf{ReMemorize (Ours)}            & 12.62 & 53.82 & \textbf{63.48} & 14.86 & 13.62 & 50.41 & \textbf{76.24} & \textbf{5.91} \\
+\textbf{ReMemorize (Ours)} & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
 \begin{table*}[t]
 \centering
-\caption{LLM-as-a-Judge evaluation (Qwen2.5-7B-Instruct, 0\% parse failure rate). All scores on a 1--5 scale. Higher is better except Hallucination ($\downarrow$).}
+\caption{LLM-as-a-Judge evaluation (Qwen2.5-7B-Instruct, 0\% parse failure rate).
+MIMIC evaluated on $n{=}500$; SOAP on $n{=}300$. All scores on a 1--5 scale.
+Higher is better except Hallucination ($\downarrow$). Values reported as mean $\pm$ bootstrap std.}
 \label{tab:llm_judge}
 \begin{tabular}{lrrrrrrrr}
 \toprule
@@ -411,10 +411,12 @@ AgenticSum                            & --    & --    & --    & --    & --    & 
 \textbf{Model} & \textbf{Hall.}$\downarrow$ & \textbf{Factual}$\uparrow$ & \textbf{Complete}$\uparrow$ & \textbf{Coherent}$\uparrow$
                & \textbf{Hall.}$\downarrow$ & \textbf{Factual}$\uparrow$ & \textbf{Complete}$\uparrow$ & \textbf{Coherent}$\uparrow$ \\
 \midrule
-Llama-3.2-3B-Instruct      & 2.05 & 3.45          & 3.23          & 3.62          & 1.30          & \textbf{4.25} & \textbf{3.55} & \textbf{4.70} \\
-Mistral-7B                 & 2.15 & \textbf{3.60} & \textbf{3.33} & \textbf{3.88} & \textbf{1.20} & 3.95          & 3.40          & 4.15          \\
+Llama-3.2-3B-Instruct  & -- & -- & -- & -- & -- & -- & -- & -- \\
+Mistral-7B             & -- & -- & -- & -- & -- & -- & -- & -- \\
+Flan-T5 XXL           & -- & -- & -- & -- & -- & -- & -- & -- \\
+MedAlpaca-7B           & -- & -- & -- & -- & -- & -- & -- & -- \\
 \midrule
-\textbf{ReMemorize (Ours)} & \textbf{1.68} & 3.52 & 3.15 & 3.83                  & \textbf{1.20} & 2.90          & 2.40          & 3.35          \\
+\textbf{ReMemorize (Ours)} & -- & -- & -- & -- & -- & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -441,7 +443,10 @@ Results on MIMIC-IV are reported in Table~\ref{tab:ablation_arch}.
 
 \begin{table}[t]
 \centering
-\caption{Ablations on MIMIC-IV (n=20 unless noted). All values in \%. Bold = best per metric. Fact./Hall.\ = MiniCheck faithfulness / NLI contradiction. Judge = Qwen2.5-7B-Instruct scores. $^\dagger$n=100.}
+\caption{Ablations on MIMIC-IV ($n{=}500$). All values in \%. Bold = best per metric.
+Fact./Hall.\ = MiniCheck faithfulness / NLI contradiction probability.
+Judge = Qwen2.5-7B-Instruct scores (1--5 scale).
+Values reported as mean $\pm$ bootstrap std (1000 iterations).}
 \label{tab:ablation_arch}
 \begin{tabular}{lrrrrrrrrrrr}
 \toprule
@@ -449,14 +454,14 @@ Results on MIMIC-IV are reported in Table~\ref{tab:ablation_arch}.
 \cmidrule(lr){2-7} \cmidrule(lr){8-9} \cmidrule(lr){10-12}
 Variant & R-1 & R-2 & R-L & B-1 & B-2 & BS-F1 & Fact.$\uparrow$ & Hall.$\downarrow$ & Factual$\uparrow$ & Comp.$\uparrow$ & Coher.$\uparrow$ \\
 \midrule
-\textbf{Full model}               & 25.67 & 5.58 & 13.39 & \textbf{14.17} & \textbf{6.28} & \textbf{54.48} & 44.06 & 21.96 & \textbf{61.3} & \textbf{50.0} & \textbf{73.8} \\
-w/o Memory                        & 21.52 & 4.41 & 12.11 & 11.03 & 4.15 & 53.44 & \textbf{63.66} & \textbf{9.20}  & 48.8 & 42.5 & 58.8 \\
-w/o Adaptive gate ($\gamma{=}0.5$)& \textbf{26.00} & \textbf{6.01} & \textbf{14.44} & 11.59 & 5.36 & 54.38 & 55.47 & 22.28 & 51.3 & 42.1 & 68.4 \\
-w/o Phase-2 update                & 24.35 & 5.12 & 12.53 & 12.39 & 5.36 & 53.86 & 66.81 & 16.66 & 51.2 & 41.2 & 62.5 \\
-w/o GRPO                          & 22.70 & 4.57 & 11.87 & 10.34 & 4.66 & 54.08 & 54.08 & 15.15 & 57.9 & 48.7 & 72.4 \\
-w/o RL$^\dagger$                  & 21.48 & 4.95 & 12.11 & 10.26 & 4.56 & 53.57 & 66.65 & 13.49 & --   & --   & --   \\
-w/o Hall.\ Penalty                & --    & --   & --    & --    & --   & --    & --    & --    & --   & --   & --   \\
-w/o Aux.\ Loss                    & --    & --   & --    & --    & --   & --    & --    & --    & --   & --   & --   \\
+\textbf{Full model}                & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+w/o Memory                         & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+w/o Adaptive gate ($\gamma{=}0.5$) & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+w/o Phase-2 update                 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+w/o GRPO                           & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+w/o RL                             & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+w/o Hall.\ Penalty                 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
+w/o Aux.\ Loss                     & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
