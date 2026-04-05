@@ -313,15 +313,68 @@ def load_predictions(predictions_path: str) -> List[Dict]:
     return records
 
 
+def bootstrap_std(
+    predictions: List[str],
+    references: List[str],
+    sources: List[str],
+    n_boot: int = 1000,
+    seed: int = 42,
+    device: str = "cpu",
+) -> Dict[str, float]:
+    """
+    Compute bootstrap std for ROUGE, BLEU, BERTScore, and MiniCheck metrics.
+    Resamples (with replacement) n_boot times and returns std of each metric.
+    """
+    import random
+    rng = random.Random(seed)
+    n = len(predictions)
+
+    rouge_keys  = ["rouge1", "rouge2", "rougeL"]
+    bleu_keys   = ["bleu1", "bleu2"]
+    bert_keys   = ["bertscore_f1"]
+    mini_keys   = ["minicheck_support", "hallucination_score"]
+
+    accum: Dict[str, List[float]] = {k: [] for k in rouge_keys + bleu_keys + bert_keys + mini_keys}
+
+    log.info("Bootstrap std: %d iterations ...", n_boot)
+    for i in range(n_boot):
+        idx = [rng.randint(0, n - 1) for _ in range(n)]
+        p = [predictions[j] for j in idx]
+        r = [references[j]  for j in idx]
+        s = [sources[j]     for j in idx]
+
+        for k, v in compute_rouge(p, r).items():
+            accum[k].append(v)
+        for k, v in compute_bleu(p, r).items():
+            accum[k].append(v)
+        for k, v in compute_bertscore(p, r, device=device).items():
+            accum[k].append(v)
+        mini = compute_minicheck(s, p, device=device)
+        for k in mini_keys:
+            if mini.get(k) is not None:
+                accum[k].append(mini[k])
+
+        if (i + 1) % 100 == 0:
+            log.info("  Bootstrap %d / %d done", i + 1, n_boot)
+
+    stds: Dict[str, float] = {}
+    for k, vals in accum.items():
+        if vals:
+            mean = sum(vals) / len(vals)
+            stds[f"{k}_std"] = (sum((v - mean) ** 2 for v in vals) / len(vals)) ** 0.5
+    return stds
+
+
 def run_metrics(
     records: List[Dict],
     output_dir: Path,
     device: str = "cpu",
+    n_boot: int = 1000,
 ) -> Dict:
     """
     Compute full metric suite on loaded predictions.
     Saves per_example.csv and metrics.json.
-    Returns aggregate metrics dict.
+    Returns aggregate metrics dict including bootstrap ±std for each metric.
     """
     import csv
 
@@ -343,6 +396,10 @@ def run_metrics(
 
     log.info("Computing MiniCheck ...")
     metrics.update(compute_minicheck(sources, predictions, device=device))
+
+    # ── Bootstrap std ─────────────────────────────────────────────────────────
+    log.info("Computing bootstrap std (n_boot=%d) ...", n_boot)
+    metrics.update(bootstrap_std(predictions, references, sources, n_boot=n_boot, device=device))
 
     # ── Memory diagnostics (mean over corpus) ────────────────────────────────
     diag_keys = ["gamma_mean", "gamma_std", "memory_norm", "recon_mse"]
@@ -408,24 +465,33 @@ def print_report(metrics: Dict, n_examples: int, checkpoint: Optional[str] = Non
     print(f"N examples   : {n_examples}")
     print()
 
+    def fmt(key: str) -> str:
+        val = metrics.get(key)
+        std = metrics.get(f"{key}_std")
+        if val is None:
+            return "[n/a]"
+        s = f"{val * 100:.2f}"
+        if std is not None:
+            s += f" ±{std * 100:.2f}"
+        return s
+
     print("LEXICAL / SEMANTIC METRICS:")
-    rows = [
-        ("ROUGE-1",       metrics.get("rouge1")),
-        ("ROUGE-2",       metrics.get("rouge2")),
-        ("ROUGE-L",       metrics.get("rougeL")),
-        ("BLEU-1",        metrics.get("bleu1")),
-        ("BLEU-2",        metrics.get("bleu2")),
-        ("BERTScore F1",  metrics.get("bertscore_f1")),
-    ]
-    for name, val in rows:
-        if val is not None:
-            print(f"  {name:<16} {val * 100:.2f}")
+    for name, key in [
+        ("ROUGE-1",      "rouge1"),
+        ("ROUGE-2",      "rouge2"),
+        ("ROUGE-L",      "rougeL"),
+        ("BLEU-1",       "bleu1"),
+        ("BLEU-2",       "bleu2"),
+        ("BERTScore F1", "bertscore_f1"),
+    ]:
+        print(f"  {name:<16} {fmt(key)}")
 
     print()
     print("FAITHFULNESS:")
     mc = metrics.get("minicheck_support")
     if mc is not None:
-        print(f"  {'MiniCheck':<16} {mc * 100:.2f}")
+        print(f"  {'MiniCheck':<16} {fmt('minicheck_support')}")
+        print(f"  {'Hallucination':<16} {fmt('hallucination_score')}")
     else:
         print("  MiniCheck        [not computed — run: pip install minicheck]")
 
@@ -467,6 +533,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--no_flash_attn",     action="store_true")
     p.add_argument("--max_examples",      type=int, default=None,
                    help="Cap number of eval examples (for testing).")
+    p.add_argument("--n_boot",            type=int, default=1000,
+                   help="Number of bootstrap iterations for ±std estimation.")
     p.add_argument("--ablation",          type=str, default="full",
                    choices=["full", "no_memory", "fixed_gate", "no_phase2_update"],
                    help="Ablation variant to run. 'full' = default trained model.")
@@ -521,7 +589,7 @@ def main() -> None:
         records = load_predictions(str(predictions_path))
         log.info("Loaded %d predictions from %s", len(records), predictions_path)
 
-        metrics = run_metrics(records, output_dir, device=device)
+        metrics = run_metrics(records, output_dir, device=device, n_boot=args.n_boot)
         print_report(
             metrics,
             n_examples=len(records),
@@ -552,23 +620,32 @@ def log_experiment(
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
     row = {
-        "timestamp":        datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "run_name":         args.run_name or Path(args.output_dir).name,
-        "ablation":         getattr(args, "ablation", "full") or "full",
-        "checkpoint":       args.checkpoint or "",
-        "eval_file":        args.eval_file or "",
-        "n_examples":       n_examples,
-        "rouge1":           metrics.get("rouge1",        ""),
-        "rouge2":           metrics.get("rouge2",        ""),
-        "rougeL":           metrics.get("rougeL",        ""),
-        "bleu1":            metrics.get("bleu1",         ""),
-        "bleu2":            metrics.get("bleu2",         ""),
-        "bertscore_f1":     metrics.get("bertscore_f1",  ""),
-        "minicheck":        metrics.get("minicheck_support", ""),
-        "mem_gamma_mean":   metrics.get("mem_gamma_mean", ""),
-        "mem_memory_norm":  metrics.get("mem_memory_norm",""),
-        "output_dir":       str(output_dir),
-        "notes":            args.notes,
+        "timestamp":             datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "run_name":              args.run_name or Path(args.output_dir).name,
+        "ablation":              getattr(args, "ablation", "full") or "full",
+        "checkpoint":            args.checkpoint or "",
+        "eval_file":             args.eval_file or "",
+        "n_examples":            n_examples,
+        "rouge1":                metrics.get("rouge1",             ""),
+        "rouge1_std":            metrics.get("rouge1_std",         ""),
+        "rouge2":                metrics.get("rouge2",             ""),
+        "rouge2_std":            metrics.get("rouge2_std",         ""),
+        "rougeL":                metrics.get("rougeL",             ""),
+        "rougeL_std":            metrics.get("rougeL_std",         ""),
+        "bleu1":                 metrics.get("bleu1",              ""),
+        "bleu1_std":             metrics.get("bleu1_std",          ""),
+        "bleu2":                 metrics.get("bleu2",              ""),
+        "bleu2_std":             metrics.get("bleu2_std",          ""),
+        "bertscore_f1":          metrics.get("bertscore_f1",       ""),
+        "bertscore_f1_std":      metrics.get("bertscore_f1_std",   ""),
+        "minicheck":             metrics.get("minicheck_support",  ""),
+        "minicheck_std":         metrics.get("minicheck_support_std", ""),
+        "hallucination":         metrics.get("hallucination_score",""),
+        "hallucination_std":     metrics.get("hallucination_score_std", ""),
+        "mem_gamma_mean":        metrics.get("mem_gamma_mean",     ""),
+        "mem_memory_norm":       metrics.get("mem_memory_norm",    ""),
+        "output_dir":            str(output_dir),
+        "notes":                 args.notes,
     }
 
     write_header = not log_path.exists()

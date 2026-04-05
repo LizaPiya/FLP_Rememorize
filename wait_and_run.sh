@@ -62,7 +62,55 @@ exec 200>"$GPU_LOCK"
 
 echo "=== Starting jobs at $(date) ===" | tee $LOG
 
-# 1. Training: no_rl
+# ── MIMIC: Full model (must run first — ablations compare against this) ───────
+
+# 1. Train: full
+run_when_free "train:mimic_full" conda run -n FLP_ReMemorize python train.py \
+    --model mistralai/Mistral-7B-v0.1 \
+    --dataset mimic \
+    --train_file Datasets/mimic_5k_train.jsonl \
+    --eval_file  Datasets/mimic_5k_val.jsonl \
+    --training_ablation full \
+    --no_flash_attn \
+    --output_dir runs/mimic_full \
+    --num_epochs 3 --group_size 4 \
+    --max_train 1000 \
+    --save_every 500 --eval_every 200
+
+# 2. Eval: full
+run_when_free "eval:mimic_full" conda run -n FLP_ReMemorize python evaluate.py \
+    --checkpoint runs/mimic_full/best_ckpt \
+    --eval_file  Datasets/mimic_5k_test.jsonl \
+    --dataset    mimic \
+    --output_dir results/mimic_full \
+    --run_name   mimic_full --ablation full --no_flash_attn \
+    --notes "full model, mimic, 1k train"
+
+# ── MIMIC: Ablations ──────────────────────────────────────────────────────────
+
+# 3. Train: no_grpo
+run_when_free "train:no_grpo" conda run -n FLP_ReMemorize python train.py \
+    --model mistralai/Mistral-7B-v0.1 \
+    --dataset mimic \
+    --train_file Datasets/mimic_5k_train.jsonl \
+    --eval_file  Datasets/mimic_5k_val.jsonl \
+    --training_ablation no_grpo \
+    --no_flash_attn \
+    --output_dir runs/ablation_no_grpo \
+    --num_epochs 3 --group_size 4 \
+    --max_train 1000 \
+    --save_every 500 --eval_every 200
+
+# 4. Eval: no_grpo
+run_when_free "eval:no_grpo" conda run -n FLP_ReMemorize python evaluate.py \
+    --checkpoint runs/ablation_no_grpo/best_ckpt \
+    --eval_file  Datasets/mimic_5k_test.jsonl \
+    --dataset    mimic \
+    --output_dir results/ablation_study_test/no_grpo \
+    --run_name   no_grpo --ablation full --no_flash_attn \
+    --notes "ablation=no_grpo"
+
+# 5. Train: no_rl
 run_when_free "train:no_rl" conda run -n FLP_ReMemorize python train.py \
     --model mistralai/Mistral-7B-v0.1 \
     --dataset mimic \
@@ -75,15 +123,16 @@ run_when_free "train:no_rl" conda run -n FLP_ReMemorize python train.py \
     --max_train 1000 \
     --save_every 500 --eval_every 200
 
-# 2. Eval no_rl
+# 6. Eval: no_rl
 run_when_free "eval:no_rl" conda run -n FLP_ReMemorize python evaluate.py \
     --checkpoint runs/ablation_no_rl/best_ckpt \
     --eval_file  Datasets/mimic_5k_test.jsonl \
+    --dataset    mimic \
     --output_dir results/ablation_study_test/no_rl \
     --run_name   no_rl --ablation full --no_flash_attn \
     --notes "ablation=no_rl"
 
-# 3. Training: no_hallucination_penalty
+# 7. Train: no_hallucination_penalty
 run_when_free "train:no_halluc" conda run -n FLP_ReMemorize python train.py \
     --model mistralai/Mistral-7B-v0.1 \
     --dataset mimic \
@@ -96,15 +145,16 @@ run_when_free "train:no_halluc" conda run -n FLP_ReMemorize python train.py \
     --max_train 1000 \
     --save_every 500 --eval_every 200
 
-# 4. Eval no_hallucination_penalty
+# 8. Eval: no_hallucination_penalty
 run_when_free "eval:no_halluc" conda run -n FLP_ReMemorize python evaluate.py \
     --checkpoint runs/ablation_no_hallucination_penalty/best_ckpt \
     --eval_file  Datasets/mimic_5k_test.jsonl \
+    --dataset    mimic \
     --output_dir results/ablation_study_test/no_hallucination_penalty \
     --run_name   no_hallucination_penalty --ablation full --no_flash_attn \
     --notes "ablation=no_hallucination_penalty"
 
-# 5. Training: no_aux_loss
+# 9. Train: no_aux_loss
 run_when_free "train:no_aux" conda run -n FLP_ReMemorize python train.py \
     --model mistralai/Mistral-7B-v0.1 \
     --dataset mimic \
@@ -117,12 +167,36 @@ run_when_free "train:no_aux" conda run -n FLP_ReMemorize python train.py \
     --max_train 1000 \
     --save_every 500 --eval_every 200
 
-# 6. Eval no_aux_loss
+# 10. Eval: no_aux_loss
 run_when_free "eval:no_aux" conda run -n FLP_ReMemorize python evaluate.py \
     --checkpoint runs/ablation_no_aux_loss/best_ckpt \
     --eval_file  Datasets/mimic_5k_test.jsonl \
+    --dataset    mimic \
     --output_dir results/ablation_study_test/no_aux_loss \
     --run_name   no_aux_loss --ablation full --no_flash_attn \
     --notes "ablation=no_aux_loss"
+
+# ── SOAP: Full model ──────────────────────────────────────────────────────────
+
+# 11. Train: full (SOAP)
+run_when_free "train:soap_full" conda run -n FLP_ReMemorize python train.py \
+    --model mistralai/Mistral-7B-v0.1 \
+    --dataset mts_dialog \
+    --train_file Datasets/soap_train.jsonl \
+    --eval_file  Datasets/soap_val.jsonl \
+    --training_ablation full \
+    --no_flash_attn \
+    --output_dir runs/soap_full \
+    --num_epochs 3 --group_size 4 \
+    --save_every 500 --eval_every 200
+
+# 12. Eval: full (SOAP)
+run_when_free "eval:soap_full" conda run -n FLP_ReMemorize python evaluate.py \
+    --checkpoint runs/soap_full/best_ckpt \
+    --eval_file  Datasets/soap_test.jsonl \
+    --dataset    mts_dialog \
+    --output_dir results/soap_full \
+    --run_name   soap_full --ablation full --no_flash_attn \
+    --notes "full model, soap, all train"
 
 echo "=== All jobs done at $(date) ===" | tee -a $LOG
