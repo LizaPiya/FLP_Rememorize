@@ -189,8 +189,16 @@ def compute_per_example_rouge(pred: str, ref: str) -> Dict[str, float]:
 # Stage 1 — Inference
 # ─────────────────────────────────────────────────────────────────────────────
 
-def load_eval_data(eval_file: str, dataset_type: str = "mimic") -> List[Dict]:
-    """Load eval JSONL into list of {id, source, reference} dicts."""
+def load_eval_data(eval_file: Optional[str], dataset_type: str = "mimic") -> List[Dict]:
+    """Load eval data from a JSONL file or, for mts_dialog, from HuggingFace if no file given."""
+    if eval_file is None and dataset_type == "mts_dialog":
+        from dataset import MTSDialogDataset
+        hf_examples = MTSDialogDataset.from_huggingface("test")
+        return [
+            {"id": ex.doc_id, "source": ex.source, "reference": ex.reference}
+            for ex in hf_examples
+        ]
+
     examples = []
     with open(eval_file) as f:
         for i, line in enumerate(f):
@@ -264,6 +272,7 @@ def run_inference(args: argparse.Namespace, output_dir: Path) -> Path:
                 ex["source"],
                 max_new_tokens=args.max_new_tokens,
                 ablation_mode=ablation,
+                # prompt_template uses the default unified clinical prompt
             )
 
             record = {
@@ -453,7 +462,7 @@ def parse_args() -> argparse.Namespace:
                    help="Path to eval JSONL (required for inference).")
     p.add_argument("--dataset",           type=str, default="mimic",
                    choices=["mimic", "mts_dialog"])
-    p.add_argument("--max_new_tokens",    type=int, default=256)
+    p.add_argument("--max_new_tokens",    type=int, default=512)
     p.add_argument("--max_source_length", type=int, default=3840)
     p.add_argument("--no_flash_attn",     action="store_true")
     p.add_argument("--max_examples",      type=int, default=None,

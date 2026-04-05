@@ -40,7 +40,7 @@ class ReMemorizeLLM(nn.Module):
         model_name_or_path: str,
         memory_manager: ReMemorizeMemoryManager,
         max_source_length: int = 2048,
-        max_target_length: int = 256,
+        max_target_length: int = 512,
         dtype: torch.dtype = torch.bfloat16,
         gradient_checkpointing: bool = True,
         use_flash_attention: bool = True,
@@ -221,11 +221,17 @@ class ReMemorizeLLM(nn.Module):
         self,
         source: str,
         prompt_template: str = (
-            "Summarize the following clinical note:\n{source}\n\nSummary:"
+            "Based on the clinical document below, write a concise medical summary. "
+            "Include the key clinical findings, diagnoses, and actions taken. "
+            "Use only information present in the document. "
+            "Do NOT add notes, commentary, or explanations about the summary itself.\n\n"
+            "{source}\n\nSummary:"
         ),
-        max_new_tokens: int = 256,
+        max_new_tokens: int = 512,
         temperature: float = 0.7,
         top_p: float = 0.9,
+        repetition_penalty: float = 1.3,
+        no_repeat_ngram_size: int = 4,
         do_sample: bool = True,
         detach_memory_hidden: bool = True,
         ablation_mode: str = "full",
@@ -286,7 +292,25 @@ class ReMemorizeLLM(nn.Module):
             logits = self.llm.lm_head(h_aug.to(self._llm_device, self.dtype))  # (1, vocab)
 
             if do_sample:
-                logits_f = logits[0].float() / max(temperature, 1e-6)
+                logits_f = logits[0].float()
+
+                # Repetition penalty: downscale logits for already-generated tokens
+                if repetition_penalty != 1.0 and generated:
+                    for tok_id in set(generated):
+                        if logits_f[tok_id] > 0:
+                            logits_f[tok_id] /= repetition_penalty
+                        else:
+                            logits_f[tok_id] *= repetition_penalty
+
+                # No-repeat n-gram: block any token that would extend a repeated n-gram
+                if no_repeat_ngram_size > 0 and len(generated) >= no_repeat_ngram_size - 1:
+                    ngram_prefix = tuple(generated[-(no_repeat_ngram_size - 1):])
+                    for i in range(len(generated) - no_repeat_ngram_size + 1):
+                        if tuple(generated[i:i + no_repeat_ngram_size - 1]) == ngram_prefix:
+                            banned = generated[i + no_repeat_ngram_size - 1]
+                            logits_f[banned] = float("-inf")
+
+                logits_f = logits_f / max(temperature, 1e-6)
                 if top_p < 1.0:
                     sorted_logits, sorted_idx = torch.sort(logits_f, descending=True)
                     cum_probs = torch.cumsum(

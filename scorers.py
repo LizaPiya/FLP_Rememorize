@@ -68,17 +68,25 @@ class HeuristicRewardScorer(BaseRewardScorer):
         halluc = 1.0 - factual
         halluc = _clamp01(halluc)
 
-        # Coherence proxy: sentence-to-sentence lexical continuity.
+        # Coherence proxy: sentence-to-sentence lexical continuity,
+        # penalized for near-duplicate sentences (repetition detection).
         sents = _sentences(summary)
         if len(sents) <= 1:
             coherence = 0.7 if sents else 0.0
         else:
             overlaps = []
+            repetition_penalty = 0.0
             for a, b in zip(sents[:-1], sents[1:]):
                 A = _token_set(a)
                 B = _token_set(b)
-                overlaps.append(len(A & B) / max(len(A | B), 1))
-            coherence = _clamp01(sum(overlaps) / len(overlaps) + 0.2)
+                overlap = len(A & B) / max(len(A | B), 1)
+                overlaps.append(overlap)
+                # Sentences with >80% overlap are near-duplicates
+                if overlap > 0.8:
+                    repetition_penalty += 0.3
+            coherence = _clamp01(
+                sum(overlaps) / len(overlaps) + 0.2 - repetition_penalty
+            )
 
         # Completeness proxy:
         # - with reference: recall against reference tokens

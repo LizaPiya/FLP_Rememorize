@@ -338,7 +338,10 @@ There is no fixed sliding window; the memory adapts continuously throughout both
 \paragraph{Training.}  
 We train using PPO and GRPO on 8 A100 GPUs (40 GB). Each document is truncated to a maximum of 3,000 tokens for BHC and 1,000 tokens for SOAP.
 
-\paragraph{Hyperparameters.}  
+\paragraph{Prompt Formulation.}
+All models are prompted using a source-grounded instruction adapted from~\citet{asgari2025framework}, which explicitly constrains generation to information present in the input document. The full prompt template is provided in Appendix~\ref{appendix:annotation_prompt}.
+
+\paragraph{Hyperparameters.}
 Key hyperparameters are listed in Table~\ref{tab:hyperparams}.
 
 \begin{table}[h]
@@ -399,7 +402,7 @@ AgenticSum                            & --    & --    & --    & --    & --    & 
 
 \begin{table*}[t]
 \centering
-\caption{LLM-as-a-Judge evaluation (Qwen2.5-7B-Instruct, 0\% parse failure rate). All values in \%. Higher is better except Hallucination ($\downarrow$).}
+\caption{LLM-as-a-Judge evaluation (Qwen2.5-7B-Instruct, 0\% parse failure rate). All scores on a 1--5 scale. Higher is better except Hallucination ($\downarrow$).}
 \label{tab:llm_judge}
 \begin{tabular}{lrrrrrrrr}
 \toprule
@@ -408,10 +411,10 @@ AgenticSum                            & --    & --    & --    & --    & --    & 
 \textbf{Model} & \textbf{Hall.}$\downarrow$ & \textbf{Factual}$\uparrow$ & \textbf{Complete}$\uparrow$ & \textbf{Coherent}$\uparrow$
                & \textbf{Hall.}$\downarrow$ & \textbf{Factual}$\uparrow$ & \textbf{Complete}$\uparrow$ & \textbf{Coherent}$\uparrow$ \\
 \midrule
-Llama-3.2-3B-Instruct      &  7.5 & 70.0          & 58.8          & 78.8          &  7.5          & \textbf{81.2} & \textbf{63.7} & \textbf{92.5} \\
-Mistral-7B                 & 15.0 & \textbf{75.0} & \textbf{63.8} & \textbf{86.3} &  \textbf{2.6} & 75.0          & 60.5          & 80.3          \\
+Llama-3.2-3B-Instruct      & 2.05 & 3.45          & 3.23          & 3.62          & 1.30          & \textbf{4.25} & \textbf{3.55} & \textbf{4.70} \\
+Mistral-7B                 & 2.15 & \textbf{3.60} & \textbf{3.33} & \textbf{3.88} & \textbf{1.20} & 3.95          & 3.40          & 4.15          \\
 \midrule
-\textbf{ReMemorize (Ours)} & \textbf{7.5} & 61.3 & 50.0 & 73.8                  &  \textbf{2.6} & 47.4          & 34.2          & 59.2          \\
+\textbf{ReMemorize (Ours)} & \textbf{1.68} & 3.52 & 3.15 & 3.83                  & \textbf{1.20} & 2.90          & 2.40          & 3.35          \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -479,6 +482,75 @@ By introducing a learnable GRU-style gated recurrent memory, \textsc{ReMemorize}
 The memory-conditioned scalar gate $\gamma_t$ allows the model to suppress redundant writes when content is already well-represented, providing a principled information-theoretic compression pressure without explicit supervision.
 Reinforcement learning via GRPO grounds these gating decisions in factuality-relevant outcome signals, allowing the policy to discover memory behaviors that improve downstream faithfulness, such as holding onto rare clinical findings while discounting common boilerplate.
 We argue that lightweight, external recurrent memory layers compatible with frozen transformer architectures open a new frontier for trustworthy, domain-specific LLMs, one that requires neither fine-tuning of attention weights nor expensive retrieval augmentation.
+
+\appendix
+
+\section{Hallucination Annotation Prompt}
+\label{appendix:annotation_prompt}
+
+To identify hallucinated spans in model-generated clinical summaries, we employ a structured evaluation prompt grounded in strict textual entailment. The task requires a language model to verify whether each statement in a generated summary is \textbf{verifiably supported} by the source document---meaning the information must be \textit{explicitly stated and unambiguous} in the document text.
+This prompt is adapted from the Lookback Lens~\citep{chuang2024lookback} framework, but incorporates additional guardrails specific to clinical applications. Crucially, it includes explicit instructions to prevent confirmation bias~\citep{adiba_bias_2025}, discourage plausible-sounding inferences, and eliminate reliance on domain knowledge not grounded in the text.
+
+\subsubsection*{Prompt Template}
+\begin{quote}\small
+You will be provided with a clinical source document and a machine-generated summary. Your task is to assess whether the summary is \textbf{strictly entailed} by the source document.
+
+\medskip
+\textbf{Definition of Entailment:} A statement is entailed only if it is explicitly and unambiguously stated in the document. Any statement that requires inference, clinical reasoning, or prior medical knowledge should be treated as \textit{Not Entailed}.
+
+\medskip
+\textbf{Key Instructions:}
+\begin{itemize}[noitemsep]
+  \item DO NOT infer or assume missing information.
+  \item DO NOT use clinical knowledge, reasoning, or common sense.
+  \item DO NOT validate based on plausibility, typicality, or tone.
+  \item DO NOT guess what the author likely meant.
+\end{itemize}
+You must treat the document as the \textbf{only source of ground truth}.
+
+\medskip
+\textbf{Document:} \{document\} \quad \textbf{Proposed Summary:} \{summary\}
+
+\medskip
+\textbf{Output Format:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Entailment Label:} \texttt{Entailed} or \texttt{Not Entailed}
+  \item \textbf{Explanation:} Justify your label with direct references to the document.
+  \item \textbf{Problematic Spans (if any):} List summary phrases not directly supported by the source.
+\end{itemize}
+\end{quote}
+
+\section{LLM-as-a-Judge Evaluation Prompt}
+\label{sec:llm_judge}
+
+The following prompt is used to evaluate generated clinical summaries using an instruction-tuned LLM acting in an evaluative role. The model is instructed to assess summaries strictly with respect to the provided source document, without relying on external medical knowledge or plausible inference. This protocol follows our prior work~\citep{asgari2025framework}.
+
+\begin{quote}\small
+\textbf{Task:} Evaluate the generated medical summary against the source clinical document. Assign an integer score from 1 to 5 for each criterion below.
+
+\medskip
+\textbf{Source Document:} \{SOURCE\_DOCUMENT\} \quad \textbf{Generated Summary:} \{GENERATED\_SUMMARY\}
+
+\medskip
+\textbf{Evaluation Criteria (1--5 scale):}
+\begin{itemize}[noitemsep]
+    \item \textbf{Hallucination:} Degree of unsupported or fabricated content (1\,=\,no hallucination; 5\,=\,major fabrications)
+    \item \textbf{Factual Consistency:} Faithfulness to the source (1\,=\,highly inaccurate; 5\,=\,fully accurate)
+    \item \textbf{Completeness:} Coverage of core clinical information (1\,=\,key info missing; 5\,=\,fully comprehensive)
+    \item \textbf{Coherence:} Fluency and logical organisation (1\,=\,poorly written; 5\,=\,highly coherent)
+\end{itemize}
+
+\medskip
+\textbf{Output Format} (no additional text):
+\begin{verbatim}
+Hallucination: X
+Factual: X
+Complete: X
+Coherent: X
+\end{verbatim}
+\end{quote}
+
+Evaluation uses a decoding temperature of 0.3 and a maximum output length of 150 tokens. All scores are validated to lie within the 1--5 range, yielding a reproducible and fully automated assessment protocol.
 
 \bibliography{ref.bib}
 \bibliographystyle{plainnat}

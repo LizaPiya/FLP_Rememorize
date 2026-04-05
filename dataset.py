@@ -266,6 +266,47 @@ class MTSDialogDataset(ReMemorizeDataset):
         )
 
     @classmethod
+    def from_huggingface(
+        cls,
+        split: str = "train",
+        val_size: int = 150,
+        test_size: int = 150,
+        seed: int = 42,
+        max_examples: Optional[int] = None,
+    ) -> "MTSDialogDataset":
+        """
+        Load SubashNeupane/dataset_SOAP_summary from HuggingFace (1,473 examples).
+        The HF dataset has only a train split, so we carve out val and test here.
+
+        split: one of "train", "val", "test"
+        val_size / test_size: number of examples held out for val and test
+        """
+        from datasets import load_dataset as hf_load
+        hf = hf_load("SubashNeupane/dataset_SOAP_summary")["train"]
+
+        all_examples = [
+            SummarizationExample(
+                source=row["input"],
+                target=row["output"],
+                reference=row["output"],
+                doc_id=f"soap_{i:05d}",
+            )
+            for i, row in enumerate(hf)
+        ]
+
+        rng = random.Random(seed)
+        rng.shuffle(all_examples)
+
+        test_ex = all_examples[:test_size]
+        val_ex  = all_examples[test_size:test_size + val_size]
+        train_ex = all_examples[test_size + val_size:]
+
+        chosen = {"train": train_ex, "val": val_ex, "test": test_ex}[split]
+        if max_examples is not None:
+            chosen = chosen[:max_examples]
+        return cls(chosen)
+
+    @classmethod
     def placeholder(cls, n: int = 200, seed: int = 42) -> "MTSDialogDataset":
         """
         Generate n synthetic MTS-Dialog-style examples for offline development.

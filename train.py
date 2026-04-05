@@ -405,14 +405,19 @@ def train(args: argparse.Namespace) -> None:
         eval_dataset: Optional[ReMemorizeDataset] = DatasetCls.placeholder(n=20, seed=args.seed + 1)
         log.info("Dev mode: %d synthetic train / 20 eval examples.", args.placeholder_n)
     else:
-        if args.train_file is None:
-            raise ValueError("--train_file is required when not in --dev mode.")
         if args.dataset == "mimic":
+            if args.train_file is None:
+                raise ValueError("--train_file is required for the mimic dataset.")
             train_dataset = MIMICDataset.from_jsonl(args.train_file, max_examples=args.max_train)
             eval_dataset = MIMICDataset.from_jsonl(args.eval_file) if args.eval_file else None
         else:
-            train_dataset = MTSDialogDataset.from_jsonl(args.train_file, max_examples=args.max_train)
-            eval_dataset = MTSDialogDataset.from_jsonl(args.eval_file) if args.eval_file else None
+            if args.train_file:
+                train_dataset = MTSDialogDataset.from_jsonl(args.train_file, max_examples=args.max_train)
+                eval_dataset = MTSDialogDataset.from_jsonl(args.eval_file) if args.eval_file else None
+            else:
+                log.info("No --train_file given for mts_dialog; loading from HuggingFace (SubashNeupane/dataset_SOAP_summary).")
+                train_dataset = MTSDialogDataset.from_huggingface("train", seed=args.seed, max_examples=args.max_train)
+                eval_dataset  = MTSDialogDataset.from_huggingface("val",   seed=args.seed)
         log.info(
             "Loaded %d train examples%s.",
             len(train_dataset),
